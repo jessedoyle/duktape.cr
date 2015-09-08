@@ -1,0 +1,8 @@
+name: duktape.cr
+version: 0.0.1
+
+authors:
+  - Jesse Doyle <jdoyle@ualberta.ca>
+
+scripts:
+  - postinstall: "make libduktape"

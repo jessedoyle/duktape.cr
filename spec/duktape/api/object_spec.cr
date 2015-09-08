@@ -1,0 +1,204 @@
+require "../../spec_helper"
+
+describe Duktape::API::Object do
+  describe "compact" do
+    it "should have no external impact" do
+      ctx = Duktape::Context.new
+      ctx.push_object
+      ctx << 42
+      ctx.put_prop_string -2, "meaningOfLife);"
+      ctx.compact -1
+      val = ctx.json_encode -1
+
+      val.should eq("{\"meaningOfLife);\":42}")
+    end
+  end
+
+  describe "enum" do
+    it "should create an enumerator for object" do
+      ctx = Duktape::Context.new
+      ctx.push_object
+      ctx.enum -1, LibDUK::ENUM_INCLUDE_NONENUMERABLE
+      ctx.next -1, false
+      str = ctx.get_string(-1)
+
+      str.should eq("constructor")
+    end
+
+    it "should raise if target is not an object" do
+      ctx = Duktape::Context.new
+      ctx.push_undefined
+
+      expect_raises Duktape::TypeError, /invalid object/ do
+        ctx.enum -1, LibDUK::ENUM_INCLUDE_NONENUMERABLE
+      end
+    end
+  end
+
+  describe "equals" do
+    it "should return false if either object has an invalid index" do
+      ctx = Duktape::Context.new
+      ctx << "equals"
+      ctx.dup_top
+      val = ctx.equals(-3, -1)
+
+      val.should be_false
+    end
+
+    it "should return true if targets are equal" do
+      ctx = Duktape::Context.new
+      ctx << "equals"
+      ctx.dup_top
+      val = ctx.equals(-1, -2)
+
+      val.should be_true
+    end
+  end
+
+  describe "get_finalizer" do
+    it "should raise on invalid index" do
+      ctx = Duktape::Context.new
+      ctx << "str"
+
+      expect_raises Duktape::StackError, /invalid index/ do
+        ctx.get_finalizer -3
+      end
+    end
+
+    it "should push undefined to stack on object without finalizer" do
+      ctx = Duktape::Context.new
+      ctx << "str"
+      ctx.get_finalizer -1
+
+      last_stack_type(ctx).should be_js_type(:undefined)
+    end
+  end
+
+  describe "get_prototype" do
+    it "should get the String prototype" do
+      ctx = Duktape::Context.new
+      ctx.push_global_object
+      ctx << "Math"
+      ctx.get_prop -2
+      ctx.get_prototype -1
+
+      last_stack_type(ctx).should be_js_type(:object)
+    end
+
+    it "should raise if target is not an object" do
+      ctx = Duktape::Context.new
+      ctx.push_null
+
+      expect_raises Duktape::TypeError, /invalid object/ do
+        ctx.get_prototype -1
+      end
+    end
+  end
+
+  describe "next" do
+    it "should return true until enumerated set" do
+      ctx = Duktape::Context.new
+      json = <<-JSON
+        {
+          "foo": 1,
+          "bar": -2
+        }
+      JSON
+
+      ctx << json
+      ctx.json_decode -1
+      ctx.enum -1, LibDUK::ENUM_INCLUDE_NONENUMERABLE
+      count = 0
+
+      while ctx.next(-1)
+        count += 1
+        ctx.pop
+      end
+
+      count.should eq(10)
+    end
+  end
+
+  describe "set_finalizer" do
+    it "should set the finalizer of an object" do
+      ctx = Duktape::Context.new
+      ctx.push_object
+      ctx.push_proc(1) do |ptr|
+        env = Duktape::Context.new ptr
+        puts "being finalized"
+        env.return 0
+      end
+      ctx.set_finalizer(-2)
+
+      last_stack_type(ctx).should be_js_type(:object)
+    end
+  end
+
+  describe "set_global_object" do
+    it "should replace the global object with one on stack top" do
+      ctx = Duktape::Context.new
+      ctx.push_global_object
+      ctx << "Duktape"
+      ctx.get_prop(-2)
+      ctx.set_global_object
+
+      expect_raises Duktape::Error, /ReferenceError/ do
+        ctx.eval_string! <<-JS
+          Duktape.version;
+        JS
+      end
+    end
+
+    it "should raise on invalid object" do
+      ctx = Duktape::Context.new
+      ctx.push_null
+
+      expect_raises Duktape::TypeError, /invalid object/ do
+        ctx.set_global_object
+      end
+    end
+  end
+
+  describe "set_prototype" do
+    it "sets an object's prototype" do
+      ctx = Duktape::Context.new
+      ctx.push_global_object
+      ctx << "Math"
+      ctx.get_prop -2
+      ctx.push_global_object
+      ctx << "Duktape"
+      ctx.get_prop(-2)
+      ctx.set_prototype -4
+      ctx.pop_n(3)
+    end
+
+    it "should raise on invalid object" do
+      ctx = Duktape::Context.new
+      ctx.push_null
+
+      expect_raises Duktape::TypeError, /invalid object/ do
+        ctx.set_prototype -1
+      end
+    end
+  end
+
+  describe "strict_equals" do
+    it "should return true if two objects are equal" do
+      ctx = Duktape::Context.new
+      ctx << "one"
+      ctx.dup_top
+      val = ctx.strict_equals(-1, -2)
+
+      val.should be_true
+    end
+
+    it "should return false on invalid index" do
+      ctx = Duktape::Context.new
+      ctx << "one"
+      ctx.dup_top
+      val = ctx.strict_equals(-1, -3)
+
+      val.should be_false
+    end
+  end
+end

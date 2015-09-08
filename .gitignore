@@ -1,0 +1,5 @@
+.DS_Store
+.crystal/
+.build/
+src/.build
+/doc/

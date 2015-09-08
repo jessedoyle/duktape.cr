@@ -1,0 +1,33 @@
+# heap.cr: duktape heap/memory operations
+#
+# Copyright (c) 2015 Jesse Doyle. All rights reserved.
+#
+# This is free software. Please see LICENSE for details.
+
+module Duktape
+  module API::Heap
+    def gc
+      LibDUK.gc ctx, 0_u32
+    end
+  end
+
+  def self.create_heap(&fatal : LibDUK::Context, Int32, UInt8* -> NoReturn)
+    LibDUK.create_heap(nil, nil, nil, nil, fatal.pointer).tap do |ctx|
+      unless ctx
+        raise HeapError.new \
+        "unable to initialize"
+      end
+    end
+  end
+
+  def self.create_heap_default
+    create_heap do |ctx, code, msg|
+      str = String.new msg
+      raise Duktape::InternalError.new ctx, str, code
+    end
+  end
+
+  def self.destroy_heap(ctx : LibDUK::Context)
+    LibDUK.destroy_heap ctx
+  end
+end
