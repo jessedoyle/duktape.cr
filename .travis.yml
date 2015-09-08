@@ -1,0 +1,3 @@
+language: crystal
+before_install: make libduktape
+script: make spec
