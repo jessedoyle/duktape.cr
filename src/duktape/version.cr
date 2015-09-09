@@ -15,9 +15,9 @@ module Duktape
 
   module VERSION
     MAJOR = 0
-    MINOR = 0
-    TINY  = 1
-    PRE   = "alpha"
+    MINOR = 5
+    TINY  = 0
+    PRE   = nil
 
     STRING = [MAJOR, MINOR, TINY, PRE].compact.join "."
 

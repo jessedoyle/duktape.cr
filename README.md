@@ -136,7 +136,7 @@ Note: This functionality is considered experimental and syntax/functionality may
 It is possible to call Crystal code from your javascript:
 
 ```crystal
-  sbx = Duktape::Context.new
+  sbx = Duktape::Sandbox.new
 
   sbx.push_proc(2) do |ptr| # 2 stack arguments
     env = Duktape::Sandbox.new ptr
