@@ -142,7 +142,7 @@ It is possible to call Crystal code from your javascript:
     env = Duktape::Sandbox.new ptr
     a = env.get_number 0
     b = env.get_number 1
-    env.push_int a + b
+    env.push_number a + b
     env.return 1 # return success
   end
 
