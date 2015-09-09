@@ -82,10 +82,10 @@ sbx.push_global_object   # [ global ]
 sbx.push_string "Math"   # [ global "Math" ]
 sbx.get_prop -2          # [ global Math ]
 sbx.push_string "PI"     # [ global Math "PI" ]
-ctx.get_prop -2          # [ global Math PI ]
-pi = ctx.get_number -1
+sbx.get_prop -2          # [ global Math PI ]
+pi = sbx.get_number -1
 puts "PI: #{pi}"
-ctx.pop_3
+sbx.pop_3
 ```
 
 ## Eval vs Eval!
