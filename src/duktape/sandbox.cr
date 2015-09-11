@@ -6,6 +6,8 @@
 
 module Duktape
   class Sandbox < Context
+    include Support::Time
+
     def initialize
       @ctx = Duktape.create_heap_default
       @heap_destroyed = false
@@ -18,8 +20,31 @@ module Duktape
       secure!
     end
 
+    def initialize(timeout = 500 : Int32 | Int64)
+      timeout = timeout.to_i64
+      if timeout < 100
+        raise ArgumentError.new \
+        "timeout must be > 100ms"
+      else
+        udata = make_udata timeout
+        @ctx  = Duktape.create_heap_udata udata
+      end
+      @heap_destroyed = false
+      secure!
+    end
+
     def sandbox?
       true
+    end
+
+    private def make_udata(timeout : Int64)
+      start = current_time_nano
+      sec   = milli_to_secs timeout
+      usec  = milli_to_nano timeout
+      tv    = LibC::TimeVal.new tv_sec: sec, tv_usec: usec
+      data  = LibDUK::TimeoutData.new start: start, timeout: tv
+      slc   = Slice(LibDUK::TimeoutData).new 1, data
+      slc.to_unsafe as Void*
     end
 
     private def secure!

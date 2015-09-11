@@ -93,6 +93,11 @@ lib LibDUK
 
   VARARGS = -1_i32
 
+  struct TimeoutData
+    start   : LibC::TimeVal
+    timeout : LibC::TimeVal
+  end
+
   struct MemoryFunctions
     alloc_func   : Void*
     realloc_func : Void*

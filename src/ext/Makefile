@@ -6,11 +6,56 @@ PREV := $(shell dirname `pwd`])
 OUTPUT := $(PREV)/.build
 LIBDIR := $(PREV)/.build/lib
 INCLUDEDIR := $(PREV)/.build/include
+
+define DUK_TIMEOUT_C
+struct timeout_data \
+{ \
+	struct timeval start; \
+	struct timeval timeout; \
+}; \
+DUK_INTERNAL_DECL duk_bool_t duk_cr_timeout(void *udata) \
+{ \
+	if (udata) \
+	{ \
+		int rc; \
+		struct timeout_data data = *(struct timeout_data*) udata; \
+		struct timeval now; \
+		struct timeval diff; \
+		rc = gettimeofday(&now, NULL); \
+		if (rc != 0) \
+		{ \
+			return 1; \
+		} \
+		diff.tv_sec = now.tv_sec - data.start.tv_sec; \
+		diff.tv_usec = now.tv_usec - data.start.tv_usec; \
+		if (diff.tv_sec > data.timeout.tv_sec) \
+		{ \
+			return 1; \
+		} \
+		else if ((diff.tv_sec == data.timeout.tv_sec) && (diff.tv_usec > data.timeout.tv_usec)) \
+		{ \
+			return 1; \
+		} \
+		else \
+		{	\
+			return 0; \
+		}	\
+	} \
+	else \
+	{ \
+		return 0; \
+	} \
+}
+endef
+export DUK_TIMEOUT_C
+
 DUK_OPTS = \
 	-DDUK_OPT_DEEP_C_STACK \
 	-DDUK_OPT_DEBUGGER_SUPPORT \
 	-DDUK_OPT_INTERRUPT_COUNTER \
-	-DDUK_OPT_FASTINT
+	-DDUK_OPT_FASTINT \
+	-DDUK_OPT_DECLARE="$$DUK_TIMEOUT_C" \
+	-DDUK_OPT_EXEC_TIMEOUT_CHECK="duk_cr_timeout"
 CFLAGS = \
 	-Wall \
 	-c \
