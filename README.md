@@ -84,7 +84,7 @@ sbx.get_prop -2          # [ global Math ]
 sbx.push_string "PI"     # [ global Math "PI" ]
 sbx.get_prop -2          # [ global Math PI ]
 pi = sbx.get_number -1
-puts "PI: #{pi}"
+puts "PI: #{pi}"         # => PI: 3.14159
 sbx.pop_3
 ```
 
@@ -116,7 +116,7 @@ will raise `Duktape::Error "SyntaxError"`.
 
 ## Sandbox vs Context
 
-You should only execute untrusted javascript code on from within a `Duktape::Sandbox` instance. A sandbox isolates code from insecure operations such as Duktape's internal `require` mechanism and the `Duktape` global javascript object.
+You should only execute untrusted javascript code from within a `Duktape::Sandbox` instance. A sandbox isolates code from insecure operations such as Duktape's internal `require` mechanism and the `Duktape` global javascript object.
 
 Note that a sandbox does not currently protect against infinite loops or excessive runtime. Ideally, a timeout mechanism will be available in future releases.
 
