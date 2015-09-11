@@ -1,11 +1,11 @@
 .PHONY: all spec duktape libduktape clean cleanlib
 
-CRYSTAL_BIN  := $(shell which crystal)
-SOURCES 		 := $(shell find src -name '*.cr')
+CRYSTAL_BIN := $(shell which crystal)
+SOURCES := $(shell find src -name '*.cr')
 SPEC_SOURCES := $(shell find spec -name '*.cr')
-CURRENT			 := $(shell pwd)
-EXT					 := $(CURRENT)/src/ext
-OUTPUT			 := $(CURRENT)/.build
+CURRENT := $(shell pwd)
+EXT := $(CURRENT)/src/ext
+OUTPUT := $(CURRENT)/.build
 
 all: duktape
 duktape: $(OUTPUT)/duktape

@@ -4,7 +4,7 @@
 #
 # This is free software. Please see LICENSE for details.
 
-@[Link(ldflags: "-L#{__DIR__}/.build/lib -L#{__DIR__}/.build/include -lduktape")]
+@[Link(ldflags: "-L#{__DIR__}/.build/lib -L#{__DIR__}/.build/include -lduktape -lm")]
 lib LibDUK
   alias Context  = Void*
 
