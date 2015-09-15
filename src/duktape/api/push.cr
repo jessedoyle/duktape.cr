@@ -70,12 +70,18 @@ module Duktape
       LibDUK.push_error_object_raw ctx, err, __FILE__, __LINE__.to_i32, msg
     end
 
+    def push_external_buffer
+      flags = LibDUK::BUF_FLAG_DYNAMIC |
+              LibDUK::BUF_FLAG_EXTERNAL
+      LibDUK.push_buffer_raw ctx, 0, flags
+    end
+
     def push_false
       LibDUK.push_false ctx
     end
 
     def push_fixed_buffer(size : Int)
-      push_buffer(size, false)
+      push_buffer size, false
     end
 
     def push_global_object

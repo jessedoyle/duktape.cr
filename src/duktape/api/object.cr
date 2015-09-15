@@ -40,6 +40,18 @@ module Duktape
       LibDUK.get_prototype ctx, index
     end
 
+    def instanceof(one : Int32, two : Int32)
+      require_valid_index one
+      require_valid_index two
+
+      unless is_object(one) || is_object(two)
+        raise TypeError.new \
+        "invalid object"
+      end
+
+      LibDUK.instanceof(ctx, one, two) == 1
+    end
+
     def next(index : Int32, get_val = false)
       require_valid_index index
       val = get_val ? 1 : 0

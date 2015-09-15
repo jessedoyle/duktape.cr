@@ -8,9 +8,28 @@
 lib LibDUK
   alias Context  = Void*
 
+  BUF_FLAG_DYNAMIC  = 1_u32
+  BUF_FLAG_EXTERNAL = 2_u32
+  BUF_FLAG_NOZERO   = 4_u32
+
   BUF_MODE_FIXED    = 0_u32
   BUF_MODE_DYNAMIC  = 1_u32
   BUF_MODE_DONTCARE = 2_u32
+
+  BUFOBJ_CREATE_ARRBUF          = 16_u32
+  BUFOBJ_DUKTAPE_BUFFER         = 0_u32
+  BUFOBJ_NODEJS_BUFFER          = 1_u32
+  BUFOBJ_ARRAY_BUFFER           = 2_u32
+  BUFOBJ_DATAVIEW               = (3_u32 | BUFOBJ_CREATE_ARRBUF)
+  BUFOBJ_INT8ARRAY              = (4_u32 | BUFOBJ_CREATE_ARRBUF)
+  BUFOBJ_UINT8ARRAY             = (5_u32 | BUFOBJ_CREATE_ARRBUF)
+  BUFOBJ_UINT8CLAMPEDARRAY      = (6_u32 | BUFOBJ_CREATE_ARRBUF)
+  BUFOBJ_INT16ARRAY             = (7_u32 | BUFOBJ_CREATE_ARRBUF)
+  BUFOBJ_UINT16ARRAY            = (8_u32 | BUFOBJ_CREATE_ARRBUF)
+  BUFOBJ_INT32ARRAY             = (9_u32 | BUFOBJ_CREATE_ARRBUF)
+  BUFOBJ_UINT32ARRAY            = (10_u32 | BUFOBJ_CREATE_ARRBUF)
+  BUFOBJ_FLOAT32ARRAY           = (11_u32 | BUFOBJ_CREATE_ARRBUF)
+  BUFOBJ_FLOAT64ARRAY           = (12_u32 | BUFOBJ_CREATE_ARRBUF)
 
   COMPILE_EVAL     = 0x01_u32
   COMPILE_FUNCTION = 0x02_u32
@@ -92,6 +111,11 @@ lib LibDUK
   TYPE_MASK_THROW     = (1 << 10).to_u32
 
   VARARGS = -1_i32
+
+  struct TimeoutData
+    start   : LibC::TimeVal
+    timeout : LibC::TimeVal
+  end
 
   struct MemoryFunctions
     alloc_func   : Void*
@@ -205,31 +229,32 @@ lib LibDUK
   fun pop_3 = duk_pop_3(ctx : Context)
 
   # Type Checks
-  fun get_type          = duk_get_type(ctx : Context, index : Int32) : Int32
-  fun check_type        = duk_check_type(ctx : Context, index : Int32, t : Int32) : Int32
-  fun get_type_mask     = duk_get_type_mask(ctx : Context, index : Int32) : UInt32
-  fun check_type_mask   = duk_check_type_mask(ctx : Context, index : Int32, mask : UInt32) : Int32
-  fun is_undefined      = duk_is_undefined(ctx : Context, index : Int32) : Int32
-  fun is_null           = duk_is_null(ctx : Context, index : Int32) : Int32
+  fun get_type           = duk_get_type(ctx : Context, index : Int32) : Int32
+  fun check_type         = duk_check_type(ctx : Context, index : Int32, t : Int32) : Int32
+  fun get_type_mask      = duk_get_type_mask(ctx : Context, index : Int32) : UInt32
+  fun check_type_mask    = duk_check_type_mask(ctx : Context, index : Int32, mask : UInt32) : Int32
+  fun is_undefined       = duk_is_undefined(ctx : Context, index : Int32) : Int32
+  fun is_null            = duk_is_null(ctx : Context, index : Int32) : Int32
   fun is_null_or_undefined = duk_is_null_or_undefined(ctx : Context, index : Int32) : Int32
-  fun is_boolean        = duk_is_boolean(ctx : Context, index : Int32) : Int32
-  fun is_number         = duk_is_number(ctx : Context, index : Int32) : Int32
-  fun is_nan            = duk_is_nan(ctx : Context, index : Int32) : Int32
-  fun is_string         = duk_is_string(ctx : Context, index : Int32) : Int32
-  fun is_object         = duk_is_object(ctx : Context, index : Int32) : Int32
-  fun is_buffer         = duk_is_buffer(ctx : Context, index : Int32) : Int32
-  fun is_pointer        = duk_is_pointer(ctx : Context, index : Int32) : Int32
-  fun is_lightfunc      = duk_is_lightfunc(ctx : Context, index : Int32) : Int32
-  fun is_array          = duk_is_array(ctx : Context, index : Int32) : Int32
-  fun is_function       = duk_is_function(ctx : Context, index : Int32) : Int32
-  fun is_c_function     = duk_is_c_function(ctx : Context, index : Int32) : Int32
+  fun is_boolean         = duk_is_boolean(ctx : Context, index : Int32) : Int32
+  fun is_number          = duk_is_number(ctx : Context, index : Int32) : Int32
+  fun is_nan             = duk_is_nan(ctx : Context, index : Int32) : Int32
+  fun is_string          = duk_is_string(ctx : Context, index : Int32) : Int32
+  fun is_object          = duk_is_object(ctx : Context, index : Int32) : Int32
+  fun is_buffer          = duk_is_buffer(ctx : Context, index : Int32) : Int32
+  fun is_pointer         = duk_is_pointer(ctx : Context, index : Int32) : Int32
+  fun is_lightfunc       = duk_is_lightfunc(ctx : Context, index : Int32) : Int32
+  fun is_array           = duk_is_array(ctx : Context, index : Int32) : Int32
+  fun is_function        = duk_is_function(ctx : Context, index : Int32) : Int32
+  fun is_c_function      = duk_is_c_function(ctx : Context, index : Int32) : Int32
   fun is_ecmascript_function = duk_is_ecmascript_function(ctx : Context, index : Int32) : Int32
-  fun is_bound_function = duk_is_bound_function(ctx : Context, index : Int32) : Int32
-  fun is_thread         = duk_is_thread(ctx : Context, index : Int32) : Int32
-  fun is_callable       = duk_is_callable(ctx : Context, index : Int32) : Int32
-  fun is_dynamic_buffer = duk_is_dynamic_buffer(ctx : Context, index : Int32) : Int32
-  fun is_fixed_buffer   = duk_is_fixed_buffer(ctx : Context, index : Int32) : Int32
-  fun is_primitive      = duk_is_primitive(ctx : Context, index : Int32) : Int32
+  fun is_bound_function  = duk_is_bound_function(ctx : Context, index : Int32) : Int32
+  fun is_thread          = duk_is_thread(ctx : Context, index : Int32) : Int32
+  fun is_callable        = duk_is_callable(ctx : Context, index : Int32) : Int32
+  fun is_dynamic_buffer  = duk_is_dynamic_buffer(ctx : Context, index : Int32) : Int32
+  fun is_fixed_buffer    = duk_is_fixed_buffer(ctx : Context, index : Int32) : Int32
+  fun is_external_buffer = duk_is_external_buffer(ctx : Context, index : Int32) : Int32
+  fun is_primitive       = duk_is_primitive(ctx : Context, index : Int32) : Int32
 
   # Get Operations
   fun get_boolean    = duk_get_boolean(ctx : Context, index : Int32) : Int32
@@ -288,7 +313,11 @@ lib LibDUK
   fun json_decode   = duk_json_decode(ctx : Context, index : Int32)
 
   # Buffer Operations
-  fun resize_buffer = duk_resize_buffer(ctx : Context, index : Int32, new_size : Int32) : Void*
+  fun config_buffer      = duk_config_buffer(ctx : Context, index : Int32, ptr : Void*, len : Int32)
+  fun get_buffer_data    = duk_get_buffer_data(ctx : Context, index : Int32, out_size : Int32*) : Void*
+  fun push_buffer_object = duk_push_buffer_object(ctx : Context, index : Int32, offset : Int32, byte_length : Int32, flags : UInt32)
+  fun resize_buffer      = duk_resize_buffer(ctx : Context, index : Int32, new_size : Int32) : Void*
+  fun steal_buffer       = duk_steal_buffer(ctx : Context, index : Int32, out_size : Int32*) : Void*
 
   # Property Access
   fun get_prop          = duk_get_prop(ctx : Context, obj_index : Int32) : Int32
@@ -349,6 +378,7 @@ lib LibDUK
 
   # ECMAScript Operators
   fun equals        = duk_equals(ctx : Context, one : Int32, two : Int32) : Int32
+  fun instanceof    = duk_instanceof(ctx : Context, one : Int32, two : Int32) : Int32
   fun strict_equals = duk_strict_equals(ctx : Context, one : Int32, two : Int32) : Int32
 
   # Method Calls
@@ -359,11 +389,14 @@ lib LibDUK
   fun pcall_method = duk_pcall_method(ctx : Context, nargs : Int32) : Int32
   fun pcall_prop   = duk_pcall_prop(ctx : Context, obj_index : Int32, nargs : Int32) : Int32
   fun new          = duk_new(ctx : Context, nargs : Int32)
+  fun pnew         = duk_pnew(ctx : Context, nargs : Int32) : Int32
   fun safe_call    = duk_safe_call(ctx : Context, func : Context -> Int32, nargs : Int32, nrets : Int32) : Int32
 
   # Compilation and Evaluation
-  fun eval_raw    = duk_eval_raw(ctx : Context, src_buffer : UInt8*, src_length : Int32, flags : UInt32) : Int32
-  fun compile_raw = duk_compile_raw(ctx : Context, src_buffer : UInt8*, src_length : Int32, flags : UInt32) : Int32
+  fun eval_raw      = duk_eval_raw(ctx : Context, src_buffer : UInt8*, src_length : Int32, flags : UInt32) : Int32
+  fun compile_raw   = duk_compile_raw(ctx : Context, src_buffer : UInt8*, src_length : Int32, flags : UInt32) : Int32
+  fun dump_function = duk_dump_function(ctx : Context)
+  fun load_function = duk_load_function(ctx : Context)
 
   # Logging
   fun log    = duk_log(ctx : Context, level : Int32, fmt : UInt8*, ...)

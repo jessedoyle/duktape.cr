@@ -44,6 +44,14 @@ describe Duktape do
     end
   end
 
+  describe "create_heap_udata" do
+    it "should create a heap with a user-argument (Void*)" do
+      data = "hello, world".to_unsafe as Void*
+      heap = Duktape.create_heap_udata(data)
+      Duktape.destroy_heap heap
+    end
+  end
+
   describe "destroy_heap" do
     it "should destroy a heap" do
       heap = Duktape.create_heap_default

@@ -2,10 +2,27 @@ require "../spec_helper"
 
 describe Duktape::Sandbox do
   describe "initialize" do
-    it "should create a new sandbox instance" do
-      sbx = Duktape::Sandbox.new
+    context "without timeout" do
+      it "should create a new sandbox instance" do
+        sbx = Duktape::Sandbox.new
 
-      sbx.should be_a(Duktape::Sandbox)
+        sbx.should be_a(Duktape::Sandbox)
+        sbx.timeout?.should be_false
+      end
+    end
+
+    context "with timeout" do
+      it "should raise if timeout < 100" do
+        expect_raises ArgumentError, /> 100ms/ do
+          sbx = Duktape::Sandbox.new 99
+        end
+      end
+
+      it "should create a sandbox with a timeout" do
+        sbx = Duktape::Sandbox.new 500
+        sbx.timeout.should eq(500)
+        sbx.timeout?.should be_true
+      end
     end
 
     it "should remove the require keyword" do
@@ -42,6 +59,49 @@ describe Duktape::Sandbox do
       sbx = Duktape::Sandbox.new
 
       sbx.sandbox?.should be_true
+    end
+  end
+
+  describe "timeout?" do
+    it "should return false when no timeout" do
+      sbx = Duktape::Sandbox.new
+
+      sbx.timeout?.should be_false
+    end
+
+    it "should return true when a timeout is specified" do
+      sbx = Duktape::Sandbox.new 200
+
+      sbx.timeout?.should be_true
+    end
+  end
+
+  describe "timeout" do
+    it "should return nil when no timeout" do
+      sbx = Duktape::Sandbox.new
+
+      sbx.timeout.should be_nil
+    end
+
+    it "should return an Int64 if timeout is specified" do
+      sbx = Duktape::Sandbox.new 200
+
+      sbx.timeout.should be_a(Int64)
+      sbx.timeout.should eq(200)
+    end
+  end
+
+  context "timeout during evaluation" do
+    it "should raise a RangeError (Duktape::Error) when timeout" do
+      sbx = Duktape::Sandbox.new(500)
+      expect_raises Duktape::Error, /RangeError/ do
+        sbx.eval! <<-JS
+          var times = 1000000;
+          for(var i = 0; i < times; i++){
+            i * i;
+          }
+        JS
+      end
     end
   end
 end

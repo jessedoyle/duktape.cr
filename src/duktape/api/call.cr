@@ -27,9 +27,14 @@ module Duktape
       LibDUK.pcall_prop(ctx, index, nargs) == 0
     end
 
+    # Equivalent to duk_pnew (protected call)
     def new(nargs : Int32)
       require_valid_nargs nargs
-      LibDUK.new ctx, nargs
+      LibDUK.pnew(ctx, nargs) == 0
+    end
+
+    def return(ret_val : Int32)
+      ret_val
     end
 
     # Experimental
@@ -37,10 +42,6 @@ module Duktape
       require_valid_nargs nargs
       require_valid_nargs nrets
       LibDUK.safe_call ctx, block, nargs, nrets
-    end
-
-    def return(ret_val : Int32)
-      ret_val
     end
 
     private def require_valid_nargs(nargs : Int32) # :nodoc:
