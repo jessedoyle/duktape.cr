@@ -16,14 +16,20 @@ module Duktape
       time
     end
 
-    def milli_to_secs(milli : Int32 | Int64)
+    def milli_to_sec_time_t(milli : Int32 | Int64)
       LibC::TimeT.cast milli.to_i64/1000
     end
 
-    def milli_to_nano(milli : Int32 | Int64)
+    def milli_to_micro_usec_t(milli : Int32 | Int64)
       milli = milli.to_i64
       secs  = milli/1000
       LibC::UsecT.cast((milli*1000) - (secs*1_000_000))
+    end
+
+    def timeout_timeval(timeout : Int64)
+      sec  = milli_to_sec_time_t timeout
+      usec = milli_to_micro_usec_t timeout
+      LibC::TimeVal.new tv_sec: sec, tv_usec: usec
     end
   end
 end

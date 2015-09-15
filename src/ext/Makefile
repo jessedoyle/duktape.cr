@@ -17,7 +17,7 @@ DUK_INTERNAL_DECL duk_bool_t duk_cr_timeout(void *udata) \
 { \
 	if (udata) \
 	{ \
-		int rc; \
+		duk_ret_t rc; \
 		struct timeout_data data = *(struct timeout_data*) udata; \
 		struct timeval now; \
 		struct timeval diff; \
@@ -54,7 +54,7 @@ DUK_OPTS = \
 	-DDUK_OPT_INTERRUPT_COUNTER \
 	-DDUK_OPT_FASTINT \
 	-DDUK_OPT_DECLARE="$$DUK_TIMEOUT_C" \
-	-DDUK_OPT_EXEC_TIMEOUT_CHECK="duk_cr_timeout"
+	-DDUK_OPT_EXEC_TIMEOUT_CHECK="duk_cr_timeout" \
 	-DDUK_OPT_TARGET_INFO=\"duktape.cr\"
 CFLAGS = \
 	-Wall \

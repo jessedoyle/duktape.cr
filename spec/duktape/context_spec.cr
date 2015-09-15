@@ -1,7 +1,7 @@
 require "../spec_helper"
 
 describe Duktape::Context do
-  describe "#initialize" do
+  describe "initialize" do
     it "should return a new context object" do
       ctx = Duktape::Context.new
 
@@ -9,7 +9,7 @@ describe Duktape::Context do
     end
   end
 
-  describe "#finalize" do
+  describe "finalize" do
     it "should destroy the heap when finalized" do
       ctx = Duktape::Context.new
       ctx.finalize
@@ -18,7 +18,7 @@ describe Duktape::Context do
     end
   end
 
-  describe "#raw" do
+  describe "raw" do
     it "should return a LibDUK::Context" do
       ctx = Duktape::Context.new
       raw = ctx.raw
@@ -43,7 +43,7 @@ describe Duktape::Context do
     end
   end
 
-  describe "#heap_destroyed?" do
+  describe "heap_destroyed?" do
     it "returns false on initialization" do
       ctx = Duktape::Context.new
 
@@ -58,11 +58,27 @@ describe Duktape::Context do
     end
   end
 
-  describe "#sandbox?" do
+  describe "sandbox?" do
     it "should return false" do
       ctx = Duktape::Context.new
 
       ctx.sandbox?.should be_false
+    end
+  end
+
+  describe "timeout?" do
+    it "should return false" do
+      ctx = Duktape::Context.new
+
+      ctx.timeout?.should be_false
+    end
+  end
+
+  describe "timeout" do
+    it "should return nil" do
+      ctx = Duktape::Context.new
+
+      ctx.timeout.should eq(nil)
     end
   end
 end
