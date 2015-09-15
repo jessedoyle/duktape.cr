@@ -95,6 +95,44 @@ describe Duktape::API::Object do
     end
   end
 
+  describe "instanceof" do
+    it "should return true if one instanceof(two)" do
+      ctx = Duktape::Context.new
+      ctx.push_error_object 101, "Test"
+      ctx.get_global_string "Error"
+
+      ctx.instanceof(-2, -1).should be_true
+    end
+
+    it "should raise if either index is not an object" do
+      ctx = Duktape::Context.new
+      ctx << 1
+      ctx << 2
+
+      expect_raises Duktape::TypeError, /invalid object/ do
+        ctx.instanceof(-2, -1)
+      end
+    end
+
+    it "should raise on invalid index (one)" do
+      ctx = Duktape::Context.new
+      ctx.push_object
+
+      expect_raises Duktape::StackError, /invalid index/ do
+        ctx.instanceof(-2, -1)
+      end
+    end
+
+    it "should raise on invalid index (two)" do
+      ctx = Duktape::Context.new
+      ctx.push_object
+
+      expect_raises Duktape::StackError, /invalid index/ do
+        ctx.instanceof(-1, -2)
+      end
+    end
+  end
+
   describe "next" do
     it "should return true until enumerated set" do
       ctx = Duktape::Context.new

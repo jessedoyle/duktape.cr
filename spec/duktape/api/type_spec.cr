@@ -283,6 +283,28 @@ describe Duktape::API::Type do
     end
   end
 
+  describe "is_external_buffer" do
+    it "should return true if buffer is external" do
+      ctx = Duktape::Context.new
+      ctx.push_external_buffer
+
+      ctx.is_external_buffer(-1).should be_true
+    end
+
+    it "should return false for non-external buffer" do
+      ctx = Duktape::Context.new
+      ctx.push_dynamic_buffer 2
+
+      ctx.is_external_buffer(-1).should be_false
+    end
+
+    it "should return false on invalid index" do
+      ctx = Duktape::Context.new
+
+      ctx.is_external_buffer(-1).should be_false
+    end
+  end
+
   describe "is_fixed_buffer" do
     it "should return true when element is a fixed buffer" do
       ctx = Duktape::Context.new
@@ -520,9 +542,7 @@ describe Duktape::API::Type do
     it "should return false on invalid index" do
       ctx = Duktape::Context.new
 
-      # NOTE: Bug in Duktape? Should return zero (false) here
-      # ctx.is_primitive(-1).should be_false
-      ctx.is_primitive(-1).should be_true
+      ctx.is_primitive(-1).should be_false
     end
   end
 
@@ -597,25 +617,6 @@ describe Duktape::API::Type do
       ctx = Duktape::Context.new
 
       ctx.is_undefined(-1).should be_false
-    end
-  end
-
-  describe "resize_buffer" do
-    it "should resize a buffer and not raise" do
-      ctx = Duktape::Context.new
-      ctx.push_dynamic_buffer 10
-      buf = ctx.resize_buffer -1, 10
-
-      buf.class.should eq(Pointer(Void))
-    end
-
-    it "should raise if buffer is not dynamic" do
-      ctx = Duktape::Context.new
-      ctx.push_fixed_buffer 10
-
-      expect_raises Duktape::TypeError, /invalid dynamic buffer/ do
-        ctx.resize_buffer -1, 10
-      end
     end
   end
 end

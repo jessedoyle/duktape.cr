@@ -8,23 +8,24 @@ require "./api/**"
 
 module Duktape
   class Context
-    include API::Call
-    include API::Coercion
-    include API::Compile
-    include API::Conversion
-    include API::Debug
-    include API::ErrorHandling
-    include API::Eval
-    include API::Get
-    include API::Heap
-    include API::Object
-    include API::Pop
-    include API::Prop
-    include API::Push
-    include API::Require
-    include API::Stack
-    include API::Strings
-    include API::Type
+    include Duktape::API::Buffer
+    include Duktape::API::Call
+    include Duktape::API::Coercion
+    include Duktape::API::Compile
+    include Duktape::API::Conversion
+    include Duktape::API::Debug
+    include Duktape::API::ErrorHandling
+    include Duktape::API::Eval
+    include Duktape::API::Get
+    include Duktape::API::Heap
+    include Duktape::API::Object
+    include Duktape::API::Pop
+    include Duktape::API::Prop
+    include Duktape::API::Push
+    include Duktape::API::Require
+    include Duktape::API::Stack
+    include Duktape::API::Strings
+    include Duktape::API::Type
 
     def initialize
       @ctx = Duktape.create_heap_default

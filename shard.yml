@@ -5,4 +5,4 @@ authors:
   - Jesse Doyle <jdoyle@ualberta.ca>
 
 scripts:
-  postinstall: "cd ext && make libduktape"
+  postinstall: "make -C ext cleanlib libduktape"

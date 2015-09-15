@@ -50,12 +50,12 @@ endef
 export DUK_TIMEOUT_C
 
 DUK_OPTS = \
-	-DDUK_OPT_DEEP_C_STACK \
 	-DDUK_OPT_DEBUGGER_SUPPORT \
 	-DDUK_OPT_INTERRUPT_COUNTER \
 	-DDUK_OPT_FASTINT \
 	-DDUK_OPT_DECLARE="$$DUK_TIMEOUT_C" \
 	-DDUK_OPT_EXEC_TIMEOUT_CHECK="duk_cr_timeout"
+	-DDUK_OPT_TARGET_INFO=\"duktape.cr\"
 CFLAGS = \
 	-Wall \
 	-c \
@@ -73,7 +73,7 @@ $(LIBDIR)/libduktape.a:
 	ar rcs $(LIBDIR)/libduktape.a $(OUTPUT)/libduktape.o
 $(INCLUDEDIR)/duktape.h:
 	@mkdir -p $(INCLUDEDIR)
-	cp $(EXT)/duktape.h $(INCLUDEDIR)/duktape.h
+	cp $(EXT)/duktape.h $(EXT)/duk_config.h $(INCLUDEDIR)
 clean:
 	rm -rf $(OUTPUT)
 	rm -rf $(CURRENT)/.crystal

@@ -354,4 +354,46 @@ describe Duktape::API::Compile do
       end
     end
   end
+
+  describe "dump_function" do
+    it "should dump a buffer containing function bytecode" do
+      ctx = Duktape::Context.new
+      ctx.eval <<-JS
+        (function helloWorld() { print('hello world'); })
+      JS
+      ctx.dump_function
+
+      last_stack_type(ctx).should be_js_type(:buffer)
+    end
+  end
+
+  describe "load_function" do
+    it "should load bytecode from a buffer" do
+      ctx = Duktape::Context.new
+      ctx.eval <<-JS
+        (function helloWorld() { print('hello world'); })
+      JS
+      ctx.dump_function
+      ctx.load_function
+
+      last_stack_type(ctx).should be_js_type(:object)
+    end
+
+    it "should raise if stack top is not buffer" do
+      ctx = Duktape::Context.new
+      ctx << 1
+
+      expect_raises Duktape::TypeError, /not buffer/ do
+        ctx.load_function
+      end
+    end
+
+    it "should raise if stack is empty" do
+      ctx = Duktape::Context.new
+
+      expect_raises Duktape::StackError, /invalid index/ do
+        ctx.load_function
+      end
+    end
+  end
 end

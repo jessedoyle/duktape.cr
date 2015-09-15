@@ -83,6 +83,10 @@ module Duktape
       LibDUK.get_error_code(ctx, index) != 0
     end
 
+    def is_external_buffer(index : Int32)
+      LibDUK.is_external_buffer(ctx, index) == 1
+    end
+
     def is_fixed_buffer(index : Int32)
       LibDUK.is_fixed_buffer(ctx, index) == 1
     end
@@ -132,7 +136,16 @@ module Duktape
     end
 
     def is_primitive(index : Int32)
-      LibDUK.is_primitive(ctx, index) == 1
+      mask = [
+        :undefined,
+        :null,
+        :boolean,
+        :string,
+        :buffer,
+        :pointer,
+        :lightfunc
+      ]
+      check_type_mask index, mask
     end
 
     def is_proc(index : Int32)
@@ -153,16 +166,6 @@ module Duktape
 
     def is_undefined(index : Int32)
       LibDUK.is_undefined(ctx, index) == 1
-    end
-
-    def resize_buffer(index : Int32, size : Int32)
-      require_valid_index index
-      unless is_dynamic_buffer index
-        raise TypeError.new \
-        "invalid dynamic buffer"
-      end
-
-      LibDUK.resize_buffer ctx, index, size
     end
   end
 end
