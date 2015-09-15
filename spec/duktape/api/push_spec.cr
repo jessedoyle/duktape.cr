@@ -152,6 +152,15 @@ describe Duktape::API::Push do
     end
   end
 
+  describe "push_external_buffer" do
+    it "should push an external buffer to the stack" do
+      ctx.push_external_buffer
+
+      last_stack_type(ctx).should be_js_type(:buffer)
+      ctx.is_external_buffer(-1).should be_true
+    end
+  end
+
   describe "push_false" do
     it "should push false onto the stack" do
       ctx.push_false

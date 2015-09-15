@@ -8,6 +8,7 @@ require "./api/**"
 
 module Duktape
   class Context
+    include Duktape::API::Buffer
     include Duktape::API::Call
     include Duktape::API::Coercion
     include Duktape::API::Compile

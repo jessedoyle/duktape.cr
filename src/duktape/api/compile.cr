@@ -87,5 +87,14 @@ module Duktape
       err = compile_string_filename src, flags
       raise_error err
     end
+
+    def dump_function
+      LibDUK.dump_function ctx
+    end
+
+    def load_function
+      require_buffer -1 # Stack Top
+      LibDUK.load_function ctx
+    end
   end
 end
