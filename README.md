@@ -118,8 +118,6 @@ will raise `Duktape::Error "SyntaxError"`.
 
 You should only execute untrusted javascript code from within a `Duktape::Sandbox` instance. A sandbox isolates code from insecure operations such as Duktape's internal `require` mechanism and the `Duktape` global javascript object.
 
-Note that a sandbox does not currently protect against infinite loops or excessive runtime. Ideally, a timeout mechanism will be available in future releases.
-
 Creating a `Duktape::Context` gives code access to internal Duktape properties:
 
 ```crystal
@@ -127,6 +125,17 @@ ctx = Duktape::Context.new
 ctx.eval! <<-JS
   print(Duktape.version);
 JS
+```
+
+## Setting a Timeout
+
+`Duktape::Sandbox` instances may optionally take an execution timeout limit in milliseconds. This provides protection against infinite loops when executing untrusted code.
+
+A `Dukape::Error "RangError"` exception is raised when the following code executes for longer than specified:
+
+```crystal
+sbx = Duktape::Sandbox.new 500 # 500ms execution time limit
+sbx.eval! "while (true) {}"    # => RangeError
 ```
 
 ## Calling Crystal Code from Javascript
@@ -138,6 +147,8 @@ It is possible to call Crystal code from your javascript:
 ```crystal
   sbx = Duktape::Sandbox.new
 
+  sbx.push_global_object
+
   sbx.push_proc(2) do |ptr| # 2 stack arguments
     env = Duktape::Sandbox.new ptr
     a = env.get_number 0
@@ -146,11 +157,8 @@ It is possible to call Crystal code from your javascript:
     env.return 1 # return success
   end
 
-  sbx.push_int 2
-  sbx.push_int 3
-  sbx.call 2 # 2 stack arguments
-  val = sbx.get_int -1
-  puts val #=> 5
+  sbx.put_prop_string -2, "adder"
+  sbx.eval! "print(adder(2, 3));" # => 5
 ```
 
 ## Contributing
