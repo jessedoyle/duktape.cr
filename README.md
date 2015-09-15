@@ -41,7 +41,7 @@ version: 1.0.0 # your project's version
 dependencies:
   duktape:
     github: jessedoyle/duktape.cr
-    branch: master
+    version: ~> 0.6.0
 ```
 
 then execute:
@@ -50,7 +50,7 @@ then execute:
 shards install
 ```
 
-Note that Shards `v0.3.1` or greater will automatically make the native library. Otherwise you will have to make the library manually by calling `make libduktape` from `libs/duktape/ext`.
+Note that Shards `v0.4.0` or greater will automatically make the native library. Otherwise you will have to make the library manually by calling `make libduktape` from `libs/duktape/ext`.
 
 ## Usage
 
@@ -131,7 +131,7 @@ JS
 
 `Duktape::Sandbox` instances may optionally take an execution timeout limit in milliseconds. This provides protection against infinite loops when executing untrusted code.
 
-A `Dukape::Error "RangError"` exception is raised when the following code executes for longer than specified:
+A `Duktape::Error "RangeError"` exception is raised when the following code executes for longer than specified:
 
 ```crystal
 sbx = Duktape::Sandbox.new 500 # 500ms execution time limit
