@@ -26,7 +26,7 @@ module Duktape
         unless msg.empty?
           text = msg.split ":"
           io << headerize text.shift, color
-          if text.length > 0
+          if text.size > 0
             io << ":"
             io << text.join ":"
           end

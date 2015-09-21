@@ -12,7 +12,7 @@ module Duktape
         "invalid external buffer"
       end
 
-      LibDUK.config_buffer ctx, index, buf.to_unsafe as Void*, buf.length
+      LibDUK.config_buffer ctx, index, buf.to_unsafe as Void*, buf.size
     end
 
     def get_buffer_data(index : Int32)

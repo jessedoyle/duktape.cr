@@ -10,20 +10,20 @@ module Duktape
 
     def initialize(ctx : LibDUK::Context, @msg : String, @err : Int32)
       # Capture the stack for later
-      LibDUK.push_context_dump ctx
-      ptr = LibDUK.to_string ctx, -1
-      @stack = String.new ptr
+      # LibDUK.push_context_dump ctx
+      # ptr = LibDUK.to_string ctx, -1
+      # @stack = String.new ptr
 
       Duktape.logger.fatal "InternalError: #{msg} - #{err}"
-      Duktape.logger.debug "STACK: #{stack}"
+      # Duktape.logger.debug "STACK: #{stack}"
 
       # Cleanup
-      LibDUK.destroy_heap ctx
+      # LibDUK.destroy_heap ctx
       super msg
     end
   end
 
-  class HeapError < InternalError
+  class HeapError < Exception
     def initialize(msg : String)
       str = "HeapError: #{msg}"
       Duktape.logger.fatal str
