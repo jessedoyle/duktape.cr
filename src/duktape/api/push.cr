@@ -10,11 +10,11 @@ module Duktape
       push_boolean value
     end
 
-    def <<(value : SignedInt)
+    def <<(value : Int::Signed)
       push_int value
     end
 
-    def <<(value : UInt8 | UInt16 | UInt32 | UInt64)
+    def <<(value : Int::Unsigned)
       push_uint value
     end
 

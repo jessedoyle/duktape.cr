@@ -13,6 +13,7 @@ module Duktape
       @ctx = Duktape.create_heap_default
       @heap_destroyed = false
       @timeout = nil
+      @should_gc = true
       secure!
     end
 
@@ -20,6 +21,9 @@ module Duktape
       @ctx = context
       @heap_destroyed = false
       @timeout = nil
+      # NOTE: Don't automatically destroy the heap
+      # on finalization when given a `LibDUK::Context`.
+      @should_gc = false
       secure!
     end
 
@@ -34,6 +38,7 @@ module Duktape
       end
       @heap_destroyed = false
       @timeout = timeout
+      @should_gc = true
       secure!
     end
 

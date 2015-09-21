@@ -6,31 +6,7 @@ Duktape.cr provides Crystal bindings to the [Duktape](https://github.com/svaaral
 
 ## Installation
 
-Duktape.cr is best installed using either [Shards](https://github.com/ysbaddaden/shards) or the Crystal Package Manager.
-
-### Via Crystal Package Manager
-
-Add this to your `Projectfile`:
-
-```crystal
-deps do
-  github "jessedoyle/duktape.cr", name: "duktape"
-end
-```
-
-then execute:
-
-```bash
-crystal deps
-```
-
-Finally build the native Duktape library:
-
-```bash
-make -C libs/duktape/ext libduktape
-```
-
-### Via Shards
+Duktape.cr is best installed using [Shards](https://github.com/ysbaddaden/shards).
 
 Add this to your `shard.yml`:
 
@@ -41,7 +17,7 @@ version: 1.0.0 # your project's version
 dependencies:
   duktape:
     github: jessedoyle/duktape.cr
-    version: ~> 0.6.0
+    version: ~> 0.6.1
 ```
 
 then execute:
@@ -50,7 +26,7 @@ then execute:
 shards install
 ```
 
-Note that Shards `v0.4.0` or greater will automatically make the native library. Otherwise you will have to make the library manually by calling `make libduktape` from `libs/duktape/ext`.
+Shards `v0.4.0` or greater will automatically make the native library. You can make the library manually by calling `make libduktape` from `libs/duktape/ext`.
 
 ## Usage
 

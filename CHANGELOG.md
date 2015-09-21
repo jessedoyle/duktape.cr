@@ -1,3 +1,9 @@
+# v0.6.1 - September 21, 2015
+
+- Update to Crystal `v0.8.0` syntax/compatibility.
+- Fix a potential use-after-free scenario that may occur when `Context` or `Sandbox` instances were garbage-collected by Crystal.
+- The Duktape heap is no longer destroyed when a `Duktape::InternalError` is thrown in Crystal. Instead, the heap will be destroyed automatically upon finalization.
+
 # v0.6.0 - September 14, 2015
 
 - Update Duktape to `v1.3.0`. This update does not break exisiting functionality. See [release info](https://github.com/svaarala/duktape/blob/master/RELEASES.rst).

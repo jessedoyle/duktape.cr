@@ -62,6 +62,21 @@ describe Duktape::Sandbox do
     end
   end
 
+  describe "should_gc?" do
+    it "should return true for a newly-created heap" do
+      sbx = Duktape::Sandbox.new
+
+      sbx.should_gc?.should be_true
+    end
+
+    it "should return false when initialized as wrapper obj" do
+      sbx = Duktape::Sandbox.new
+      wrapper = Duktape::Sandbox.new sbx.raw
+
+      wrapper.should_gc?.should be_false
+    end
+  end
+
   describe "timeout?" do
     it "should return false when no timeout" do
       sbx = Duktape::Sandbox.new

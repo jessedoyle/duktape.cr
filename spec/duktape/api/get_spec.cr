@@ -28,7 +28,7 @@ describe Duktape::API::Get do
       slc = ctx.get_buffer -1
 
       slc.class.should eq(Slice(UInt8))
-      slc.length.should eq(10)
+      slc.size.should eq(10)
     end
 
     it "should return a null pointer on non-buffer value" do
@@ -120,7 +120,7 @@ describe Duktape::API::Get do
       tup = ctx.get_lstring -1
 
       tup[0].should eq(str)
-      tup[1].should eq(str.length)
+      tup[1].should eq(str.size)
     end
 
     it "should return size of 0 and nil on invalid element" do

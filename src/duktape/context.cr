@@ -30,15 +30,17 @@ module Duktape
     def initialize
       @ctx = Duktape.create_heap_default
       @heap_destroyed = false
+      @should_gc = true
     end
 
     def initialize(context : LibDUK::Context)
       @ctx = context
       @heap_destroyed = false
+      @should_gc = false
     end
 
     def finalize
-      destroy_heap!
+      destroy_heap! if should_gc?
     end
 
     def ctx
@@ -63,6 +65,10 @@ module Duktape
       end
 
       @ctx
+    end
+
+    def should_gc?
+      @should_gc
     end
 
     def sandbox?

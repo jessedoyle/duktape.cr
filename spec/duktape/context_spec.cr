@@ -58,6 +58,21 @@ describe Duktape::Context do
     end
   end
 
+  describe "should_gc?" do
+    it "should return true for a newly-created heap" do
+      ctx = Duktape::Context.new
+
+      ctx.should_gc?.should be_true
+    end
+
+    it "should return false when initialized as wrapper obj" do
+      ctx = Duktape::Context.new
+      wrapper = Duktape::Context.new ctx.raw
+
+      wrapper.should_gc?.should be_false
+    end
+  end
+
   describe "sandbox?" do
     it "should return false" do
       ctx = Duktape::Context.new

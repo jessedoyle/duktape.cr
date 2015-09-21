@@ -10,7 +10,7 @@ describe Duktape::API::Buffer do
       slc = ctx.get_buffer_data -1
 
       ctx.is_external_buffer(-1).should be_true
-      slc.length.should eq(4)
+      slc.size.should eq(4)
     end
 
     it "should raise when not external buffer" do
@@ -42,7 +42,7 @@ describe Duktape::API::Buffer do
       ret = ctx.get_buffer_data -1
 
       ret.should be_a(Slice(UInt8))
-      ret.length.should eq(4)
+      ret.size.should eq(4)
       String.new(ret).should eq("test")
     end
 
@@ -51,14 +51,14 @@ describe Duktape::API::Buffer do
       ctx << "not buffer"
       buf = ctx.get_buffer_data -1
 
-      buf.length.should eq(0)
+      buf.size.should eq(0)
     end
 
     it "should return a 0 size slice on invalid index" do
       ctx = Duktape::Context.new
       buf = ctx.get_buffer_data -1
 
-      buf.length.should eq(0)
+      buf.size.should eq(0)
     end
   end
 
@@ -98,7 +98,7 @@ describe Duktape::API::Buffer do
       ret = ctx.require_buffer_data -1
 
       ret.should be_a(Slice(UInt8))
-      ret.length.should eq(4)
+      ret.size.should eq(4)
       String.new(ret).should eq("test")
     end
 
@@ -147,8 +147,8 @@ describe Duktape::API::Buffer do
       cur = ctx.get_buffer_data -1
 
       buf.should be_a(Slice(UInt8))
-      buf.length.should eq(2)
-      cur.length.should eq(0)
+      buf.size.should eq(2)
+      cur.size.should eq(0)
     end
 
     it "should raise if object is not a dynamic buffer" do
