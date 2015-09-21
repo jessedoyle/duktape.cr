@@ -168,7 +168,7 @@ describe Duktape::API::Compile do
   describe "compile_lstring" do
     it "should compile a valid string with length" do
       ctx = Duktape::Context.new
-      val = ctx.compile_lstring valid_js, valid_js.length
+      val = ctx.compile_lstring valid_js, valid_js.size
 
       ctx.is_function(-1).should be_true
       val.should eq(0)
@@ -176,7 +176,7 @@ describe Duktape::API::Compile do
 
     it "should return non-zero on invalid lstring" do
       ctx = Duktape::Context.new
-      val = ctx.compile_lstring invalid_js, invalid_js.length
+      val = ctx.compile_lstring invalid_js, invalid_js.size
 
       ctx.safe_to_string(-1).should match(/SyntaxError/)
       val.should_not eq(0)
@@ -186,7 +186,7 @@ describe Duktape::API::Compile do
   describe "compile_lstring!" do
     it "should compile a valid string with length" do
       ctx = Duktape::Context.new
-      val = ctx.compile_lstring! valid_js, valid_js.length
+      val = ctx.compile_lstring! valid_js, valid_js.size
 
       ctx.is_function(-1).should be_true
       val.should eq(0)
@@ -196,7 +196,7 @@ describe Duktape::API::Compile do
       ctx = Duktape::Context.new
 
       expect_raises Duktape::Error, /SyntaxError/ do
-        ctx.compile_lstring! invalid_js, invalid_js.length
+        ctx.compile_lstring! invalid_js, invalid_js.size
       end
     end
   end
@@ -206,14 +206,14 @@ describe Duktape::API::Compile do
       ctx = Duktape::Context.new
 
       expect_raises Duktape::StackError, /invalid index/ do
-        ctx.compile_lstring_filename valid_js, valid_js.length
+        ctx.compile_lstring_filename valid_js, valid_js.size
       end
     end
 
     it "should compile a valid js file" do
       ctx = Duktape::Context.new
       ctx << "test.js"
-      err = ctx.compile_lstring_filename valid_js, valid_js.length
+      err = ctx.compile_lstring_filename valid_js, valid_js.size
 
       err.should eq(0)
       ctx.is_function(-1).should be_true
@@ -222,7 +222,7 @@ describe Duktape::API::Compile do
     it "should return non-zero on invalid js" do
       ctx = Duktape::Context.new
       ctx << "test.js"
-      err = ctx.compile_lstring_filename invalid_js, invalid_js.length
+      err = ctx.compile_lstring_filename invalid_js, invalid_js.size
       str = ctx.safe_to_string -1
 
       err.should_not eq(0)
@@ -235,14 +235,14 @@ describe Duktape::API::Compile do
       ctx = Duktape::Context.new
 
       expect_raises Duktape::StackError, /invalid index/ do
-        ctx.compile_lstring_filename! valid_js, valid_js.length
+        ctx.compile_lstring_filename! valid_js, valid_js.size
       end
     end
 
     it "should compile a valid js file" do
       ctx = Duktape::Context.new
       ctx << "test.js"
-      err = ctx.compile_lstring_filename! valid_js, valid_js.length
+      err = ctx.compile_lstring_filename! valid_js, valid_js.size
 
       err.should eq(0)
       ctx.is_function(-1).should be_true
@@ -253,7 +253,7 @@ describe Duktape::API::Compile do
       ctx << "test.js"
 
       expect_raises Duktape::Error, /SyntaxError/ do
-        ctx.compile_lstring_filename! invalid_js, invalid_js.length
+        ctx.compile_lstring_filename! invalid_js, invalid_js.size
       end
     end
   end

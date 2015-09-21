@@ -31,7 +31,7 @@ describe Duktape::API::Require do
       buf = ctx.require_buffer(-1)
 
       buf.class.should eq(Slice(UInt8))
-      buf.length.should eq(2)
+      buf.size.should eq(2)
     end
 
     it "should raise TypeError if not a buffer" do
@@ -102,7 +102,7 @@ describe Duktape::API::Require do
       tup = ctx.require_lstring(-1)
 
       tup[0].should eq(str)
-      tup[1].should eq(str.length)
+      tup[1].should eq(str.size)
     end
 
     it "should return a empty string and size of 0" do

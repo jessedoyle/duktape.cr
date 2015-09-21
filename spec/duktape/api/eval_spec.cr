@@ -162,7 +162,7 @@ describe Duktape::API::Eval do
   describe "eval_lstring" do
     it "should evaluate a valid js string and length" do
       ctx = Duktape::Context.new
-      err = ctx.eval_lstring valid_js, valid_js.length
+      err = ctx.eval_lstring valid_js, valid_js.size
 
       err.should eq(0)
     end
@@ -178,7 +178,7 @@ describe Duktape::API::Eval do
   describe "eval_lstring!" do
     it "should return 0 on valid js" do
       ctx = Duktape::Context.new
-      err = ctx.eval_lstring! valid_js, valid_js.length
+      err = ctx.eval_lstring! valid_js, valid_js.size
 
       err.should eq(0)
     end
@@ -187,7 +187,7 @@ describe Duktape::API::Eval do
       ctx = Duktape::Context.new
 
       expect_raises Duktape::Error, /ReferenceError/ do
-        ctx.eval_lstring! invalid_js, invalid_js.length
+        ctx.eval_lstring! invalid_js, invalid_js.size
       end
     end
 
@@ -203,7 +203,7 @@ describe Duktape::API::Eval do
   describe "eval_lstring_noresult" do
     it "should evaluate valid js without leaving a stack value" do
       ctx = Duktape::Context.new
-      err = ctx.eval_lstring_noresult valid_js, valid_js.length
+      err = ctx.eval_lstring_noresult valid_js, valid_js.size
 
       err.should eq(0)
       last_stack_type(ctx).should be_js_type(:none)
@@ -211,7 +211,7 @@ describe Duktape::API::Eval do
 
     it "should not leave an error on stack for invalid js" do
       ctx = Duktape::Context.new
-      err = ctx.eval_lstring_noresult invalid_js, invalid_js.length
+      err = ctx.eval_lstring_noresult invalid_js, invalid_js.size
 
       err.should_not eq(0)
       last_stack_type(ctx).should be_js_type(:none)
@@ -228,7 +228,7 @@ describe Duktape::API::Eval do
   describe "eval_lstring_noresult!" do
     it "should return 0 on valid js" do
       ctx = Duktape::Context.new
-      err = ctx.eval_lstring_noresult! valid_js, valid_js.length
+      err = ctx.eval_lstring_noresult! valid_js, valid_js.size
 
       err.should eq(0)
     end
@@ -237,7 +237,7 @@ describe Duktape::API::Eval do
       ctx = Duktape::Context.new
 
       expect_raises Duktape::StackError, /error object missing/ do
-        ctx.eval_lstring_noresult! invalid_js, invalid_js.length
+        ctx.eval_lstring_noresult! invalid_js, invalid_js.size
       end
     end
 

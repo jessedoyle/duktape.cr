@@ -97,7 +97,7 @@ describe Duktape::API::Push do
       slc = ctx.push_buffer 4, false
 
       slc.class.should eq(Slice(UInt8))
-      slc.length.should eq(4)
+      slc.size.should eq(4)
     end
 
     it "should raise when negative size" do
