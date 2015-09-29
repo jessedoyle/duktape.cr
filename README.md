@@ -1,5 +1,6 @@
 # Duktape.cr
 
+[![GitHub version](https://badge.fury.io/gh/jessedoyle%2Fduktape.cr.svg)](http://badge.fury.io/gh/jessedoyle%2Fduktape.cr)
 [![Build Status](https://travis-ci.org/jessedoyle/duktape.cr.svg?branch=master)](https://travis-ci.org/jessedoyle/duktape.cr)
 
 Duktape.cr provides Crystal bindings to the [Duktape](https://github.com/svaarala/duktape) javascript engine.
