@@ -27,8 +27,9 @@ describe "UglifyJS" do
   it "should uglify some javascript" do
     ctx = Duktape::Context.new
     ctx.eval_file! "#{JS_SOURCE_PATH}/uglify.js"
-    ctx.dump!
-    ctx.eval_string!("uglify('function add(x, y) {  return x + y;  }');")
+    ctx.eval_string <<-JS
+      uglify('function add(x, y) {  return x + y;  }');
+    JS
     ret = ctx.get_string -1
 
     ret.should eq("function add(x,y){return x+y}")
