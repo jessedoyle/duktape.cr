@@ -1,6 +1,5 @@
 require "../../spec_helper"
 
-
 describe Duktape::API::Type do
   describe "check_type" do
     it "should return true if value is of type" do
@@ -533,7 +532,7 @@ describe Duktape::API::Type do
     end
 
     it "should return false on Object" do
-      ctx  = Duktape::Context.new
+      ctx = Duktape::Context.new
       ctx.push_object
 
       ctx.is_primitive(-1).should be_false

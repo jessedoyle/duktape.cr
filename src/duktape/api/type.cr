@@ -15,7 +15,7 @@ module Duktape
     LibDUK::TYPE_OBJECT    => :object,
     LibDUK::TYPE_BUFFER    => :buffer,
     LibDUK::TYPE_POINTER   => :pointer,
-    LibDUK::TYPE_LIGHTFUNC => :lightfunc
+    LibDUK::TYPE_LIGHTFUNC => :lightfunc,
   }
 
   TYPE_TO_NUM = TYPES.invert
@@ -126,7 +126,7 @@ module Duktape
         :object,
         :buffer,
         :pointer,
-        :lightfunc
+        :lightfunc,
       ]
       check_type_mask index, mask
     end
@@ -143,7 +143,7 @@ module Duktape
         :string,
         :buffer,
         :pointer,
-        :lightfunc
+        :lightfunc,
       ]
       check_type_mask index, mask
     end

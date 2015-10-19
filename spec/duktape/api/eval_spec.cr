@@ -84,7 +84,7 @@ describe Duktape::API::Eval do
       ctx = Duktape::Context.new
       err = ctx.eval_file "#{JS_SOURCE_PATH}/valid.js"
 
-      err.should eq(0);
+      err.should eq(0)
     end
 
     it "should return non-zero on file containing invalid js" do
@@ -125,7 +125,7 @@ describe Duktape::API::Eval do
       ctx = Duktape::Context.new
       err = ctx.eval_file_noresult "#{JS_SOURCE_PATH}/valid.js"
 
-      last_stack_type(ctx).should be_js_type(:none);
+      last_stack_type(ctx).should be_js_type(:none)
       err.should eq(0)
     end
 

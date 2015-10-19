@@ -60,8 +60,7 @@ module Duktape
 
     def raw
       if heap_destroyed?
-        raise HeapError.new \
-        "heap destroyed"
+        raise HeapError.new "heap destroyed"
       end
 
       @ctx

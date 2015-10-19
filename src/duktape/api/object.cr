@@ -14,8 +14,7 @@ module Duktape
     def enum(index : Int32, flags : UInt32)
       require_valid_index index
       unless is_object index
-        raise TypeError.new \
-        "invalid object"
+        raise TypeError.new "invalid object"
       end
 
       LibDUK.enum ctx, index, flags
@@ -33,8 +32,7 @@ module Duktape
     def get_prototype(index : Int32)
       require_valid_index index
       unless is_object index
-        raise TypeError.new \
-        "invalid object"
+        raise TypeError.new "invalid object"
       end
 
       LibDUK.get_prototype ctx, index
@@ -45,8 +43,7 @@ module Duktape
       require_valid_index two
 
       unless is_object(one) || is_object(two)
-        raise TypeError.new \
-        "invalid object"
+        raise TypeError.new "invalid object"
       end
 
       LibDUK.instanceof(ctx, one, two) == 1
@@ -61,8 +58,7 @@ module Duktape
     def set_finalizer(index : Int32)
       require_valid_index index
       unless is_object index
-        raise TypeError.new \
-        "invalid object"
+        raise TypeError.new "invalid object"
       end
 
       LibDUK.set_finalizer ctx, index
@@ -71,8 +67,7 @@ module Duktape
     def set_global_object
       require_valid_index -1
       unless is_object -1
-        raise TypeError.new \
-        "invalid object"
+        raise TypeError.new "invalid object"
       end
 
       LibDUK.set_global_object ctx
@@ -81,8 +76,7 @@ module Duktape
     def set_prototype(index : Int32)
       require_valid_index index
       unless is_object index
-        raise TypeError.new \
-        "invalid object"
+        raise TypeError.new "invalid object"
       end
 
       LibDUK.set_prototype ctx, index

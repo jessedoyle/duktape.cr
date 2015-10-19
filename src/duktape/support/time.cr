@@ -9,8 +9,7 @@ module Duktape
     def current_time_nano
       LibC.gettimeofday(out time, nil).tap do |rc|
         unless rc == 0
-          raise Error.new \
-          "can't get system time"
+          raise Error.new "can't get system time"
         end
       end
       time
@@ -22,12 +21,12 @@ module Duktape
 
     def milli_to_micro_usec_t(milli : Int32 | Int64)
       milli = milli.to_i64
-      secs  = milli/1000
-      LibC::UsecT.new((milli*1000) - (secs*1_000_000))
+      secs = milli / 1000
+      LibC::UsecT.new((milli * 1000) - (secs * 1_000_000))
     end
 
     def timeout_timeval(timeout : Int64)
-      sec  = milli_to_sec_time_t timeout
+      sec = milli_to_sec_time_t timeout
       usec = milli_to_micro_usec_t timeout
       LibC::TimeVal.new tv_sec: sec, tv_usec: usec
     end

@@ -11,4 +11,3 @@ require "./support/**"
 Duktape.logger.level = Logger::Severity::UNKNOWN
 
 JS_SOURCE_PATH = "#{__DIR__}/javascripts"
-

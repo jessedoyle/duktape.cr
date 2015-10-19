@@ -6,12 +6,12 @@ require "../../spec_helper"
 # to test that functionality here.
 
 describe Duktape::API::Prop do
-  flags = LibDUK::DEFPROP_HAVE_VALUE        |
-          LibDUK::DEFPROP_HAVE_WRITABLE     |
-          LibDUK::DEFPROP_WRITABLE          |
-          LibDUK::DEFPROP_HAVE_ENUMERABLE   |
-          LibDUK::DEFPROP_HAVE_CONFIGURABLE |
-          LibDUK::DEFPROP_CONFIGURABLE
+  flags = LibDUK::DEFPROP_HAVE_VALUE |
+    LibDUK::DEFPROP_HAVE_WRITABLE |
+    LibDUK::DEFPROP_WRITABLE |
+    LibDUK::DEFPROP_HAVE_ENUMERABLE |
+    LibDUK::DEFPROP_HAVE_CONFIGURABLE |
+    LibDUK::DEFPROP_CONFIGURABLE
 
   describe "def_prop" do
     it "should define a property on an object" do
@@ -444,7 +444,7 @@ describe Duktape::API::Prop do
 
   describe "put_prop_index" do
     it "should put a property corresponding to index" do
-      ctx =  Duktape::Context.new
+      ctx = Duktape::Context.new
       ctx.push_object
       ctx << "val"
       val = ctx.put_prop_index(-2, 123_u32)
