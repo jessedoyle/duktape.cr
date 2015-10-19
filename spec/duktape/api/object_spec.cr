@@ -163,7 +163,6 @@ describe Duktape::API::Object do
       ctx.push_object
       ctx.push_proc(1) do |ptr|
         env = Duktape::Context.new ptr
-        puts "being finalized"
         env.return 0
       end
       ctx.set_finalizer(-2)
