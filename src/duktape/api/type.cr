@@ -6,17 +6,17 @@
 
 module Duktape
   TYPES = {
-            LibDUK::TYPE_NONE      => :none,
-            LibDUK::TYPE_UNDEFINED => :undefined,
-            LibDUK::TYPE_NULL      => :null,
-            LibDUK::TYPE_BOOLEAN   => :boolean,
-            LibDUK::TYPE_NUMBER    => :number,
-            LibDUK::TYPE_STRING    => :string,
-            LibDUK::TYPE_OBJECT    => :object,
-            LibDUK::TYPE_BUFFER    => :buffer,
-            LibDUK::TYPE_POINTER   => :pointer,
-            LibDUK::TYPE_LIGHTFUNC => :lightfunc,
-          }
+    LibDUK::TYPE_NONE      => :none,
+    LibDUK::TYPE_UNDEFINED => :undefined,
+    LibDUK::TYPE_NULL      => :null,
+    LibDUK::TYPE_BOOLEAN   => :boolean,
+    LibDUK::TYPE_NUMBER    => :number,
+    LibDUK::TYPE_STRING    => :string,
+    LibDUK::TYPE_OBJECT    => :object,
+    LibDUK::TYPE_BUFFER    => :buffer,
+    LibDUK::TYPE_POINTER   => :pointer,
+    LibDUK::TYPE_LIGHTFUNC => :lightfunc,
+  }
 
   TYPE_TO_NUM = TYPES.invert
 
@@ -121,13 +121,13 @@ module Duktape
 
     def is_object_coercible(index : Int32)
       mask = [
-               :boolean,
-               :string,
-               :object,
-               :buffer,
-               :pointer,
-               :lightfunc,
-             ]
+        :boolean,
+        :string,
+        :object,
+        :buffer,
+        :pointer,
+        :lightfunc,
+      ]
       check_type_mask index, mask
     end
 
@@ -137,14 +137,14 @@ module Duktape
 
     def is_primitive(index : Int32)
       mask = [
-               :undefined,
-               :null,
-               :boolean,
-               :string,
-               :buffer,
-               :pointer,
-               :lightfunc,
-             ]
+        :undefined,
+        :null,
+        :boolean,
+        :string,
+        :buffer,
+        :pointer,
+        :lightfunc,
+      ]
       check_type_mask index, mask
     end
 

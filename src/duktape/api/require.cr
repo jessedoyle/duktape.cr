@@ -96,14 +96,14 @@ module Duktape
       require_valid_index index
 
       mask = [
-               :boolean,
-               :number,
-               :string,
-               :object,
-               :buffer,
-               :pointer,
-               :lightfunc,
-             ]
+        :boolean,
+        :number,
+        :string,
+        :object,
+        :buffer,
+        :pointer,
+        :lightfunc,
+      ]
 
       unless check_type_mask(index, mask)
         raise TypeError.new "type at #{index} not object coercible"
