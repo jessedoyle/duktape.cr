@@ -3,21 +3,21 @@ require "../../spec_helper"
 describe Duktape::API::Stack do
   describe "check_stack" do
     it "should return true if there is space on stack" do
-      ctx  = Duktape::Context.new
+      ctx = Duktape::Context.new
       fits = ctx.check_stack 10
 
       fits.should be_true
     end
 
     it "should return false on Int32::MAX" do
-      ctx  = Duktape::Context.new
+      ctx = Duktape::Context.new
       fits = ctx.check_stack Int32::MAX
 
       fits.should be_false
     end
 
     it "should return true on negative input" do
-      ctx  = Duktape::Context.new
+      ctx = Duktape::Context.new
       fits = ctx.check_stack -10
 
       fits.should be_true
@@ -26,14 +26,14 @@ describe Duktape::API::Stack do
 
   describe "check_stack_top" do
     it "should return true when space is on stack" do
-      ctx  = Duktape::Context.new
+      ctx = Duktape::Context.new
       fits = ctx.check_stack_top 10
 
       fits.should be_true
     end
 
     it "should return false on Int32::MAX" do
-      ctx  = Duktape::Context.new
+      ctx = Duktape::Context.new
       fits = ctx.check_stack_top Int32::MAX
 
       fits.should be_false
@@ -109,7 +109,7 @@ describe Duktape::API::Stack do
 
   describe "empty?" do
     it "should return true when the stack is empty" do
-      ctx  = Duktape::Context.new
+      ctx = Duktape::Context.new
 
       ctx.empty?.should be_true
     end

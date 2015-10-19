@@ -18,20 +18,20 @@ module Duktape
 
   private def self.make_logger
     Logger.new(STDOUT).tap do |log|
-      log.progname  = "Duktape"
-      log.level     = Logger::Severity::INFO
+      log.progname = "Duktape"
+      log.level = Logger::Severity::INFO
 
       log.formatter = Logger::Formatter.new do |lev, _time, _name, msg, io|
-        color = log_color lev
-        unless msg.empty?
-          text = msg.split ":"
-          io << headerize text.shift, color
-          if text.size > 0
-            io << ":"
-            io << text.join ":"
-          end
-        end
-      end
+                        color = log_color lev
+                        unless msg.empty?
+                          text = msg.split ":"
+                          io << headerize text.shift, color
+                          if text.size > 0
+                            io << ":"
+                            io << text.join ":"
+                          end
+                        end
+                      end
     end
   end
 

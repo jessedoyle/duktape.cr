@@ -10,7 +10,7 @@ module Duktape
       require_valid_index index
       ptr = LibDUK.safe_to_lstring ctx, index, out size
       str = String.new ptr.to_slice(size)
-      { str, size }
+      {str, size}
     end
 
     def safe_to_string(index : Int)
@@ -26,15 +26,14 @@ module Duktape
     def to_buffer(index)
       require_valid_index index
       flags = LibDUK::BUF_MODE_DONTCARE
-      ptr   = LibDUK.to_buffer_raw(ctx, index, out size, flags) as UInt8*
+      ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags) as UInt8*
       ptr.to_slice size
     end
 
     def to_defaultvalue(index : Int, hint = LibDUK::HINT_STRING)
       require_valid_index index
       unless is_object index
-        raise TypeError.new \
-        "invalid object"
+        raise TypeError.new "invalid object"
       end
       LibDUK.to_defaultvalue ctx, index, hint
     end
@@ -42,14 +41,14 @@ module Duktape
     def to_dynamic_buffer(index : Int)
       require_valid_index index
       flags = LibDUK::BUF_MODE_DYNAMIC
-      ptr   = LibDUK.to_buffer_raw(ctx, index, out size, flags) as UInt8*
+      ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags) as UInt8*
       Slice.new ptr, size
     end
 
     def to_fixed_buffer(index : Int)
       require_valid_index index
       flags = LibDUK::BUF_MODE_FIXED
-      ptr   = LibDUK.to_buffer_raw(ctx, index, out size, flags) as UInt8*
+      ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags) as UInt8*
       Slice.new ptr, size
     end
 
@@ -67,7 +66,7 @@ module Duktape
       require_valid_index index
       ptr = LibDUK.to_lstring ctx, index, out size
       str = String.new ptr.to_slice(size)
-      { str, size }
+      {str, size}
     end
 
     def to_null(index : Int)

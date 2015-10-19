@@ -8,8 +8,7 @@ module Duktape
   module API::Buffer
     def config_buffer(index : Int32, buf : Slice(UInt8))
       unless is_external_buffer index
-        raise TypeError.new \
-        "invalid external buffer"
+        raise TypeError.new "invalid external buffer"
       end
 
       LibDUK.config_buffer ctx, index, buf.to_unsafe as Void*, buf.size
@@ -32,8 +31,7 @@ module Duktape
 
     def resize_buffer(index : Int32, size : Int32)
       unless is_dynamic_buffer index
-        raise TypeError.new \
-        "invalid dynamic buffer"
+        raise TypeError.new "invalid dynamic buffer"
       end
 
       LibDUK.resize_buffer ctx, index, size
@@ -41,8 +39,7 @@ module Duktape
 
     def steal_buffer(index : Int32)
       unless is_dynamic_buffer index
-        raise TypeError.new \
-        "invalid dynamic buffer"
+        raise TypeError.new "invalid dynamic buffer"
       end
 
       ptr = LibDUK.steal_buffer ctx, index, out size

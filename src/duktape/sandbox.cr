@@ -30,11 +30,10 @@ module Duktape
     def initialize(timeout : Int32 | Int64)
       timeout = timeout.to_i64
       if timeout < 100
-        raise ArgumentError.new \
-        "timeout must be > 100ms"
+        raise ArgumentError.new "timeout must be > 100ms"
       else
         udata = make_udata timeout
-        @ctx  = Duktape.create_heap_udata udata
+        @ctx = Duktape.create_heap_udata udata
       end
       @heap_destroyed = false
       @timeout = timeout
@@ -52,9 +51,9 @@ module Duktape
 
     private def make_udata(timeout : Int64)
       start = current_time_nano
-      tv    = timeout_timeval timeout
-      data  = LibDUK::TimeoutData.new start: start, timeout: tv
-      slc   = Slice(LibDUK::TimeoutData).new 1, data
+      tv = timeout_timeval timeout
+      data = LibDUK::TimeoutData.new start: start, timeout: tv
+      slc = Slice(LibDUK::TimeoutData).new 1, data
       slc.to_unsafe as Void*
     end
 

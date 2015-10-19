@@ -22,8 +22,7 @@ module Duktape
       raw_ctx = LibDUK.get_context ctx, index
       # May return null pointer
       unless raw_ctx
-        raise StackError.new \
-        "invalid context"
+        raise StackError.new "invalid context"
       end
       Context.new raw_ctx
     end
@@ -53,7 +52,7 @@ module Duktape
         str = nil
       end
 
-      { str, size }
+      {str, size}
     end
 
     def get_number(index : Int32)

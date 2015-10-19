@@ -11,7 +11,7 @@ module Duktape
   module API::Eval
     def eval
       flags = LibDUK::COMPILE_EVAL |
-              LibDUK::COMPILE_SAFE
+                LibDUK::COMPILE_SAFE
 
       LibDUK.push_string ctx, __FILE__
       LibDUK.eval_raw ctx, nil, 0, flags
@@ -34,7 +34,7 @@ module Duktape
       validate_file! path
 
       flags = LibDUK::COMPILE_EVAL |
-              LibDUK::COMPILE_SAFE
+                LibDUK::COMPILE_SAFE
 
       LibDUK.push_string_file_raw ctx, path, 0_u32
       LibDUK.push_string ctx, path
@@ -49,9 +49,9 @@ module Duktape
     def eval_file_noresult(path : String)
       validate_file! path
 
-      flags = LibDUK::COMPILE_EVAL     |
-              LibDUK::COMPILE_SAFE     |
-              LibDUK::COMPILE_NORESULT
+      flags = LibDUK::COMPILE_EVAL |
+                LibDUK::COMPILE_SAFE |
+                LibDUK::COMPILE_NORESULT
 
       LibDUK.push_string_file_raw ctx, path, 0_u32
       LibDUK.push_string ctx, path
@@ -68,9 +68,9 @@ module Duktape
       # methods, so return with an error code.
       return LibDUK::ERR_API_ERROR if length < 0
 
-      flags = LibDUK::COMPILE_EVAL     |
-              LibDUK::COMPILE_SAFE     |
-              LibDUK::COMPILE_NOSOURCE
+      flags = LibDUK::COMPILE_EVAL |
+                LibDUK::COMPILE_SAFE |
+                LibDUK::COMPILE_NOSOURCE
 
       LibDUK.push_string ctx, __FILE__
       LibDUK.eval_raw ctx, src, length, flags
@@ -78,8 +78,7 @@ module Duktape
 
     def eval_lstring!(src : String, length : Int)
       if length < 0
-        raise Error.new \
-        "negative string length"
+        raise Error.new "negative string length"
       end
 
       err = eval_lstring src, length
@@ -91,10 +90,10 @@ module Duktape
       # methods, so return with an error code.
       return LibDUK::ERR_API_ERROR if length < 0
 
-      flags = LibDUK::COMPILE_EVAL     |
-              LibDUK::COMPILE_SAFE     |
-              LibDUK::COMPILE_NOSOURCE |
-              LibDUK::COMPILE_NORESULT
+      flags = LibDUK::COMPILE_EVAL |
+                LibDUK::COMPILE_SAFE |
+                LibDUK::COMPILE_NOSOURCE |
+                LibDUK::COMPILE_NORESULT
 
       LibDUK.push_string ctx, __FILE__
       LibDUK.eval_raw ctx, src, length, flags
@@ -102,8 +101,7 @@ module Duktape
 
     def eval_lstring_noresult!(src : String, length : Int)
       if length < 0
-        raise Error.new \
-        "negative string length"
+        raise Error.new "negative string length"
       end
 
       err = eval_lstring_noresult src, length
@@ -111,9 +109,9 @@ module Duktape
     end
 
     def eval_noresult
-      flags = LibDUK::COMPILE_EVAL     |
-              LibDUK::COMPILE_SAFE     |
-              LibDUK::COMPILE_NORESULT
+      flags = LibDUK::COMPILE_EVAL |
+                LibDUK::COMPILE_SAFE |
+                LibDUK::COMPILE_NORESULT
 
       LibDUK.push_string ctx, __FILE__
       LibDUK.eval_raw ctx, nil, 0, flags
@@ -125,10 +123,10 @@ module Duktape
     end
 
     def eval_string(src : String)
-      flags = LibDUK::COMPILE_EVAL     |
-              LibDUK::COMPILE_NOSOURCE |
-              LibDUK::COMPILE_STRLEN   |
-              LibDUK::COMPILE_SAFE
+      flags = LibDUK::COMPILE_EVAL |
+                LibDUK::COMPILE_NOSOURCE |
+                LibDUK::COMPILE_STRLEN |
+                LibDUK::COMPILE_SAFE
 
       LibDUK.push_string ctx, __FILE__
       LibDUK.eval_raw ctx, src, 0, flags
@@ -140,11 +138,11 @@ module Duktape
     end
 
     def eval_string_noresult(src : String)
-      flags = LibDUK::COMPILE_EVAL     |
-              LibDUK::COMPILE_SAFE     |
-              LibDUK::COMPILE_NOSOURCE |
-              LibDUK::COMPILE_STRLEN   |
-              LibDUK::COMPILE_NORESULT
+      flags = LibDUK::COMPILE_EVAL |
+                LibDUK::COMPILE_SAFE |
+                LibDUK::COMPILE_NOSOURCE |
+                LibDUK::COMPILE_STRLEN |
+                LibDUK::COMPILE_NORESULT
 
       LibDUK.push_string ctx, __FILE__
       LibDUK.eval_raw ctx, src, 0, flags
@@ -161,8 +159,7 @@ module Duktape
     # more information about potential errors.
     private def validate_file!(path : String)
       unless File.exists? path
-        raise Duktape::FileError.new \
-        "invalid file: #{path}"
+        raise Duktape::FileError.new "invalid file: #{path}"
       end
 
       # Can we read the file?
@@ -170,25 +167,22 @@ module Duktape
         file = File.open path, "r"
       rescue ex : Errno
         msg = String.new LibC.strerror(ex.errno)
-        raise Duktape::FileError.new \
-        "#{path} : #{msg}"
+        raise Duktape::FileError.new "#{path} : #{msg}"
       ensure
         file.close if file
       end
     end
 
-    private def raise_error(err) #:nodoc:
+    private def raise_error(err) # :nodoc:
       # We want to return the code (0) if no
       # error is raised
       err.tap do |error|
         unless error == 0
           code = LibDUK.get_error_code ctx, -1
           if code == 0
-            raise StackError.new \
-            "error object missing"
+            raise StackError.new "error object missing"
           else
-            raise Duktape::Error.new \
-            safe_to_string -1
+            raise Duktape::Error.new safe_to_string -1
           end
         end
       end

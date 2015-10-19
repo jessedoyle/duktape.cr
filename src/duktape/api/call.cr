@@ -46,8 +46,7 @@ module Duktape
 
     private def require_valid_nargs(nargs : Int32) # :nodoc:
       if nargs < 0
-        raise Error.new \
-        "negative argument count"
+        raise Error.new "negative argument count"
       end
     end
   end

@@ -10,7 +10,7 @@ describe Duktape::API::Pop do
       top_popped = ctx.get_top
 
       top_with_str.should eq(1)
-      top_popped.should   eq(0)
+      top_popped.should eq(0)
     end
 
     it "should raise StackError if empty" do
@@ -32,7 +32,7 @@ describe Duktape::API::Pop do
       after = ctx.get_top
 
       before.should eq(2)
-      after.should  eq(0)
+      after.should eq(0)
     end
 
     it "should raise if there are not 2 elements" do
@@ -56,7 +56,7 @@ describe Duktape::API::Pop do
       after = ctx.get_top
 
       before.should eq(3)
-      after.should  eq(0)
+      after.should eq(0)
     end
 
     it "should raise if there are less than 3 elements" do
@@ -80,7 +80,7 @@ describe Duktape::API::Pop do
       after = ctx.get_top
 
       before.should eq(4)
-      after.should  eq(0)
+      after.should eq(0)
     end
 
     it "should raise when n is negative" do

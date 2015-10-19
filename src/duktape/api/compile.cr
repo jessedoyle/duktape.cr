@@ -39,8 +39,8 @@ module Duktape
     end
 
     def compile_lstring(src : String, length : Int32, flags = 0_u32 : UInt32)
-      flags |= LibDUK::COMPILE_SAFE     |
-               LibDUK::COMPILE_NOSOURCE
+      flags |= LibDUK::COMPILE_SAFE |
+        LibDUK::COMPILE_NOSOURCE
       push_string __FILE__
       LibDUK.compile_raw ctx, src, length, flags
     end
@@ -52,8 +52,8 @@ module Duktape
 
     def compile_lstring_filename(src : String, length : Int32, flags = 0_u32 : UInt32)
       require_valid_index -1 # filename
-      flags |= LibDUK::COMPILE_SAFE     |
-               LibDUK::COMPILE_NOSOURCE
+      flags |= LibDUK::COMPILE_SAFE |
+        LibDUK::COMPILE_NOSOURCE
       LibDUK.compile_raw ctx, src, length, flags
     end
 
@@ -63,9 +63,9 @@ module Duktape
     end
 
     def compile_string(src : String, flags = 0_u32 : UInt32)
-      flags |= LibDUK::COMPILE_SAFE     |
-               LibDUK::COMPILE_NOSOURCE |
-               LibDUK::COMPILE_STRLEN
+      flags |= LibDUK::COMPILE_SAFE |
+        LibDUK::COMPILE_NOSOURCE |
+        LibDUK::COMPILE_STRLEN
       push_string __FILE__
       LibDUK.compile_raw ctx, src, 0, flags
     end
@@ -77,9 +77,9 @@ module Duktape
 
     def compile_string_filename(src : String, flags = 0_u32 : UInt32)
       require_valid_index -1 # filename
-      flags |= LibDUK::COMPILE_SAFE     |
-               LibDUK::COMPILE_NOSOURCE |
-               LibDUK::COMPILE_STRLEN
+      flags |= LibDUK::COMPILE_SAFE |
+        LibDUK::COMPILE_NOSOURCE |
+        LibDUK::COMPILE_STRLEN
       LibDUK.compile_raw ctx, src, 0, flags
     end
 

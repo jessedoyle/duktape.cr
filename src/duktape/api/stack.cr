@@ -74,8 +74,7 @@ module Duktape
     def require_normalize_index(index : Int32)
       normalize_index(index).tap do |idx|
         if idx < 0
-          raise StackError.new \
-          "invalid index: #{index}"
+          raise StackError.new "invalid index: #{index}"
         end
       end
     end
@@ -83,8 +82,7 @@ module Duktape
     def require_stack(extra : Int32)
       check_stack(extra).tap do |fits|
         unless fits
-          raise StackError.new \
-          "stack overflow"
+          raise StackError.new "stack overflow"
         end
       end
     end
@@ -92,8 +90,7 @@ module Duktape
     def require_stack_top(top : Int32)
       check_stack_top(top).tap do |fits|
         unless fits
-          raise StackError.new \
-          "stack overflow"
+          raise StackError.new "stack overflow"
         end
       end
     end
@@ -101,8 +98,7 @@ module Duktape
     def require_top_index
       get_top_index.tap do |idx|
         if idx < 0
-          raise StackError.new \
-          "stack empty"
+          raise StackError.new "stack empty"
         end
       end
     end
@@ -110,8 +106,7 @@ module Duktape
     def require_valid_index(index : Int32)
       is_valid_index(index).tap do |idx|
         unless idx
-          raise StackError.new \
-          "invalid index: #{index}"
+          raise StackError.new "invalid index: #{index}"
         end
       end
     end

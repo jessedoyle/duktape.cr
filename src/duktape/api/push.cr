@@ -41,8 +41,7 @@ module Duktape
 
     def push_buffer(size : Int, resizable = false)
       if size < 0
-        raise Error.new \
-        "negative buffer size"
+        raise Error.new "negative buffer size"
       end
 
       dyn = resizable ? 1_u32 : 0_u32
@@ -72,7 +71,7 @@ module Duktape
 
     def push_external_buffer
       flags = LibDUK::BUF_FLAG_DYNAMIC |
-              LibDUK::BUF_FLAG_EXTERNAL
+                LibDUK::BUF_FLAG_EXTERNAL
       LibDUK.push_buffer_raw ctx, 0, flags
     end
 
@@ -106,8 +105,7 @@ module Duktape
 
     def push_lstring(str : String, len : Int)
       if len < 0
-        raise Error.new \
-        "negative string length"
+        raise Error.new "negative string length"
       end
 
       ptr = LibDUK.push_lstring ctx, str, len

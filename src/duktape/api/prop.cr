@@ -58,8 +58,7 @@ module Duktape
       # only an object as its target value. This is intentional as it
       # follows Ecmascript operator semantics.
       unless is_object index
-        raise TypeError.new \
-        "invalid object"
+        raise TypeError.new "invalid object"
       end
       LibDUK.has_prop(ctx, index) == 1
     end
@@ -67,8 +66,7 @@ module Duktape
     def has_prop_index(index : Int32, arr_index : UInt32)
       require_valid_index index
       unless is_object index
-        raise TypeError.new \
-        "invalid object"
+        raise TypeError.new "invalid object"
       end
       LibDUK.has_prop_index(ctx, index, arr_index) == 1
     end
@@ -76,8 +74,7 @@ module Duktape
     def has_prop_string(index : Int32, key : String)
       require_valid_index index
       unless is_object index
-        raise TypeError.new \
-        "invalid object"
+        raise TypeError.new "invalid object"
       end
       LibDUK.has_prop_string(ctx, index, key) == 1
     end

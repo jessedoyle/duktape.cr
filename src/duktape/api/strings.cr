@@ -10,8 +10,7 @@ module Duktape
       require_string index
       LibDUK.char_code_at(ctx, index, offset).tap do |code|
         if code == 0
-          raise Error.new \
-          "StringError: offset out of bounds"
+          raise Error.new "StringError: offset out of bounds"
         end
       end
     end
