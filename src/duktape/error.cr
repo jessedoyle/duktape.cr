@@ -21,31 +21,9 @@ module Duktape
     private def make_stack
       LibDUK.push_context_dump @ctx
       ptr = LibDUK.safe_to_lstring @ctx, -1, out size
-      String.new(ptr.to_slice(size)).tap do |_str|
+      String.new(ptr.to_slice(size)).tap do
         LibDUK.pop @ctx
       end
-    end
-  end
-
-  class HeapError < Exception
-    def initialize(msg : String)
-      str = "HeapError: #{msg}"
-      Duktape.logger.fatal str
-      super msg
-    end
-  end
-
-  class StackError < Exception
-    def initialize(msg : String)
-      Duktape.logger.error "StackError: #{msg}"
-      super msg
-    end
-  end
-
-  class TypeError < Exception
-    def initialize(msg : String)
-      Duktape.logger.error "TypeError: #{msg}"
-      super msg
     end
   end
 
@@ -63,4 +41,29 @@ module Duktape
       super msg
     end
   end
+
+  class HeapError < Exception
+    def initialize(msg : String)
+      str = "HeapError: #{msg}"
+      Duktape.logger.fatal str
+      super msg
+    end
+  end
+
+  class StackError < Exception
+    def initialize(msg : String)
+      str = "StackError: #{msg}"
+      Duktape.logger.error str
+      super msg
+    end
+  end
+
+  class TypeError < Exception
+    def initialize(msg : String)
+      str = "TypeError: #{msg}"
+      Duktape.logger.error str
+      super msg
+    end
+  end
+
 end
