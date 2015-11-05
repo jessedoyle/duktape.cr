@@ -65,5 +65,4 @@ module Duktape
       super msg
     end
   end
-
 end

@@ -17,10 +17,10 @@ describe Duktape do
       # Test custom fatal handler by throwing an error
       expect_raises Duktape::InternalError, /uncaught error/ do
         LibDUK.error_raw heap,
-                         LibDUK::ERR_UNCAUGHT_ERROR,
-                         __FILE__,
-                         __LINE__,
-                         "uncaught error"
+          LibDUK::ERR_UNCAUGHT_ERROR,
+          __FILE__,
+          __LINE__,
+          "uncaught error"
       end
     end
   end
@@ -35,10 +35,10 @@ describe Duktape do
       # Test custom fatal handler by throwing an error
       expect_raises Exception, /8/ do
         LibDUK.error_raw heap,
-                         LibDUK::ERR_UNCAUGHT_ERROR,
-                         __FILE__,
-                         __LINE__,
-                         "uncaught error"
+          LibDUK::ERR_UNCAUGHT_ERROR,
+          __FILE__,
+          __LINE__,
+          "uncaught error"
       end
     end
   end
