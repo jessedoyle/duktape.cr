@@ -1,3 +1,10 @@
+# v0.6.2 - November 30, 2015
+
+- Update Duktape version to `v1.3.1`. See [release info](https://github.com/svaarala/duktape/blob/master/RELEASES.rst).
+- More consistent exception classes in `error.cr`.
+- Removed a few unecessary method calls from spec files.
+- Adopt Crystal `0.9.1` code formatting.
+
 # v0.6.1 - September 21, 2015
 
 - Update to Crystal `v0.8.0` syntax/compatibility.

@@ -1,8 +1,10 @@
 name: duktape.cr
-version: 0.6.1
+version: 0.6.2
 
 authors:
   - Jesse Doyle <jdoyle@ualberta.ca>
 
 scripts:
   postinstall: "make -C ext clean libduktape"
+
+license: MIT
