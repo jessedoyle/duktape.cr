@@ -4,7 +4,6 @@ ENV["VERIFY"] = "1"
 require "spec"
 require "../src/lib_duktape"
 require "../src/duktape"
-require "../src/duktape/**"
 require "./support/**"
 
 # Disable logging

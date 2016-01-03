@@ -18,7 +18,7 @@ version: 1.0.0 # your project's version
 dependencies:
   duktape:
     github: jessedoyle/duktape.cr
-    version: ~> 0.6.2
+    version: ~> 0.6.3
 ```
 
 then execute:
@@ -114,6 +114,39 @@ A `Duktape::Error "RangeError"` exception is raised when the following code exec
 sbx = Duktape::Sandbox.new 500 # 500ms execution time limit
 sbx.eval! "while (true) {}"    # => RangeError
 ```
+
+## Duktape::Runtime
+
+A alternative interface for evaluating JS code is available via the `Duktape::Runtime` class. This class provides a streamlined evaluation API (similar to ExecJS) that allows easier access to javascript values without the need to call many low-level Duktape API functions.
+
+The entire `Runtime` API is as follows:
+
+* `call(property, *args)` - Call the property or function with the given arguments and return the result.
+* `call([properties], *args)` - Call the property that is nested within an array of string property names.
+* `eval(source)` - Evaluate the javascript source and return the last value.
+* `exec(source)` - Evaluate the javascript source and always return `nil`.
+
+`Duktape::Runtime` instances can also be provided an initialization block when created.
+
+Here's an example:
+
+```crystal
+  require "duktape/runtime"
+
+  # A Runtime (optionally) accepts an initialization block
+  rt = Duktape::Runtime.new do |sbx|
+    sbx.eval! <<-JS
+      function test(a, b, c) { return a + b + c; }
+    JS
+  end
+
+  rt.call("test", 3, 4, 5) # => 12 (same as test(3, 4, 5);)
+  rt.call(["Math", "PI"])  # => 3.14159
+  rt.eval("1 + 1")         # => 2
+  rt.exec("1 + 1")         # => nil
+```
+
+Note that `duktape/runtime` is not loaded by the base `duktape` require, and may be used standalone if necessary (ie. replace your `require "duktape"` calls with `require "duktape/runtime"` if you want this functionality).
 
 ## Calling Crystal Code from Javascript
 

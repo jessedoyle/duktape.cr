@@ -67,7 +67,7 @@ CFLAGS = \
 libduktape: $(OUTPUT)/libduktape.o $(LIBDIR)/libduktape.a $(INCLUDEDIR)/duktape.h
 $(OUTPUT)/libduktape.o: $(EXT)/duktape.c
 	@mkdir -p $(OUTPUT)
-	gcc -o $@ $(EXT)/duktape.c $(CFLAGS) $(DUK_OPTS)
+	$(CC) -o $@ $(EXT)/duktape.c $(CFLAGS) $(DUK_OPTS)
 $(LIBDIR)/libduktape.a:
 	@mkdir -p $(LIBDIR)
 	ar rcs $(LIBDIR)/libduktape.a $(OUTPUT)/libduktape.o

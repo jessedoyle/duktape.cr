@@ -4,6 +4,4 @@
 #
 # This is free software. Please see LICENSE for details.
 
-require "./lib_duktape"
-require "./duktape/support/*"
-require "./duktape/*"
+require "./duktape/base"
