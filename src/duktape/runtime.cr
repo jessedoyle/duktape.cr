@@ -17,7 +17,7 @@ module Duktape
   #
   # ```
   # rt = Duktape::Runtime.new
-  # rt.eval("Math.PI") #=> 3.14159
+  # rt.eval("Math.PI") # => 3.14159
   # ```
   #
   # The Runtime class also allows for javascript initialization code:
@@ -29,7 +29,7 @@ module Duktape
   #   JS
   # end
   #
-  # rt.eval("add_one", 42) #=> 43
+  # rt.eval("add_one", 42) # => 43
   # ```
   #
   # The Runtime class is not loaded by default and must be required before
@@ -85,8 +85,8 @@ module Duktape
     # The property string can include parent objects:
     #
     # ```
-    #  rt = Duktape::Runtime.new
-    #  rt.call("JSON.stringify", 123) #=> "123"
+    # rt = Duktape::Runtime.new
+    # rt.call("JSON.stringify", 123) # => "123"
     # ```
     #
     def call(prop : String, *args)
@@ -97,8 +97,8 @@ module Duktape
     # array of strings with the supplied arguments.
     #
     # ```
-    #  rt = Duktape::Runtime.new
-    #  rt.call(["Math", "PI"]) #=> 3.14159
+    # rt = Duktape::Runtime.new
+    # rt.call(["Math", "PI"]) # => 3.14159
     # ```
     #
     def call(props : Array(String), *args)
@@ -141,7 +141,7 @@ module Duktape
     #
     # ```
     # rt = Duktape::Runtime.new
-    # rt.exec("1 + 1") #=> nil
+    # rt.exec("1 + 1") # => nil
     # ```
     #
     def exec(source : String)

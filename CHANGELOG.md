@@ -1,4 +1,11 @@
+# v0.6.4 - Jan 2, 2016
+
+- Add the `src/runtime.cr` file so you can now properly `require "./duktape/runtime"` once `shards` does its thing.
+- Actually update the version in `shard.yml` (my mistake - sorry!).
+
 # v0.6.3 - Jan 2, 2016
+
+**NOTE - This release has issues, use `0.6.4` instead.**
 
 - Rework the internal require order and `duktape/base`.
 - Add a `Duktape::Runtime` class that lessens the need for low-level API calls for many use-cases. This must be required using `require "duktape/runtime"`.
