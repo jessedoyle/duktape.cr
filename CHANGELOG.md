@@ -1,6 +1,6 @@
 # v0.6.4 - Jan 2, 2016
 
-- Add the `src/runtime.cr` file so you can now properly `require "./duktape/runtime"` once `shards does its thing.
+- Add the `src/runtime.cr` file so you can now properly `require "./duktape/runtime"` once `shards` does its thing.
 - Actually update the version in `shard.yml` (my mistake - sorry!).
 
 # v0.6.3 - Jan 2, 2016
