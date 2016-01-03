@@ -1,3 +1,8 @@
+# v0.6.3 - Jan 2, 2016
+
+- Rework the internal require order and `duktape/base`.
+- Add a `Duktape::Runtime` class that lessens the need for low-level API calls for many use-cases. This must be required using `require "duktape/runtime"`.
+
 # v0.6.2 - November 30, 2015
 
 - Update Duktape version to `v1.3.1`. See [release info](https://github.com/svaarala/duktape/blob/master/RELEASES.rst).
