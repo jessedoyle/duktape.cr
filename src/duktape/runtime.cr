@@ -7,6 +7,22 @@
 require "./base"
 
 module Duktape
+  # Code evaluated using a `Duktape::Runtime` instance will return a value
+  # that depends on the last evaluated javascript expression.
+  #
+  # We try our best to translate a complex object on the Duktape stack
+  # to a usable Crystal value.
+  #
+  # Javascript objects will become Crystal hashes of type
+  # Hash(String, Duktape::JSPrimitive), which is itself of type
+  # Duktape::JSPrimtive.
+  #
+  # Javascript arrays will become Crystal arrays of type
+  # Array(Duktape::JSPrimitive), which is also a
+  # Duktape::JSPrimitive instance.
+  #
+  alias JSPrimitive = Nil | Float64 | String | Bool | Array(JSPrimitive) | Hash(String, JSPrimitive)
+
   # A Runtime is a simplified mechanism for evaluating javascript code
   # without directly using the low-level Duktape API calls.
   #
@@ -43,30 +59,6 @@ module Duktape
   # and may be used in a standalone manner.
   #
   class Runtime
-    # Code evaluating using a `Duktape::Runtime` instance will return a value
-    # that depends on the last evaluated javascript expression.
-    #
-    # Some javascript objects are too complex to be mapped to Crystal values.
-    # A `ComplexObject` instance is returned from evaluation calls when this
-    # is the case.
-    #
-    # Currently, the primitive types such as Booleans, Numbers, Strings and
-    # undefined/null are mapped directly to Crystal values.
-    #
-    # Any other javascript return type will be returned as an instance of
-    # `ComplexObject`.
-    #
-    class ComplexObject
-      getter kind, string
-
-      def initialize(@kind : Symbol, @string : String)
-      end
-
-      def to_s
-        "<Duktape::ComplexObject::#{kind.to_s.capitalize}>: #{string}"
-      end
-    end
-
     def initialize
       @context = Duktape::Sandbox.new
     end
@@ -108,13 +100,13 @@ module Duktape
     # ```
     #
     def call(props : Array(String), *args)
-      return nil if props.empty?
+      return nil as JSPrimitive if props.empty?
 
       prepare_nested_prop props
       perform_call args
       check_and_raise_error
 
-      stack_to_crystal(-1).tap do
+      (stack_to_crystal(-1) as JSPrimitive).tap do
         reset_stack!
       end
     end
@@ -129,7 +121,7 @@ module Duktape
     #
     def eval(source : String)
       @context.eval! source
-      stack_to_crystal(-1).tap do
+      (stack_to_crystal(-1) as JSPrimitive).tap do
         reset_stack!
       end
     end
@@ -155,39 +147,53 @@ module Duktape
       end
     end
 
+    private def invalid_type(index : Int32)
+      raise TypeError.new "invalid type at index #{index}"
+    end
+
+    # nodoc
+    private def next_array_element(array : Array(JSPrimitive))
+      while @context.next -1, true
+        array << stack_to_crystal -1
+        @context.pop_2
+      end
+    end
+
     # :nodoc:
-    private def stack_to_crystal(index : Int32)
-      case @context.get_type(index)
-      when :none
-        nil
-      when :undefined
-        nil
-      when :null
-        nil
-      when :boolean
-        @context.get_boolean index
-      when :number
-        @context.get_number index
-      when :string
-        @context.get_string index
-      when :object
-        ComplexObject.new :object, object_to_string(index)
-      when :buffer
-        ComplexObject.new :buffer, object_to_string(index)
-      when :pointer
-        ComplexObject.new :pointer, object_to_string(index)
-      when :lightfunc
-        ComplexObject.new :lightfunc, object_to_string(index)
+    private def next_hash_element(hash : Hash(String, JSPrimitive))
+      while @context.next -1, true
+        key = @context.to_string -2
+        hash[key] = stack_to_crystal -1
+        @context.pop_2
+      end
+    end
+
+    # :nodoc:
+    private def object_to_crystal(index : Int32)
+      if @context.is_function index
+        # TODO: can we do better than just get a string
+        # when the object is a function?
+        object_to_string index
+      elsif @context.is_array index
+        Array(JSPrimitive).new.tap do |array|
+          @context.enum index, LibDUK::ENUM_ARRAY_INDICIES_ONLY
+          next_array_element array
+          @context.pop
+        end
+      elsif @context.is_object index
+        Hash(String, JSPrimitive).new.tap do |hash|
+          @context.enum index, LibDUK::ENUM_OWN_PROPERTIES_ONLY
+          next_hash_element hash
+          @context.pop
+        end
       else
-        raise TypeError.new "invalid type at index #{index}"
+        invalid_type index
       end
     end
 
     # :nodoc:
     private def object_to_string(index : Int32)
-      @context.safe_to_string(-1).tap do
-        reset_stack!
-      end
+      @context.safe_to_string -1
     end
 
     # :nodoc:
@@ -268,7 +274,7 @@ module Duktape
     end
 
     # :nodoc:
-    private def push_crystal_object(arg : Hash(Symbol, _))
+    private def push_crystal_object(arg : Hash(String | Symbol, _))
       @context.push_object
       arg.each do |key, value|
         @context.push_string key.to_s
@@ -285,6 +291,34 @@ module Duktape
     # :nodoc:
     private def reset_stack!
       @context.set_top(0) if @context.get_top > 0
+    end
+
+    # :nodoc:
+    private def stack_to_crystal(index : Int32)
+      case @context.get_type(index)
+      when :none
+        nil
+      when :undefined
+        nil
+      when :null
+        nil
+      when :boolean
+        @context.get_boolean index
+      when :number
+        @context.get_number index
+      when :string
+        @context.get_string index
+      when :object
+        object_to_crystal index
+      when :buffer
+        object_to_string index
+      when :pointer
+        object_to_string index
+      when :lightfunc
+        object_to_string index
+      else
+        invalid_type index
+      end
     end
   end
 end

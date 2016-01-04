@@ -113,6 +113,26 @@ describe Duktape::Runtime do
       val.should eq("{\"a\":[1,2,{\"three\":\"four\"}]}")
     end
 
+    it "should return a crystal Array of JSPrimitive" do
+      rt = Duktape::Runtime.new do |sbx|
+        sbx.eval!("function same(obj){ return obj; }")
+      end
+      val = rt.call("same", [1, 2, ["three", "four"]])
+
+      val.should be_a(Duktape::JSPrimitive)
+      val.should eq([1, 2, ["three", "four"]])
+    end
+
+    it "should return a crystal Hash of JSPrimtive" do
+      rt = Duktape::Runtime.new do |sbx|
+        sbx.eval!("function same(obj){ return obj; }")
+      end
+      val = rt.call("same", {a: "1", b: "2", c: [3, true]})
+
+      val.should be_a(Duktape::JSPrimitive)
+      val.should eq({"a" => "1", "b" => "2", "c" => [3, true]})
+    end
+
     context "with a single property name" do
       it "should call the property with the args" do
         rt = Duktape::Runtime.new do |sbx|
