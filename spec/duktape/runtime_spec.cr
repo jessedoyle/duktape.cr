@@ -1,6 +1,15 @@
 require "../spec_helper"
 require "../../src/duktape/runtime"
 
+# We need access to the raw context to test some things
+module Duktape
+  class Runtime
+    def ctx
+      @context
+    end
+  end
+end
+
 describe Duktape::Runtime do
   describe "initialize" do
     context "without arguments" do
@@ -20,11 +29,90 @@ describe Duktape::Runtime do
 
         rt.eval("add(9);").should eq(18)
         rt.should be_a(Duktape::Runtime)
+        rt.ctx.get_top.should eq(0)
       end
     end
   end
 
   describe "call" do
+    it "should accept signed ints as arguments" do
+      rt = Duktape::Runtime.new
+      val = rt.call("Math.sqrt", 9_i32)
+
+      val.should eq(3)
+    end
+
+    it "should accept unsigned ints as arguments" do
+      rt = Duktape::Runtime.new
+      val = rt.call("Math.sqrt", 9_u32)
+
+      val.should eq(3)
+    end
+
+    it "should accept booleans as arguments" do
+      rt = Duktape::Runtime.new
+      val = rt.call("Boolean", false)
+
+      val.should eq(false)
+      val.should be_a(Bool)
+    end
+
+    it "should accept strings as arguments" do
+      rt = Duktape::Runtime.new
+      val = rt.call("parseInt", "10")
+
+      val.should eq(10)
+    end
+
+    it "should call to_s on symbol arguments" do
+      rt = Duktape::Runtime.new
+      val = rt.call("JSON.stringify", :some_text)
+
+      val.should eq("\"some_text\"")
+    end
+
+    it "should accept floats as arguments" do
+      rt = Duktape::Runtime.new do |sbx|
+        sbx.eval!("function add(a, b) { return a + b; }")
+      end
+      val = rt.call("add", 3.14159_f32, -16_f64) as Float64
+
+      val.should be_a(Float64)
+      val.to_s.should eq("-12.8584")
+    end
+
+    it "should accept arrays as arguments" do
+      rt = Duktape::Runtime.new
+      val = rt.call(["JSON", "stringify"], [true, 1, "test", :sym])
+
+      val.should be_a(String)
+      val.should eq("[true,1,\"test\",\"sym\"]")
+    end
+
+    it "should accept nested arrays as arguments" do
+      rt = Duktape::Runtime.new
+      val = rt.call(["JSON", "stringify"], [1, [2, [3, 4]]])
+
+      val.should be_a(String)
+      val.should eq("[1,[2,[3,4]]]")
+    end
+
+    it "should accept hashes as arguments" do
+      rt = Duktape::Runtime.new
+      val = rt.call("JSON.stringify", {a: "test", b: 123})
+
+      val.should be_a(String)
+      val.should eq("{\"a\":\"test\",\"b\":123}")
+    end
+
+    it "should accept nested hashes and arrays as arguments" do
+      rt = Duktape::Runtime.new
+      val = rt.call("JSON.stringify", {a: [1, 2, {three: "four"}]})
+
+      val.should be_a(String)
+      val.should eq("{\"a\":[1,2,{\"three\":\"four\"}]}")
+    end
+
     context "with a single property name" do
       it "should call the property with the args" do
         rt = Duktape::Runtime.new do |sbx|
@@ -43,6 +131,15 @@ describe Duktape::Runtime do
 
         val.should_not be_nil
         val.floor.should eq(3)
+      end
+
+      it "should have an empty stack after the call" do
+        rt = Duktape::Runtime.new
+        val = rt.call("JSON.stringify", {a: true, b: -10})
+
+        val.should be_a(String)
+        val.should eq("{\"a\":true,\"b\":-10}")
+        rt.ctx.get_top.should eq(0)
       end
     end
 
@@ -86,6 +183,14 @@ describe Duktape::Runtime do
         val.should be_a(Duktape::Runtime::ComplexObject)
         val.string.should eq("TypeError: not callable")
       end
+
+      it "should have an empty stack after the call" do
+        rt = Duktape::Runtime.new
+        val = rt.call(["Math", "sqrt"], 9)
+
+        val.should eq(3)
+        rt.ctx.get_top.should eq(0)
+      end
     end
   end
 
@@ -116,6 +221,13 @@ describe Duktape::Runtime do
         rt.eval("__abc__;")
       end
     end
+
+    it "should have an empty stack after evaluation" do
+      rt = Duktape::Runtime.new
+      rt.eval("2 + 2;")
+
+      rt.ctx.get_top.should eq(0)
+    end
   end
 
   describe "exec" do
@@ -145,6 +257,13 @@ describe Duktape::Runtime do
       expect_raises(Duktape::Error, /SyntaxError/) do
         rt.exec("\"missing")
       end
+    end
+
+    it "should have an empty stack after execution" do
+      rt = Duktape::Runtime.new
+      rt.exec("2 + 2;")
+
+      rt.ctx.get_top.should eq(0)
     end
   end
 end
