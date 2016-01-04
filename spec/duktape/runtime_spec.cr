@@ -137,7 +137,7 @@ describe Duktape::Runtime do
         rt = Duktape::Runtime.new
 
         expect_raises(Duktape::Error, /TypeError/) do
-          rt.call(["JSON.__invalid"], 123)
+          rt.call("JSON.__invalid", 123)
         end
       end
 
