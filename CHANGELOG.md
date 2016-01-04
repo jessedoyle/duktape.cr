@@ -1,4 +1,4 @@
-# Not yet released
+# Master
 
 - `Duktape::Runtime` can now accept hashes and arrays as arguments for call. These will be translated into Javascript objects and pushed to the stack.
 - Added the bugfix from Crystal [#1982](https://github.com/manastech/crystal/issues/1982) to make specs work again. This is a temporary monkey patch and will be removed once a new version of Crystal is released.
