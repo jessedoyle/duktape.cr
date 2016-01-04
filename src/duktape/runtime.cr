@@ -76,7 +76,7 @@ module Duktape
       yield @context
       # Remove all values from the stack left
       # over from initialization code
-      @context.set_top(0) if @context.get_top > 0
+      reset_stack!
     end
 
     # Call the named property with the supplied arguments,
@@ -119,7 +119,7 @@ module Duktape
       end
 
       stack_to_crystal(-1).tap do
-        @context.pop_2
+        reset_stack!
       end
     end
 
@@ -133,7 +133,9 @@ module Duktape
     #
     def eval(source : String)
       @context.eval! source
-      stack_to_crystal -1
+      stack_to_crystal(-1).tap do
+        reset_stack!
+      end
     end
 
     # Execute the supplied source code on the underyling javascript
@@ -146,7 +148,7 @@ module Duktape
     #
     def exec(source : String)
       @context.eval! source
-      @context.pop
+      reset_stack!
       nil
     end
 
@@ -181,7 +183,7 @@ module Duktape
     # :nodoc:
     private def object_to_string(index : Int32)
       @context.safe_to_string(-1).tap do
-        @context.pop
+        reset_stack!
       end
     end
 
@@ -204,16 +206,66 @@ module Duktape
 
     # :nodoc:
     private def push_args(args)
-      args.each do |arg|
-        case arg
-        when Int::Signed, Int::Unsigned, Bool, String, Float
-          @context << arg
-        when Symbol
-          @context.push_string arg.to_s
-        else
-          raise TypeError.new "unable to convert to JS type"
-        end
+      args.each { |arg| push_crystal_object arg }
+    end
+
+    # :nodoc:
+    private def push_crystal_object(arg : Int::Signed)
+      @context.push_int arg
+    end
+
+    # :nodoc:
+    private def push_crystal_object(arg : Int::Unsigned)
+      @context.push_uint arg
+    end
+
+    # :nodoc:
+    private def push_crystal_object(arg : Float)
+      @context.push_number arg.to_f64
+    end
+
+    # :nodoc:
+    private def push_crystal_object(arg : Bool)
+      @context.push_boolean arg
+    end
+
+    # :nodoc:
+    private def push_crystal_object(arg : Symbol)
+      @context.push_string arg.to_s
+    end
+
+    # :nodoc:
+    private def push_crystal_object(arg : String)
+      @context.push_string arg
+    end
+
+    # :nodoc:
+    private def push_crystal_object(arg : Array)
+      array_index = @context.push_array
+      arg.each_with_index do |object, index|
+        push_crystal_object object
+        @context.put_prop_index array_index, index.to_u32
       end
+    end
+
+    # :nodoc:
+    private def push_crystal_object(arg : Hash(Symbol, _))
+      @context.push_object
+      arg.each do |key, value|
+        @context.push_string key.to_s
+        push_crystal_object value
+        @context.put_prop -3
+      end
+    end
+
+    # :nodoc:
+    private def push_crystal_object(arg)
+      raise TypeError.new "unable to convert JS type"
+    end
+
+    # :nodoc:
+    private def reset_stack!
+      @context.set_top(0) if @context.get_top > 0
     end
   end
 end
