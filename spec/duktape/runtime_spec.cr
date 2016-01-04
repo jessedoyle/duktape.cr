@@ -133,6 +133,14 @@ describe Duktape::Runtime do
         val.floor.should eq(3)
       end
 
+      it "should raise a Duktape::Error if an error was thrown" do
+        rt = Duktape::Runtime.new
+
+        expect_raises(Duktape::Error, /TypeError/) do
+          rt.call(["JSON.__invalid"], 123)
+        end
+      end
+
       it "should have an empty stack after the call" do
         rt = Duktape::Runtime.new
         val = rt.call("JSON.stringify", {a: true, b: -10})
@@ -176,12 +184,12 @@ describe Duktape::Runtime do
         val.floor.should eq(2)
       end
 
-      it "should return a ComplexObject on error" do
+      it "should raise a Duktape::Error if an error was thrown" do
         rt = Duktape::Runtime.new
-        val = rt.call(["JSON", "invalid"], 123) as Duktape::Runtime::ComplexObject
 
-        val.should be_a(Duktape::Runtime::ComplexObject)
-        val.string.should eq("TypeError: not callable")
+        expect_raises(Duktape::Error, /TypeError/) do
+          rt.call(["JSON", "invalid"], 123)
+        end
       end
 
       it "should have an empty stack after the call" do

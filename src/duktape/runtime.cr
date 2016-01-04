@@ -82,6 +82,9 @@ module Duktape
     # Call the named property with the supplied arguments,
     # returning the value of the called property.
     #
+    # This call will raise a `Duktape::Error` if the
+    # last evaluated expression threw an error.
+    #
     # The property string can include parent objects:
     #
     # ```
@@ -96,6 +99,9 @@ module Duktape
     # Call the nested property that is supplied via an
     # array of strings with the supplied arguments.
     #
+    # This call will raise a `Duktape::Error` if the
+    # last evaluated expression threw an error.
+    #
     # ```
     # rt = Duktape::Runtime.new
     # rt.call(["Math", "PI"]) # => 3.14159
@@ -105,18 +111,8 @@ module Duktape
       return nil if props.empty?
 
       prepare_nested_prop props
-      if args.size > 0
-        push_args args
-        # We want a reference to the last property that was
-        # successfully accessed via `get_prop`. Because we
-        # leave the last property name in the chain as a string
-        # , this should only depend on the number of arguments
-        # on the stack.
-        obj_idx = -(args.size + 2)
-        @context.call_prop obj_idx, args.size
-      else
-        @context.get_prop -2
-      end
+      perform_call args
+      check_and_raise_error
 
       stack_to_crystal(-1).tap do
         reset_stack!
@@ -153,6 +149,13 @@ module Duktape
     end
 
     # :nodoc:
+    private def check_and_raise_error
+      if @context.is_valid_index(-1) && @context.is_error(-1)
+        raise Duktape::Error.new @context.safe_to_string(-1)
+      end
+    end
+
+    # :nodoc:
     private def stack_to_crystal(index : Int32)
       case @context.get_type(index)
       when :none
@@ -184,6 +187,22 @@ module Duktape
     private def object_to_string(index : Int32)
       @context.safe_to_string(-1).tap do
         reset_stack!
+      end
+    end
+
+    # :nodoc:
+    private def perform_call(args)
+      if args.size > 0
+        push_args args
+        # We want a reference to the last property that was
+        # successfully accessed via `get_prop`. Because we
+        # leave the last property name in the chain as a string
+        # , this should only depend on the number of arguments
+        # on the stack.
+        obj_idx = -(args.size + 2)
+        @context.call_prop obj_idx, args.size
+      else
+        @context.get_prop -2
       end
     end
 
