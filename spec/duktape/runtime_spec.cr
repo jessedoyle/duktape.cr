@@ -4,7 +4,9 @@ require "../../src/duktape/runtime"
 # We need access to the raw context to test some things
 module Duktape
   class Runtime
-    def ctx; @context end
+    def ctx
+      @context
+    end
   end
 end
 
@@ -97,7 +99,7 @@ describe Duktape::Runtime do
 
     it "should accept hashes as arguments" do
       rt = Duktape::Runtime.new
-      val = rt.call("JSON.stringify", { a: "test", b: 123 })
+      val = rt.call("JSON.stringify", {a: "test", b: 123})
 
       val.should be_a(String)
       val.should eq("{\"a\":\"test\",\"b\":123}")
@@ -105,7 +107,7 @@ describe Duktape::Runtime do
 
     it "should accept nested hashes and arrays as arguments" do
       rt = Duktape::Runtime.new
-      val = rt.call("JSON.stringify", { a: [1, 2, { three: "four" }]})
+      val = rt.call("JSON.stringify", {a: [1, 2, {three: "four"}]})
 
       val.should be_a(String)
       val.should eq("{\"a\":[1,2,{\"three\":\"four\"}]}")
@@ -133,7 +135,7 @@ describe Duktape::Runtime do
 
       it "should have an empty stack after the call" do
         rt = Duktape::Runtime.new
-        val = rt.call("JSON.stringify", { a: true, b: -10 })
+        val = rt.call("JSON.stringify", {a: true, b: -10})
 
         val.should be_a(String)
         val.should eq("{\"a\":true,\"b\":-10}")
