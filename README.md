@@ -117,7 +117,7 @@ sbx.eval! "while (true) {}"    # => RangeError
 
 ## Duktape::Runtime
 
-A alternative interface for evaluating JS code is available via the `Duktape::Runtime` class. This class provides a streamlined evaluation API (similar to ExecJS) that allows easier access to javascript values without the need to call many low-level Duktape API functions.
+An alternative interface for evaluating JS code is available via the `Duktape::Runtime` class. This class provides a streamlined evaluation API (similar to ExecJS) that allows easier access to javascript values without the need to call many low-level Duktape API functions.
 
 The entire `Runtime` API is as follows:
 

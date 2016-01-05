@@ -27,7 +27,7 @@ module Duktape
   # without directly using the low-level Duktape API calls.
   #
   # Instances of the Runtime class may evaluate code using an interface
-  # inspired by (ExecJS)[https://github.com/rails/execjs]. The method calls
+  # inspired by [ExecJS](https://github.com/rails/execjs). The method calls
   # within this class all return the last evaluated value (with the exception
   # of `exec`).
   #
@@ -147,11 +147,12 @@ module Duktape
       end
     end
 
+    # :nodoc:
     private def invalid_type(index : Int32)
       raise TypeError.new "invalid type at index #{index}"
     end
 
-    # nodoc
+    # :nodoc:
     private def next_array_element(array : Array(JSPrimitive))
       while @context.next -1, true
         array << stack_to_crystal -1
