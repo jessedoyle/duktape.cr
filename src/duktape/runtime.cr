@@ -194,7 +194,7 @@ module Duktape
 
     # :nodoc:
     private def object_to_string(index : Int32)
-      @context.safe_to_string -1
+      @context.safe_to_string index
     end
 
     # :nodoc:
