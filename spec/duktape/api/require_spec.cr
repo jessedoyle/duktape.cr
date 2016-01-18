@@ -43,6 +43,28 @@ describe Duktape::API::Require do
     end
   end
 
+  describe "require_callable" do
+    it "should not raise if the index is a function" do
+      ctx.push_proc(0) do |ptr|
+        env = Duktape::Context.new ptr
+        env << 1 + 2
+        env.return 1
+      end
+
+      ctx.require_callable(-1)
+
+      1.should eq(1)
+    end
+
+    it "should raise TypeError if the index is not a function" do
+      ctx << 1
+
+      expect_raises(Duktape::TypeError, /is not a function/) do
+        ctx.require_callable(-1)
+      end
+    end
+  end
+
   describe "require_context" do
     it "should return a Duktape::Context when valid" do
       ctx.push_thread
@@ -56,6 +78,28 @@ describe Duktape::API::Require do
 
       expect_raises Duktape::TypeError, /is not thread/ do
         ctx.require_context(-1)
+      end
+    end
+  end
+
+  describe "require_function" do
+    it "should not raise if the index is a function" do
+      ctx.push_proc(0) do |ptr|
+        env = Duktape::Context.new ptr
+        env << 1 + 2
+        env.return 1
+      end
+
+      ctx.require_function(-1)
+
+      1.should eq(1)
+    end
+
+    it "should raise TypeError if the index is not a function" do
+      ctx << 1
+
+      expect_raises(Duktape::TypeError, /is not a function/) do
+        ctx.require_function(-1)
       end
     end
   end

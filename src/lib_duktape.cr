@@ -250,7 +250,6 @@ lib LibDUK
   fun is_ecmascript_function = duk_is_ecmascript_function(ctx : Context, index : Int32) : Int32
   fun is_bound_function = duk_is_bound_function(ctx : Context, index : Int32) : Int32
   fun is_thread = duk_is_thread(ctx : Context, index : Int32) : Int32
-  fun is_callable = duk_is_callable(ctx : Context, index : Int32) : Int32
   fun is_dynamic_buffer = duk_is_dynamic_buffer(ctx : Context, index : Int32) : Int32
   fun is_fixed_buffer = duk_is_fixed_buffer(ctx : Context, index : Int32) : Int32
   fun is_external_buffer = duk_is_external_buffer(ctx : Context, index : Int32) : Int32
@@ -284,6 +283,8 @@ lib LibDUK
   fun require_c_function = duk_require_c_function(ctx : Context, index : Int32) : Int32
   fun require_context = duk_require_context(ctx : Context, index : Int32) : Context
   fun require_heapptr = duk_require_heapptr(ctx : Context, index : Int32) : Void*
+  @[Raises]
+  fun require_function = duk_require_function(ctx : Context, index : Int32)
 
   # Coercion Operations
   fun to_undefined = duk_to_undefined(ctx : Context, index : Int32)
