@@ -64,7 +64,7 @@ module Duktape
     end
 
     def is_callable(index : Int32)
-      LibDUK.is_callable(ctx, index) == 1
+      is_function index
     end
 
     def is_constructor_call

@@ -1,8 +1,8 @@
-# Master
-
+# v0.7.0 - Jan 18, 2016
+- (_breaking change_) A monkeypatch to the Crystal `Logger` class was temporarily added to master to fix a bug in core Crystal ([#1982](https://github.com/manastech/crystal/issues/1982)). This patch has now been removed from the codebase. Crystal `v0.10.1` or higher is a requirement for this library.
 - `Duktape::Runtime` instances now return Crystal arrays and hashes for corresponding JS arrays and objects.
 - `Duktape::Runtime` can now accept hashes and arrays as arguments for call. These will be translated into Javascript objects and pushed to the stack.
-- Added the bugfix from Crystal [#1982](https://github.com/manastech/crystal/issues/1982) to make specs work again. This is a temporary monkey patch and will be removed once a new version of Crystal is released.
+- Updated Duktape version to `v1.4.0`. See [release info](https://github.com/svaarala/duktape/blob/master/RELEASES.rst).
 
 # v0.6.4 - Jan 2, 2016
 

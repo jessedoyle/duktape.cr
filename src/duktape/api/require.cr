@@ -27,6 +27,10 @@ module Duktape
       ptr.to_slice size
     end
 
+    def require_callable(index : Int32)
+      require_function index
+    end
+
     def require_context(index : Int32)
       require_valid_index index
 
@@ -36,6 +40,16 @@ module Duktape
 
       raw = LibDUK.require_context ctx, index
       Context.new raw
+    end
+
+    def require_function(index : Int32)
+      require_valid_index index
+
+      begin
+        LibDUK.require_function ctx, index
+      rescue ex : InternalError
+        raise TypeError.new "type at #{index} is not a function"
+      end
     end
 
     def require_heapptr(index : Int32)
