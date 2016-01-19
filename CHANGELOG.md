@@ -1,4 +1,9 @@
+# Master (v0.7.1.pre)
+
+- `Duktape::Runtime` instances may now accept a execution timeout value in milliseconds upon creation. [[#15](https://github.com/jessedoyle/duktape.cr/pull/15), [@raydf](https://github.com/raydf)].
+
 # v0.7.0 - Jan 18, 2016
+
 - (_breaking change_) A monkeypatch to the Crystal `Logger` class was temporarily added to master to fix a bug in core Crystal ([#1982](https://github.com/manastech/crystal/issues/1982)). This patch has now been removed from the codebase. Crystal `v0.10.1` or higher is a requirement for this library.
 - `Duktape::Runtime` instances now return Crystal arrays and hashes for corresponding JS arrays and objects.
 - `Duktape::Runtime` can now accept hashes and arrays as arguments for call. These will be translated into Javascript objects and pushed to the stack.

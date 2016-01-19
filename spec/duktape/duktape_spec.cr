@@ -1,6 +1,18 @@
 require "../spec_helper"
 
 describe Duktape do
+  describe "self.version" do
+    it "should not have an empty version string" do
+      Duktape.version.should_not eq("")
+    end
+  end
+
+  describe "self.api_version" do
+    it "should not have an empty version string" do
+      Duktape.api_version.should_not eq("")
+    end
+  end
+
   describe "self.create_heap_default" do
     it "should allocate a LibDUK::Context" do
       ctx = Duktape.create_heap_default
