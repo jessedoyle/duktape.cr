@@ -19,10 +19,30 @@ describe Duktape::Runtime do
         rt.should be_a(Duktape::Runtime)
       end
     end
+    context "with timeout argument" do
+      it "should create a Runtime instance" do
+        rt = Duktape::Runtime.new 1000
+
+        rt.should be_a(Duktape::Runtime)
+      end
+    end
 
     context "with a block argument" do
       it "should pass a Duktape::Sandbox to init JS code with" do
         rt = Duktape::Runtime.new do |sbx|
+          sbx.should be_a(Duktape::Sandbox)
+          sbx.eval!("function add(num){ return num + num; }")
+        end
+
+        rt.eval("add(9);").should eq(18)
+        rt.should be_a(Duktape::Runtime)
+        rt.ctx.get_top.should eq(0)
+      end
+    end
+
+    context "with timeout and a block argument" do
+      it "should pass a Duktape::Sandbox to init JS code with" do
+        rt = Duktape::Runtime.new 1000 do |sbx|
           sbx.should be_a(Duktape::Sandbox)
           sbx.eval!("function add(num){ return num + num; }")
         end
