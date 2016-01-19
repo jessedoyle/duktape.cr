@@ -70,6 +70,18 @@ module Duktape
       # over from initialization code
       reset_stack!
     end
+    
+    def initialize(timeout : Int32 | Int64)
+      @context = Duktape::Sandbox.new timeout
+    end
+
+    def initialize(timeout : Int32 | Int64, &block)
+      @context = Duktape::Sandbox.new timeout
+      yield @context
+      # Remove all values from the stack left
+      # over from initialization code
+      reset_stack!
+    end
 
     # Call the named property with the supplied arguments,
     # returning the value of the called property.
