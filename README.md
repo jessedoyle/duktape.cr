@@ -150,7 +150,7 @@ Note that `duktape/runtime` is not loaded by the base `duktape` require, and may
 
 ## Calling Crystal Code from Javascript
 
-Note: This functionality is considered experimental and syntax/functionality may change dramatically between releases.
+**Note**: This functionality is considered experimental and syntax/functionality may change dramatically between releases.
 
 It is possible to call Crystal code from your javascript:
 
@@ -178,9 +178,9 @@ It is possible to call Crystal code from your javascript:
   sbx.eval! "print(add_together(2, 3));" # => 5
 ```
 
-The `proc` object that is pushed to the Duktape stack accepts a pointer to `Context` instance, we must wrap this pointer by calling `env = Duktape::Sandbox.new ptr`. The `proc` must also return an `Int32` status code - `env.call_failure` and `env.call_success` will provide the proper integer values.
+The `proc` object that is pushed to the Duktape stack accepts a pointer to a `Context` instance. We must wrap this pointer by calling `env = Duktape::Sandbox.new ptr`. The `proc` must also return an `Int32` status code - `env.call_failure` and `env.call_success` will provide the proper integer values.
 
-Note: Because it is currently not possible to pass closures to C bindings in Crystal, one must be careful that any variables used in the `proc` must not be referenced or initialized outside the `proc`'s scope. This is why variable names such as `env` are used.
+**Note**: Because it is currently not possible to pass closures to C bindings in Crystal, one must be careful that any variables used in the `proc` must not be referenced or initialized outside the scope of the `proc`. This is why variable names such as `env` are used.
 
 ## Contributing
 
