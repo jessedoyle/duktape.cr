@@ -37,6 +37,27 @@ describe Duktape::API::Call do
     end
   end
 
+  describe "call_failure" do
+    Duktape::API::Call::ERRORS.keys.each do |err|
+      it "#{err}: should return a negative status code" do
+        ctx = Duktape::Context.new
+        num = ctx.call_failure err
+
+        (num < 0).should be_true
+        num.should eq(Duktape::API::Call::ERRORS[err])
+        num.should be_a(Int32)
+      end
+    end
+
+    it "should raise Duktape::Error if error does not exist" do
+      ctx = Duktape::Context.new
+
+      expect_raises(Duktape::Error, /invalid error type/) do
+        ctx.call_failure :invalid
+      end
+    end
+  end
+
   describe "call_method" do
     it "should call a method from stack" do
       ctx = Duktape::Context.new
@@ -93,6 +114,16 @@ describe Duktape::API::Call do
     end
   end
 
+  describe "call_success" do
+    it "should return 1 as an Int32" do
+      ctx = Duktape::Context.new
+      num = ctx.call_success
+
+      num.should be_a(Int32)
+      num.should eq(1)
+    end
+  end
+
   describe "new" do
     it "should call the constructor" do
       # JS: new String("test string");
@@ -121,6 +152,16 @@ describe Duktape::API::Call do
       num = ctx.return 42
 
       num.should eq(42)
+    end
+  end
+
+  describe "return_undefined" do
+    it "should return an Int32 of 0" do
+      ctx = Duktape::Context.new
+      num = ctx.return_undefined
+
+      num.should be_a(Int32)
+      num.should eq(0)
     end
   end
 end

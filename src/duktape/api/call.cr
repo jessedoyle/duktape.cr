@@ -9,10 +9,33 @@ module Duktape
   # `pcall_xxx` functions because we wish to safely return
   # from errors.
   module API::Call
+    ERRORS = {
+      unimplemented: -LibDUK::ERR_UNIMPLEMENTED_ERROR,
+      unsupported:   -LibDUK::ERR_UNSUPPORTED_ERROR,
+      internal:      -LibDUK::ERR_INTERNAL_ERROR,
+      alloc:         -LibDUK::ERR_ALLOC_ERROR,
+      assertion:     -LibDUK::ERR_ASSERTION_ERROR,
+      api:           -LibDUK::ERR_API_ERROR,
+      uncaught:      -LibDUK::ERR_UNCAUGHT_ERROR,
+      error:         -LibDUK::ERR_ERROR,
+      eval:          -LibDUK::ERR_EVAL_ERROR,
+      range:         -LibDUK::ERR_RANGE_ERROR,
+      reference:     -LibDUK::ERR_REFERENCE_ERROR,
+      syntax:        -LibDUK::ERR_SYNTAX_ERROR,
+      type:          -LibDUK::ERR_TYPE_ERROR,
+      uri:           -LibDUK::ERR_URI_ERROR,
+    }
+
     def call(nargs : Int32)
       require_valid_nargs nargs
       require_valid_index -(nargs + 1) # function and args
       LibDUK.pcall(ctx, nargs) == 0
+    end
+
+    def call_failure(value = :error)
+      ERRORS[value]
+    rescue KeyError
+      raise Error.new "invalid error type: #{value}"
     end
 
     def call_method(nargs : Int32)
@@ -27,6 +50,10 @@ module Duktape
       LibDUK.pcall_prop(ctx, index, nargs) == 0
     end
 
+    def call_success
+      1
+    end
+
     # Equivalent to duk_pnew (protected call)
     def new(nargs : Int32)
       require_valid_nargs nargs
@@ -35,6 +62,10 @@ module Duktape
 
     def return(ret_val : Int32)
       ret_val
+    end
+
+    def return_undefined
+      0
     end
 
     # Experimental

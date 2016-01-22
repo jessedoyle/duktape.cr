@@ -70,7 +70,7 @@ module Duktape
       # over from initialization code
       reset_stack!
     end
-    
+
     def initialize(timeout : Int32 | Int64)
       @context = Duktape::Sandbox.new timeout
     end

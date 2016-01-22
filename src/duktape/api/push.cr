@@ -87,6 +87,14 @@ module Duktape
       LibDUK.push_global_object ctx
     end
 
+    # Experimental
+    def push_global_proc(name : String, nargs = 0 : Int32, &block : LibDUK::Context -> Int32)
+      push_global_object
+      push_proc nargs, &block
+      put_prop_string -2, name
+      pop
+    end
+
     def push_global_stash
       LibDUK.push_global_stash ctx
     end
