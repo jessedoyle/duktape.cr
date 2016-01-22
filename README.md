@@ -157,19 +157,30 @@ It is possible to call Crystal code from your javascript:
 ```crystal
   sbx = Duktape::Sandbox.new
 
-  sbx.push_global_object
-
-  sbx.push_proc(2) do |ptr| # 2 stack arguments
+  # Push a global function named "add_together"
+  # that accepts two arguments.
+  sbx.push_global_proc("add_together", 2) do |ptr|
     env = Duktape::Sandbox.new ptr
-    a = env.get_number 0
-    b = env.get_number 1
-    env.push_number a + b
-    env.return 1 # return success
+
+    begin
+      a = env.require_number 0
+      b = env.require_number 1
+    rescue Duktape::TypeError
+      # Push TypeError to the stack
+      # and return from the call
+      return env.call_failure(:type)
+    end
+
+    env.push_number a + b # Push the return value to the stack
+    env.call_success      # call_success -> stack top is value returned
   end
 
-  sbx.put_prop_string -2, "adder"
-  sbx.eval! "print(adder(2, 3));" # => 5
+  sbx.eval! "print(add_together(2, 3));" # => 5
 ```
+
+The `proc` object that is pushed to the Duktape stack accepts a pointer to `Context` instance, we must wrap this pointer by calling `env = Duktape::Sandbox.new ptr`. The `proc` must also return an `Int32` status code - `env.call_failure` and `env.call_success` will provide the proper integer values.
+
+Note: Because it is currently not possible to pass closures to C bindings in Crystal, one must be careful that any variables used in the `proc` must not be referenced or initialized outside the `proc`'s scope. This is why variable names such as `env` are used.
 
 ## Contributing
 

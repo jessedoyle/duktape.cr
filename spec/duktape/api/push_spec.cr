@@ -187,6 +187,50 @@ describe Duktape::API::Push do
     end
   end
 
+  describe "push_global_proc" do
+    it "should push a native global function and name it" do
+      ctx.push_global_proc("add_one", 1) do |ptr|
+        env = Duktape::Context.new ptr
+
+        begin
+          num = env.require_number 0
+        rescue Duktape::TypeError
+          return env.call_failure :type
+        end
+
+        env << num + 1
+        env.call_success
+      end
+
+      rc = ctx.eval!("add_one(42);")
+
+      rc.should eq(0)
+      ctx.is_error(-1).should be_false
+      ctx.get_number(-1).should eq(43)
+    end
+
+    it "should have no visible effect on the stack" do
+      top_before = ctx.get_top
+
+      ctx.push_global_proc("add_one", 1) do |ptr|
+        env = Duktape::Context.new ptr
+
+        begin
+          num = env.require_number 0
+        rescue Duktape::TypeError
+          return env.call_failure :type
+        end
+
+        env << num + 1
+        env.call_success
+      end
+
+      top_after = ctx.get_top
+
+      top_before.should eq(top_after)
+    end
+  end
+
   describe "push_global_stash" do
     it "should push an object onto the stack" do
       ctx.push_global_stash
@@ -298,7 +342,7 @@ describe Duktape::API::Push do
         b = env.get_number 1
         c = a + b
         env << c
-        env.return 1
+        env.call_success
       end
 
       # Push the arguments
@@ -311,6 +355,46 @@ describe Duktape::API::Push do
       num = ctx.get_int -1
       num.should eq(5)
     end
+
+    it "should push undefined to the stack when called" do
+      ctx.push_proc do |ptr|
+        env = Duktape::Context.new ptr
+        env << 42
+        env.return_undefined
+      end
+
+      ctx.call 0
+
+      last_stack_type(ctx).should be_js_type(:undefined)
+    end
+
+    it "should push a default generic error to the stack when called" do
+      ctx.push_proc do |ptr|
+        env = Duktape::Context.new ptr
+        env.call_failure
+      end
+
+      ctx.call 0
+
+      ctx.is_error(-1).should be_true
+      ctx.safe_to_string(-1).should match(/error error/)
+    end
+
+    # See spec/support/proc_helper.cr
+    proc_should_return_error(:unimplemented)
+    proc_should_return_error(:unsupported)
+    proc_should_return_error(:internal)
+    proc_should_return_error(:alloc)
+    proc_should_return_error(:assertion)
+    proc_should_return_error(:api)
+    proc_should_return_error(:uncaught)
+    proc_should_return_error(:error)
+    proc_should_return_error(:eval)
+    proc_should_return_error(:range)
+    proc_should_return_error(:reference)
+    proc_should_return_error(:syntax)
+    proc_should_return_error(:type)
+    proc_should_return_error(:uri)
   end
 
   describe "push_string" do
