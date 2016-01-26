@@ -3,6 +3,7 @@
 - Added `call_success`, `call_failure` and `return_undefined` convenience methods that provide the appropriate integer status codes when returning from a native function call.
 - Added the `push_global_proc` method that simplifies pushing a named native function to the stack.
 - `Duktape::Runtime` instances may now accept a execution timeout value in milliseconds upon creation. [[#15](https://github.com/jessedoyle/duktape.cr/pull/15), [@raydf](https://github.com/raydf)].
+- Changed the name in the `shard.yml` from `duktape.cr` to `duktape`. This should have no effect on the installation process.
 
 # v0.7.0 - Jan 18, 2016
 

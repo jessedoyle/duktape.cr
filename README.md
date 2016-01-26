@@ -162,14 +162,10 @@ It is possible to call Crystal code from your javascript:
   sbx.push_global_proc("add_together", 2) do |ptr|
     env = Duktape::Sandbox.new ptr
 
-    begin
-      a = env.require_number 0
-      b = env.require_number 1
-    rescue Duktape::TypeError
-      # Push TypeError to the stack
-      # and return from the call
-      return env.call_failure(:type)
-    end
+    # Get the two arguments
+    # from the stack
+    a = env.require_number 0
+    b = env.require_number 1
 
     env.push_number a + b # Push the return value to the stack
     env.call_success      # call_success -> stack top is value returned

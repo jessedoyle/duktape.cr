@@ -195,7 +195,7 @@ describe Duktape::API::Push do
         begin
           num = env.require_number 0
         rescue Duktape::TypeError
-          return env.call_failure :type
+          next env.call_failure :type
         end
 
         env << num + 1
@@ -218,7 +218,7 @@ describe Duktape::API::Push do
         begin
           num = env.require_number 0
         rescue Duktape::TypeError
-          return env.call_failure :type
+          next env.call_failure :type
         end
 
         env << num + 1
