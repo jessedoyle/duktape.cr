@@ -1,4 +1,4 @@
-# Master (v0.7.1.pre)
+# v0.8.0 - Feb 4, 2016
 
 - JS errors are now mapped to their proper Crystal exceptions. i.e. JS `SyntaxError` becomes `Duktape::SyntaxError`.
 - Make all exception classes more consistent. Instances of `Duktape::Error` are all recoverable exceptions that are thrown by the engine at runtime (eg. `Duktape::TypeError`). Instances of `Duktape::InternalError` are generally non-recoverable for a given context (eg. `Duktape::HeapError`).
