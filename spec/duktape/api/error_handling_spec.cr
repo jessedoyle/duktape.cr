@@ -60,6 +60,91 @@ describe Duktape::API::ErrorHandling do
     end
   end
 
+  describe "raise_error" do
+    it "should not raise and return 0 when not given an argument" do
+      ctx = Duktape::Context.new
+      val = ctx.raise_error
+
+      val.should eq(0)
+    end
+
+    it "should rescue with a Duktape::Error" do
+      ctx = Duktape::Context.new
+      ctx.push_error_object LibDUK::ERR_TYPE_ERROR, "test"
+
+      begin
+        ctx.raise_error(-1)
+        # We should not get this far due to a raise
+        1.should_not eq(1)
+      rescue ex : Duktape::Error
+        1.should eq(1)
+      end
+    end
+
+    it "should raise a Duktape::Error" do
+      ctx = Duktape::Context.new
+      ctx.push_error_object LibDUK::ERR_ERROR, "test"
+
+      expect_raises Duktape::Error, /test/ do
+        ctx.raise_error(-1)
+      end
+    end
+
+    it "should raise a Duktape::EvalError" do
+      ctx = Duktape::Context.new
+      ctx.push_error_object LibDUK::ERR_EVAL_ERROR, "test"
+
+      expect_raises Duktape::EvalError, /test/ do
+        ctx.raise_error(-1)
+      end
+    end
+
+    it "should raise a Duktape::RangeError" do
+      ctx = Duktape::Context.new
+      ctx.push_error_object LibDUK::ERR_RANGE_ERROR, "test"
+
+      expect_raises Duktape::RangeError, /test/ do
+        ctx.raise_error(-1)
+      end
+    end
+
+    it "should raise a Duktape::ReferenceError" do
+      ctx = Duktape::Context.new
+      ctx.push_error_object LibDUK::ERR_REFERENCE_ERROR, "test"
+
+      expect_raises Duktape::ReferenceError, /test/ do
+        ctx.raise_error(-1)
+      end
+    end
+
+    it "should raise a Duktape::SyntaxError" do
+      ctx = Duktape::Context.new
+      ctx.push_error_object LibDUK::ERR_SYNTAX_ERROR, "test"
+
+      expect_raises Duktape::SyntaxError, /test/ do
+        ctx.raise_error(-1)
+      end
+    end
+
+    it "should raise a Duktape::TypeError" do
+      ctx = Duktape::Context.new
+      ctx.push_error_object LibDUK::ERR_TYPE_ERROR, "test"
+
+      expect_raises Duktape::TypeError, /test/ do
+        ctx.raise_error(-1)
+      end
+    end
+
+    it "should raise a Duktape::URIError" do
+      ctx = Duktape::Context.new
+      ctx.push_error_object LibDUK::ERR_URI_ERROR, "test"
+
+      expect_raises Duktape::URIError, /test/ do
+        ctx.raise_error(-1)
+      end
+    end
+  end
+
   # Note: Can't really test this from a proc as
   # `push_proc` doesn't get along with Crystal's
   # spec library.

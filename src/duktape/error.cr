@@ -8,6 +8,11 @@ module Duktape
   class InternalError < Exception
     getter msg, err
 
+    def initialize(@msg : String)
+      @err = LibDUK::ERR_ERROR
+      super msg
+    end
+
     def initialize(@ctx : LibDUK::Context, @msg : String, @err : Int32)
       Duktape.logger.fatal "InternalError: #{msg} - #{err}"
       Duktape.logger.debug "STACK: #{stack}"
@@ -34,35 +39,24 @@ module Duktape
     end
   end
 
-  class FileError < Exception
-    def initialize(msg : String)
-      str = "FileError: #{msg}"
-      Duktape.logger.error str
-      super msg
+  macro define_error_class(klass, parent)
+    class {{klass}} < {{parent}}
+      def initialize(msg : String)
+        super msg
+      end
     end
   end
 
-  class HeapError < Exception
-    def initialize(msg : String)
-      str = "HeapError: #{msg}"
-      Duktape.logger.fatal str
-      super msg
-    end
-  end
+  # Runtime Exception Classes
+  define_error_class EvalError, Error
+  define_error_class FileError, Error
+  define_error_class RangeError, Error
+  define_error_class ReferenceError, Error
+  define_error_class StackError, Error
+  define_error_class SyntaxError, Error
+  define_error_class TypeError, Error
+  define_error_class URIError, Error
 
-  class StackError < Exception
-    def initialize(msg : String)
-      str = "StackError: #{msg}"
-      Duktape.logger.error str
-      super msg
-    end
-  end
-
-  class TypeError < Exception
-    def initialize(msg : String)
-      str = "TypeError: #{msg}"
-      Duktape.logger.error str
-      super msg
-    end
-  end
+  # Non-recoverable (Engine) Exception Classes
+  define_error_class HeapError, InternalError
 end

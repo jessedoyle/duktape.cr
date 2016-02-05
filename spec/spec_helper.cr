@@ -10,3 +10,7 @@ require "./support/**"
 Duktape.logger.level = Logger::Severity::UNKNOWN
 
 JS_SOURCE_PATH = "#{__DIR__}/javascripts"
+
+REFERENCE_REGEX = /identifier '__abc__' undefined/
+SYNTAX_REGEX = /eof or line terminator while parsing string literal/
+TYPE_REGEX = /undefined not callable/

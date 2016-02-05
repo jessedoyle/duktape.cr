@@ -78,7 +78,7 @@ module Duktape
 
     def eval_lstring!(src : String, length : Int)
       if length < 0
-        raise Error.new "negative string length"
+        raise ArgumentError.new "negative string length"
       end
 
       err = eval_lstring src, length
@@ -101,7 +101,7 @@ module Duktape
 
     def eval_lstring_noresult!(src : String, length : Int)
       if length < 0
-        raise Error.new "negative string length"
+        raise ArgumentError.new "negative string length"
       end
 
       err = eval_lstring_noresult src, length
@@ -170,21 +170,6 @@ module Duktape
         raise Duktape::FileError.new "#{path} : #{msg}"
       ensure
         file.close if file
-      end
-    end
-
-    private def raise_error(err) # :nodoc:
-      # We want to return the code (0) if no
-      # error is raised
-      err.tap do |error|
-        unless error == 0
-          code = LibDUK.get_error_code ctx, -1
-          if code == 0
-            raise StackError.new "error object missing"
-          else
-            raise Duktape::Error.new safe_to_string -1
-          end
-        end
       end
     end
   end

@@ -31,7 +31,7 @@ describe Duktape::Sandbox do
         var test = require('foo');
       JS
 
-      expect_raises Duktape::Error, /ReferenceError/ do
+      expect_raises Duktape::ReferenceError, /identifier 'require' undefined/ do
         sbx.eval_string! js
       end
     end
@@ -42,7 +42,7 @@ describe Duktape::Sandbox do
         Duktape.version;
       JS
 
-      expect_raises Duktape::Error, /ReferenceError/ do
+      expect_raises Duktape::ReferenceError, /identifier 'Duktape' undefined/ do
         sbx.eval_string! js
       end
     end
@@ -107,9 +107,9 @@ describe Duktape::Sandbox do
   end
 
   context "timeout during evaluation" do
-    it "should raise a RangeError (Duktape::Error) when timeout" do
+    it "should raise a Duktape::RangeError on timeout" do
       sbx = Duktape::Sandbox.new(500)
-      expect_raises Duktape::Error, /RangeError/ do
+      expect_raises Duktape::RangeError, /execution timeout/ do
         sbx.eval! <<-JS
           var times = 1000000;
           for(var i = 0; i < times; i++){

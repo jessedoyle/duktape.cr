@@ -155,7 +155,8 @@ module Duktape
     # :nodoc:
     private def check_and_raise_error
       if @context.is_valid_index(-1) && @context.is_error(-1)
-        raise Duktape::Error.new @context.safe_to_string(-1)
+        code = @context.get_error_code -1
+        @context.raise_error code
       end
     end
 

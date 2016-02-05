@@ -53,7 +53,7 @@ describe Duktape::API::Eval do
       it "should raise if arg contains invalid js" do
         ctx = Duktape::Context.new
 
-        expect_raises Duktape::Error, /ReferenceError/ do
+        expect_raises Duktape::ReferenceError, /identifier '__invalid_identifier' undefined/ do
           ctx.eval! invalid_js
         end
       end
@@ -72,7 +72,7 @@ describe Duktape::API::Eval do
         ctx = Duktape::Context.new
         ctx << invalid_js
 
-        expect_raises Duktape::Error, /ReferenceError/ do
+        expect_raises Duktape::ReferenceError, /identifier '__invalid_identifier' undefined/ do
           ctx.eval!
         end
       end
@@ -114,7 +114,7 @@ describe Duktape::API::Eval do
     it "should raise an error on invalid js" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::Error, /SyntaxError/ do
+      expect_raises Duktape::SyntaxError, /eof or line terminator/ do
         ctx.eval_file! "#{JS_SOURCE_PATH}/invalid.js"
       end
     end
@@ -153,7 +153,7 @@ describe Duktape::API::Eval do
       # Because the NORESULT flag tells Duktape to
       # not push the Error object on the stack after
       # failure, we have to look for a StackError
-      expect_raises Duktape::StackError, /error object missing/ do
+      expect_raises Duktape::StackError, /stack empty/ do
         ctx.eval_file_noresult! "#{JS_SOURCE_PATH}/invalid.js"
       end
     end
@@ -186,7 +186,7 @@ describe Duktape::API::Eval do
     it "should raise an error on invalid js" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::Error, /ReferenceError/ do
+      expect_raises Duktape::ReferenceError, /identifier '__invalid_identifier' undefined/ do
         ctx.eval_lstring! invalid_js, invalid_js.size
       end
     end
@@ -194,7 +194,7 @@ describe Duktape::API::Eval do
     it "should raise when length is negative" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::Error, /negative string length/ do
+      expect_raises ArgumentError, /negative string length/ do
         ctx.eval_lstring! valid_js, -1
       end
     end
@@ -236,7 +236,7 @@ describe Duktape::API::Eval do
     it "should raise on invalid js" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::StackError, /error object missing/ do
+      expect_raises Duktape::StackError, /stack empty/ do
         ctx.eval_lstring_noresult! invalid_js, invalid_js.size
       end
     end
@@ -244,7 +244,7 @@ describe Duktape::API::Eval do
     it "should raise when length is negative" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::Error, /negative string length/ do
+      expect_raises ArgumentError, /negative string length/ do
         ctx.eval_lstring_noresult! valid_js, -1
       end
     end
@@ -282,7 +282,7 @@ describe Duktape::API::Eval do
       ctx = Duktape::Context.new
       ctx << invalid_js
 
-      expect_raises Duktape::StackError, /error object missing/ do
+      expect_raises Duktape::StackError, /stack empty/ do
         ctx.eval_noresult!
       end
     end
@@ -319,7 +319,7 @@ describe Duktape::API::Eval do
     it "should raise on invalid js strings" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::Error, /ReferenceError/ do
+      expect_raises Duktape::ReferenceError, /identifier '__invalid_identifier' undefined/ do
         ctx.eval_string! invalid_js
       end
     end
@@ -361,7 +361,7 @@ describe Duktape::API::Eval do
     it "should raise StackError on invalid js" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::StackError, /error object missing/ do
+      expect_raises Duktape::StackError, /stack empty/ do
         ctx.eval_string_noresult! invalid_js
       end
     end
