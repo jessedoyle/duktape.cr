@@ -8,9 +8,7 @@ module Duktape
   module API::Debug
     def stack
       push_context_dump
-      require_string(-1).tap do
-        pop
-      end
+      require_string(-1).tap { pop }
     end
 
     def dump!

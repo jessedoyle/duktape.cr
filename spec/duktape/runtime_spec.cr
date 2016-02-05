@@ -173,10 +173,10 @@ describe Duktape::Runtime do
         val.floor.should eq(3)
       end
 
-      it "should raise a Duktape::Error if an error was thrown" do
+      it "should raise a Duktape::TypeError if an error was thrown" do
         rt = Duktape::Runtime.new
 
-        expect_raises(Duktape::Error, /TypeError/) do
+        expect_raises(Duktape::TypeError, TYPE_REGEX) do
           rt.call("JSON.__invalid", 123)
         end
       end
@@ -224,10 +224,10 @@ describe Duktape::Runtime do
         val.floor.should eq(2)
       end
 
-      it "should raise a Duktape::Error if an error was thrown" do
+      it "should raise a Duktape::TypeError if an error was thrown" do
         rt = Duktape::Runtime.new
 
-        expect_raises(Duktape::Error, /TypeError/) do
+        expect_raises(Duktape::TypeError, TYPE_REGEX) do
           rt.call(["JSON", "invalid"], 123)
         end
       end
@@ -265,7 +265,7 @@ describe Duktape::Runtime do
     it "should raise a ReferenceError on invalid syntax" do
       rt = Duktape::Runtime.new
 
-      expect_raises(Duktape::Error, /ReferenceError/) do
+      expect_raises(Duktape::ReferenceError, REFERENCE_REGEX) do
         rt.eval("__abc__;")
       end
     end
@@ -302,7 +302,7 @@ describe Duktape::Runtime do
     it "should raise on invalid syntax" do
       rt = Duktape::Runtime.new
 
-      expect_raises(Duktape::Error, /SyntaxError/) do
+      expect_raises(Duktape::SyntaxError, SYNTAX_REGEX) do
         rt.exec("\"missing")
       end
     end

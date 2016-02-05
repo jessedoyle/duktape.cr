@@ -35,7 +35,7 @@ module Duktape
     def call_failure(value = :error)
       ERRORS[value]
     rescue KeyError
-      raise Error.new "invalid error type: #{value}"
+      raise TypeError.new "invalid error type: #{value}"
     end
 
     def call_method(nargs : Int32)
@@ -77,7 +77,7 @@ module Duktape
 
     private def require_valid_nargs(nargs : Int32) # :nodoc:
       if nargs < 0
-        raise Error.new "negative argument count"
+        raise ArgumentError.new "negative argument count"
       end
     end
   end

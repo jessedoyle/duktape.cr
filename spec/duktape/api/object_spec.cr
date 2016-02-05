@@ -179,7 +179,7 @@ describe Duktape::API::Object do
       ctx.get_prop(-2)
       ctx.set_global_object
 
-      expect_raises Duktape::Error, /ReferenceError/ do
+      expect_raises Duktape::ReferenceError, /identifier 'Duktape' undefined/ do
         ctx.eval_string! <<-JS
           Duktape.version;
         JS

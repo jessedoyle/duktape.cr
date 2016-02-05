@@ -1,5 +1,7 @@
-# Master (v0.7.1.pre)
+# v0.8.0 - Feb 4, 2016
 
+- (_breaking change_) JS errors are now mapped to their proper Crystal exceptions. i.e. JS `SyntaxError` becomes `Duktape::SyntaxError`.
+- (_breaking change_) Make all exception classes more consistent. Instances of `Duktape::Error` are all recoverable exceptions that are thrown by the engine at runtime (eg. `Duktape::TypeError`). Instances of `Duktape::InternalError` are generally non-recoverable for a given context (eg. `Duktape::HeapError`).
 - Added `call_success`, `call_failure` and `return_undefined` convenience methods that provide the appropriate integer status codes when returning from a native function call.
 - Added the `push_global_proc` method that simplifies pushing a named native function to the stack.
 - `Duktape::Runtime` instances may now accept a execution timeout value in milliseconds upon creation. [[#15](https://github.com/jessedoyle/duktape.cr/pull/15), [@raydf](https://github.com/raydf)].

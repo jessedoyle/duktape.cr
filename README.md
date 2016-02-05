@@ -18,7 +18,7 @@ version: 1.0.0 # your project's version
 dependencies:
   duktape:
     github: jessedoyle/duktape.cr
-    version: ~> 0.7.0
+    version: ~> 0.8.0
 ```
 
 then execute:
@@ -89,7 +89,7 @@ sbx.eval! <<-JS
 JS
 ```
 
-will raise `Duktape::Error "SyntaxError"`.
+will raise `Duktape::SyntaxError`.
 
 ## Sandbox vs Context
 
@@ -108,7 +108,7 @@ JS
 
 `Duktape::Sandbox` instances may optionally take an execution timeout limit in milliseconds. This provides protection against infinite loops when executing untrusted code.
 
-A `Duktape::Error "RangeError"` exception is raised when the following code executes for longer than specified:
+A `Duktape::RangeError` exception is raised when the following code executes for longer than specified:
 
 ```crystal
 sbx = Duktape::Sandbox.new 500 # 500ms execution time limit
@@ -177,6 +177,27 @@ It is possible to call Crystal code from your javascript:
 The `proc` object that is pushed to the Duktape stack accepts a pointer to a `Context` instance. We must wrap this pointer by calling `env = Duktape::Sandbox.new ptr`. The `proc` must also return an `Int32` status code - `env.call_failure` and `env.call_success` will provide the proper integer values.
 
 **Note**: Because it is currently not possible to pass closures to C bindings in Crystal, one must be careful that any variables used in the `proc` must not be referenced or initialized outside the scope of the `proc`. This is why variable names such as `env` are used.
+
+## Exceptions
+
+The following exceptions may be thrown at runtime and may be rescued normally:
+
+* `Duktape::Error`
+* `Duktape::EvalError`
+* `Duktape::RangeError`
+* `Duktape::ReferenceError`
+* `Duktape::SyntaxError`
+* `Duktape::TypeError`
+* `Duktape::URIError`
+
+These exceptions all inherit from `Duktape::Error`, so it may be used as a catch-all for runtime errors.
+
+The following exceptions represent errors internal to the Duktape engine and are generally not recoverable when thrown from a context:
+
+* `Duktape::InternalError`
+* `Duktape::HeapError`
+
+These exceptions all inherit from `Duktape::InternalError`.
 
 ## Contributing
 

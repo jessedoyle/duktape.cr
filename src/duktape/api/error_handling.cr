@@ -23,6 +23,38 @@ module Duktape
       get_error_code(index) != 0
     end
 
+    def raise_error(err = 0) # :nodoc:
+      # We want to return the code (0) if no
+      # error is raised
+      err.tap do |error|
+        unless error == 0
+          unless valid_index? -1
+            raise StackError.new "stack empty"
+          end
+
+          code = LibDUK.get_error_code ctx, -1
+          msg  = safe_to_string(-1).gsub(/\A.*Error:\s/, "")
+
+          case code
+          when LibDUK::ERR_EVAL_ERROR
+            raise EvalError.new msg
+          when LibDUK::ERR_RANGE_ERROR
+            raise RangeError.new msg
+          when LibDUK::ERR_REFERENCE_ERROR
+            raise ReferenceError.new msg
+          when LibDUK::ERR_SYNTAX_ERROR
+            raise SyntaxError.new msg
+          when LibDUK::ERR_TYPE_ERROR
+            raise TypeError.new msg
+          when LibDUK::ERR_URI_ERROR
+            raise URIError.new msg
+          else
+            raise Error.new msg
+          end
+        end
+      end
+    end
+
     def throw
       LibDUK.throw ctx
     end

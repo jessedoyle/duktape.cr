@@ -5,7 +5,7 @@ describe Duktape::API::Call do
     it "should raise if nargs < 0" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::Error, /negative argument/ do
+      expect_raises ArgumentError, /negative argument/ do
         ctx.call(-1)
       end
     end
@@ -52,7 +52,7 @@ describe Duktape::API::Call do
     it "should raise Duktape::Error if error does not exist" do
       ctx = Duktape::Context.new
 
-      expect_raises(Duktape::Error, /invalid error type/) do
+      expect_raises(Duktape::TypeError, /invalid error type/) do
         ctx.call_failure :invalid
       end
     end
@@ -77,7 +77,7 @@ describe Duktape::API::Call do
     it "should raise if nargs < 0" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::Error, /negative argument/ do
+      expect_raises ArgumentError, /negative argument/ do
         ctx.call_method -1
       end
     end
@@ -140,7 +140,7 @@ describe Duktape::API::Call do
     it "should raise on negative nargs" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::Error, /negative argument/ do
+      expect_raises ArgumentError, /negative argument/ do
         ctx.new -1
       end
     end

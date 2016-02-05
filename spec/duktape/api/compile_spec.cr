@@ -84,7 +84,7 @@ describe Duktape::API::Compile do
         ctx << invalid_js
         ctx << "invalid.js"
 
-        expect_raises Duktape::Error, /SyntaxError/ do
+        expect_raises Duktape::SyntaxError, /parse error/ do
           ctx.compile!
         end
       end
@@ -103,7 +103,7 @@ describe Duktape::API::Compile do
       it "should raise when provided invalid js" do
         ctx = Duktape::Context.new
 
-        expect_raises Duktape::Error, /SyntaxError/ do
+        expect_raises Duktape::SyntaxError, /parse error/ do
           ctx.compile! invalid_js
         end
       end
@@ -159,7 +159,7 @@ describe Duktape::API::Compile do
     it "should raise on invalid js" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::Error, /SyntaxError/ do
+      expect_raises Duktape::SyntaxError, /eof or line terminator/ do
         ctx.compile_file! "#{JS_SOURCE_PATH}/invalid.js"
       end
     end
@@ -195,7 +195,7 @@ describe Duktape::API::Compile do
     it "should raise on invalid js" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::Error, /SyntaxError/ do
+      expect_raises Duktape::SyntaxError, /parse error/ do
         ctx.compile_lstring! invalid_js, invalid_js.size
       end
     end
@@ -252,7 +252,7 @@ describe Duktape::API::Compile do
       ctx = Duktape::Context.new
       ctx << "test.js"
 
-      expect_raises Duktape::Error, /SyntaxError/ do
+      expect_raises Duktape::SyntaxError, /parse error/ do
         ctx.compile_lstring_filename! invalid_js, invalid_js.size
       end
     end
@@ -291,7 +291,7 @@ describe Duktape::API::Compile do
     it "should raise on invalid js" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::Error, /SyntaxError/ do
+      expect_raises Duktape::SyntaxError, /parse error/ do
         ctx.compile_string! invalid_js
       end
     end
@@ -341,7 +341,7 @@ describe Duktape::API::Compile do
       ctx = Duktape::Context.new
       ctx << "invalid.js"
 
-      expect_raises Duktape::Error, /SyntaxError/ do
+      expect_raises Duktape::SyntaxError, /parse error/ do
         ctx.compile_string_filename! invalid_js
       end
     end
