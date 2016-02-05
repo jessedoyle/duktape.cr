@@ -9,7 +9,7 @@ module Duktape
     getter msg, err
 
     def initialize(@msg : String)
-      @err = LibDUK::ERR_ERROR
+      @err = LibDUK::ERR_INTERNAL_ERROR
       super msg
     end
 
