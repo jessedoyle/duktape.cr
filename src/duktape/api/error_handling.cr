@@ -33,7 +33,7 @@ module Duktape
           end
 
           code = LibDUK.get_error_code ctx, -1
-          msg  = safe_to_string(-1).gsub(/\A.*Error:\s/, "")
+          msg = safe_to_string(-1).gsub(/\A.*Error:\s/, "")
 
           case code
           when LibDUK::ERR_EVAL_ERROR
