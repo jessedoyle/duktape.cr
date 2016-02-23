@@ -1,3 +1,7 @@
+# Master (0.8.1.pre)
+
+- Refactor `API::Eval` code for readability.
+
 # v0.8.0 - Feb 4, 2016
 
 - (_breaking change_) JS errors are now mapped to their proper Crystal exceptions. i.e. JS `SyntaxError` becomes `Duktape::SyntaxError`.

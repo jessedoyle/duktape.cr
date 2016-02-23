@@ -22,8 +22,7 @@ module Duktape
     end
 
     def eval!
-      err = eval
-      raise_error err
+      raise_error eval
     end
 
     def eval!(str : String)
@@ -42,8 +41,7 @@ module Duktape
     end
 
     def eval_file!(path : String)
-      err = eval_file path
-      raise_error err
+      raise_error eval_file(path)
     end
 
     def eval_file_noresult(path : String)
@@ -59,8 +57,7 @@ module Duktape
     end
 
     def eval_file_noresult!(path : String)
-      err = eval_file_noresult path
-      raise_error err
+      raise_error eval_file_noresult(path)
     end
 
     def eval_lstring(src : String, length : Int)
@@ -81,8 +78,7 @@ module Duktape
         raise ArgumentError.new "negative string length"
       end
 
-      err = eval_lstring src, length
-      raise_error err
+      raise_error eval_lstring(src, length)
     end
 
     def eval_lstring_noresult(src : String, length : Int)
@@ -104,8 +100,7 @@ module Duktape
         raise ArgumentError.new "negative string length"
       end
 
-      err = eval_lstring_noresult src, length
-      raise_error err
+      raise_error eval_lstring_noresult(src, length)
     end
 
     def eval_noresult
@@ -118,8 +113,7 @@ module Duktape
     end
 
     def eval_noresult!
-      err = eval_noresult
-      raise_error err
+      raise_error eval_noresult
     end
 
     def eval_string(src : String)
@@ -133,8 +127,7 @@ module Duktape
     end
 
     def eval_string!(src : String)
-      err = eval_string src
-      raise_error err
+      raise_error eval_string(src)
     end
 
     def eval_string_noresult(src : String)
@@ -149,8 +142,7 @@ module Duktape
     end
 
     def eval_string_noresult!(src : String)
-      err = eval_string_noresult src
-      raise_error err
+      raise_error eval_string_noresult(src)
     end
 
     # Duktape throws ugly internal errors when it
