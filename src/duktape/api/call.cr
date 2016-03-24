@@ -69,7 +69,7 @@ module Duktape
     end
 
     # Experimental
-    def safe_call(nargs = 0 : Int32, nrets = 0 : Int32, &block : LibDUK::Context -> Int32)
+    def safe_call(nargs : Int32 = 0, nrets : Int32 = 0, &block : LibDUK::Context -> Int32)
       require_valid_nargs nargs
       require_valid_nargs nrets
       LibDUK.safe_call ctx, block, nargs, nrets

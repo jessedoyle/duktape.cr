@@ -165,7 +165,7 @@ describe Duktape::API::Get do
       buf = ctx.get_pointer -1
 
       buf.class.should eq(Pointer(Void))
-      buf.should be_falsey
+      buf.should eq(Pointer(Void).null)
     end
   end
 

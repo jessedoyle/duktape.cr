@@ -11,7 +11,7 @@ module Duktape
     end
   end
 
-  def self.create_heap(udata = nil : Void*?, &fatal : LibDUK::Context, Int32, UInt8* -> NoReturn)
+  def self.create_heap(udata : Void*? = nil, &fatal : LibDUK::Context, Int32, UInt8* -> NoReturn)
     LibDUK.create_heap(nil, nil, nil, udata, fatal.pointer).tap do |ctx|
       unless ctx
         raise HeapError.new "unable to initialize"

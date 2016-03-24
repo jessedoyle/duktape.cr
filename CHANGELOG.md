@@ -1,5 +1,6 @@
-# Master (0.8.1.pre)
+# v0.8.1 - Mar 23, 2016
 
+- Update to Crystal `0.14.2` syntax.
 - Refactor `API::Eval` code for readability.
 
 # v0.8.0 - Feb 4, 2016
