@@ -6,6 +6,9 @@
 
 module Duktape
   class InternalError < Exception
+    @ctx : Void*?
+    @stack : String?
+
     getter msg, err
 
     def initialize(@msg : String)
