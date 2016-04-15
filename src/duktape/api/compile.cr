@@ -23,7 +23,7 @@ module Duktape
       raise_error err
     end
 
-    def compile!(str : String, flags =  0_u32)
+    def compile!(str : String, flags = 0_u32)
       compile_string! str, flags
     end
 
