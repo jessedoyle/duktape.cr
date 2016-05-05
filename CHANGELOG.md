@@ -1,3 +1,7 @@
+# v0.8.2 - May 5, 2016
+
+- Update to Crystal `0.16.0` syntax.
+
 # v0.8.1 - Mar 23, 2016
 
 - Update to Crystal `0.14.2` syntax.
