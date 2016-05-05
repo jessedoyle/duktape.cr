@@ -8,6 +8,8 @@ require "colorize"
 require "logger"
 
 module Duktape
+  @@log : Logger?
+
   def self.logger
     @@log ||= make_logger
   end
