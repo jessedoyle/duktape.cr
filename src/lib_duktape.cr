@@ -113,8 +113,8 @@ lib LibDUK
   VARARGS = -1_i32
 
   struct TimeoutData
-    start : LibC::TimeVal
-    timeout : LibC::TimeVal
+    start : LibC::Timeval
+    timeout : LibC::Timeval
   end
 
   struct MemoryFunctions
