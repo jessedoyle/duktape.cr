@@ -11,12 +11,12 @@ module Duktape
         raise TypeError.new "invalid external buffer"
       end
 
-      LibDUK.config_buffer ctx, index, buf.to_unsafe as Void*, buf.size
+      LibDUK.config_buffer ctx, index, buf.to_unsafe.as(Void*), buf.size
     end
 
     def get_buffer_data(index : Int32)
       ptr = LibDUK.get_buffer_data ctx, index, out size
-      Slice(UInt8).new ptr as UInt8*, size
+      Slice(UInt8).new ptr.as(UInt8*), size
     end
 
     def push_buffer_object(index : Int32, byte_offset : Int32, byte_length : Int32, flags : UInt32)
@@ -43,7 +43,7 @@ module Duktape
       end
 
       ptr = LibDUK.steal_buffer ctx, index, out size
-      Slice(UInt8).new ptr as UInt8*, size
+      Slice(UInt8).new ptr.as(UInt8*), size
     end
   end
 end

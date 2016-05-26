@@ -18,7 +18,7 @@ version: 1.0.0 # your project's version
 dependencies:
   duktape:
     github: jessedoyle/duktape.cr
-    version: ~> 0.8.2
+    version: ~> 0.9.0
 ```
 
 then execute:
@@ -140,9 +140,9 @@ Here's an example:
     JS
   end
 
-  rt.call("test", 3, 4, 5) # => 12 (same as test(3, 4, 5);)
+  rt.call("test", 3, 4, 5) # => 12.0 (same as test(3, 4, 5);)
   rt.call(["Math", "PI"])  # => 3.14159
-  rt.eval("1 + 1")         # => 2
+  rt.eval("1 + 1")         # => 2.0
   rt.exec("1 + 1")         # => nil
 ```
 

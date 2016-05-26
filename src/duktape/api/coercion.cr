@@ -26,7 +26,7 @@ module Duktape
     def to_buffer(index)
       require_valid_index index
       flags = LibDUK::BUF_MODE_DONTCARE
-      ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags) as UInt8*
+      ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags).as(UInt8*)
       ptr.to_slice size
     end
 
@@ -41,14 +41,14 @@ module Duktape
     def to_dynamic_buffer(index : Int)
       require_valid_index index
       flags = LibDUK::BUF_MODE_DYNAMIC
-      ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags) as UInt8*
+      ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags).as(UInt8*)
       Slice.new ptr, size
     end
 
     def to_fixed_buffer(index : Int)
       require_valid_index index
       flags = LibDUK::BUF_MODE_FIXED
-      ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags) as UInt8*
+      ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags).as(UInt8*)
       Slice.new ptr, size
     end
 

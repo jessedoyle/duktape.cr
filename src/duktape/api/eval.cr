@@ -10,8 +10,7 @@ module Duktape
   # from errors.
   module API::Eval
     def eval
-      flags =
-        2 |
+      flags = 2 |
         LibDUK::COMPILE_EVAL |
         LibDUK::COMPILE_SAFE |
         LibDUK::COMPILE_NOFILENAME
@@ -34,8 +33,7 @@ module Duktape
     def eval_file(path : String)
       validate_file! path
 
-      flags =
-        3 |
+      flags = 3 |
         LibDUK::COMPILE_EVAL |
         LibDUK::COMPILE_SAFE
 
@@ -51,8 +49,7 @@ module Duktape
     def eval_file_noresult(path : String)
       validate_file! path
 
-      flags =
-        3 |
+      flags = 3 |
         LibDUK::COMPILE_EVAL |
         LibDUK::COMPILE_SAFE |
         LibDUK::COMPILE_NORESULT
@@ -71,8 +68,7 @@ module Duktape
       # methods, so return with an error code.
       return LibDUK::ERR_API_ERROR if length < 0
 
-      flags =
-        1 |
+      flags = 1 |
         LibDUK::COMPILE_EVAL |
         LibDUK::COMPILE_SAFE |
         LibDUK::COMPILE_NOSOURCE |
@@ -94,8 +90,7 @@ module Duktape
       # methods, so return with an error code.
       return LibDUK::ERR_API_ERROR if length < 0
 
-      flags =
-        1 |
+      flags = 1 |
         LibDUK::COMPILE_EVAL |
         LibDUK::COMPILE_SAFE |
         LibDUK::COMPILE_NOSOURCE |
@@ -114,8 +109,7 @@ module Duktape
     end
 
     def eval_noresult
-      flags =
-        2 |
+      flags = 2 |
         LibDUK::COMPILE_EVAL |
         LibDUK::COMPILE_SAFE |
         LibDUK::COMPILE_NORESULT |
@@ -129,8 +123,7 @@ module Duktape
     end
 
     def eval_string(src : String)
-      flags =
-        1 |
+      flags = 1 |
         LibDUK::COMPILE_EVAL |
         LibDUK::COMPILE_NOSOURCE |
         LibDUK::COMPILE_STRLEN |
@@ -145,8 +138,7 @@ module Duktape
     end
 
     def eval_string_noresult(src : String)
-      flags =
-        1 |
+      flags = 1 |
         LibDUK::COMPILE_EVAL |
         LibDUK::COMPILE_SAFE |
         LibDUK::COMPILE_NOSOURCE |

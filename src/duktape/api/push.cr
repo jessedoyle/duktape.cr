@@ -45,7 +45,7 @@ module Duktape
       end
 
       dyn = resizable ? 1_u32 : 0_u32
-      ptr = LibDUK.push_buffer_raw(ctx, size, dyn) as UInt8*
+      ptr = LibDUK.push_buffer_raw(ctx, size, dyn).as(UInt8*)
       ptr.to_slice size
     end
 

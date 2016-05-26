@@ -95,10 +95,10 @@ describe Duktape::Runtime do
       rt = Duktape::Runtime.new do |sbx|
         sbx.eval!("function add(a, b) { return a + b; }")
       end
-      val = rt.call("add", 3.14159_f32, -16_f64) as Float64
+      val = rt.call("add", 3.14159_f32, -16_f64).as(Float64)
 
       val.should be_a(Float64)
-      val.to_s.should eq("-12.8584")
+      val.to_s.should eq("-12.858409881591797")
     end
 
     it "should accept arrays as arguments" do
@@ -119,7 +119,7 @@ describe Duktape::Runtime do
 
     it "should accept hashes as arguments" do
       rt = Duktape::Runtime.new
-      val = rt.call("JSON.stringify", {a: "test", b: 123})
+      val = rt.call("JSON.stringify", {"a" => "test", "b" => 123})
 
       val.should be_a(String)
       val.should eq("{\"a\":\"test\",\"b\":123}")
@@ -127,10 +127,18 @@ describe Duktape::Runtime do
 
     it "should accept nested hashes and arrays as arguments" do
       rt = Duktape::Runtime.new
-      val = rt.call("JSON.stringify", {a: [1, 2, {three: "four"}]})
+      val = rt.call("JSON.stringify", {"a" => [1, 2, {"three" => "four"}]})
 
       val.should be_a(String)
       val.should eq("{\"a\":[1,2,{\"three\":\"four\"}]}")
+    end
+
+    it "should accept NamedTuples as arguments" do
+      rt = Duktape::Runtime.new
+      val = rt.call("JSON.stringify", {a: "test", b: 123})
+
+      val.should be_a(String)
+      val.should eq("{\"a\":\"test\",\"b\":123}")
     end
 
     it "should return a crystal Array of JSPrimitive" do
@@ -147,7 +155,7 @@ describe Duktape::Runtime do
       rt = Duktape::Runtime.new do |sbx|
         sbx.eval!("function same(obj){ return obj; }")
       end
-      val = rt.call("same", {a: "1", b: "2", c: [3, true]})
+      val = rt.call("same", {"a" => "1", "b" => "2", "c" => [3, true]})
 
       val.should be_a(Duktape::JSPrimitive)
       val.should eq({"a" => "1", "b" => "2", "c" => [3, true]})
@@ -167,7 +175,7 @@ describe Duktape::Runtime do
 
       it "should call a key without arguments" do
         rt = Duktape::Runtime.new
-        val = rt.call("Math.PI") as Float64
+        val = rt.call("Math.PI").as(Float64)
 
         val.should_not be_nil
         val.floor.should eq(3)
@@ -183,7 +191,7 @@ describe Duktape::Runtime do
 
       it "should have an empty stack after the call" do
         rt = Duktape::Runtime.new
-        val = rt.call("JSON.stringify", {a: true, b: -10})
+        val = rt.call("JSON.stringify", {"a" => true, "b" => -10})
 
         val.should be_a(String)
         val.should eq("{\"a\":true,\"b\":-10}")
@@ -194,7 +202,7 @@ describe Duktape::Runtime do
     context "with multiple property names" do
       it "should call the nested property with arguments" do
         rt = Duktape::Runtime.new
-        val = rt.call(["JSON", "stringify"], 123) as String
+        val = rt.call(["JSON", "stringify"], 123).as(String)
 
         val.should eq("123")
       end
@@ -219,7 +227,7 @@ describe Duktape::Runtime do
 
       it "should work without any arguments passed" do
         rt = Duktape::Runtime.new
-        val = rt.call(["Math", "E"]) as Float64
+        val = rt.call(["Math", "E"]).as(Float64)
 
         val.floor.should eq(2)
       end

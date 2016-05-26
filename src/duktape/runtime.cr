@@ -45,7 +45,7 @@ module Duktape
   #   JS
   # end
   #
-  # rt.eval("add_one", 42) # => 43
+  # rt.eval("add_one", 42) # => 43.0
   # ```
   #
   # The Runtime class is not loaded by default and must be required before
@@ -112,15 +112,11 @@ module Duktape
     # ```
     #
     def call(props : Array(String), *args)
-      return nil as JSPrimitive if props.empty?
-
+      return nil.as(JSPrimitive) if props.empty?
       prepare_nested_prop props
       perform_call args
       check_and_raise_error
-
-      (stack_to_crystal(-1) as JSPrimitive).tap do
-        reset_stack!
-      end
+      return_last_evaluated_value
     end
 
     # Evaluate the supplied source code on the underlying javascript
@@ -133,9 +129,7 @@ module Duktape
     #
     def eval(source : String)
       @context.eval! source
-      (stack_to_crystal(-1) as JSPrimitive).tap do
-        reset_stack!
-      end
+      return_last_evaluated_value
     end
 
     # Execute the supplied source code on the underyling javascript
@@ -298,6 +292,11 @@ module Duktape
     end
 
     # :nodoc:
+    private def push_crystal_object(arg : NamedTuple)
+      push_crystal_object(arg.to_h)
+    end
+
+    # :nodoc:
     private def push_crystal_object(arg)
       raise TypeError.new "unable to convert JS type"
     end
@@ -305,6 +304,13 @@ module Duktape
     # :nodoc:
     private def reset_stack!
       @context.set_top(0) if @context.get_top > 0
+    end
+
+    # :nodoc:
+    private def return_last_evaluated_value
+      (stack_to_crystal(-1).as(JSPrimitive)).tap do
+        reset_stack!
+      end
     end
 
     # :nodoc:
