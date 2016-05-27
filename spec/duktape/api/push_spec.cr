@@ -326,7 +326,7 @@ describe Duktape::API::Push do
 
   describe "push_pointer" do
     it "should push a pointer to the stack" do
-      ptr = "abcd".to_unsafe as Pointer(Void)
+      ptr = "abcd".to_unsafe.as(Pointer(Void))
       ctx.push_pointer ptr
 
       last_stack_type(ctx).should be_js_type(:pointer)

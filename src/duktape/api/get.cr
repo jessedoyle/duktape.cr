@@ -13,7 +13,7 @@ module Duktape
 
     def get_buffer(index : Int32)
       require_valid_index index
-      ptr = LibDUK.get_buffer(ctx, index, out size) as UInt8*
+      ptr = LibDUK.get_buffer(ctx, index, out size).as(UInt8*)
       ptr.to_slice size
     end
 

@@ -23,7 +23,7 @@ module Duktape
         raise TypeError.new "type at #{index} is not buffer"
       end
 
-      ptr = LibDUK.require_buffer(ctx, index, out size) as UInt8*
+      ptr = LibDUK.require_buffer(ctx, index, out size).as(UInt8*)
       ptr.to_slice size
     end
 

@@ -57,10 +57,10 @@ DUK_OPTS = \
 	-DDUK_OPT_EXEC_TIMEOUT_CHECK="duk_cr_timeout" \
 	-DDUK_OPT_TARGET_INFO=\"duktape.cr\"
 CFLAGS = \
-	-Wall \
+	-pedantic \
 	-c \
 	-std=c99 \
-	-Os \
+	-O2 \
 	-fstrict-aliasing \
 	-fomit-frame-pointer
 

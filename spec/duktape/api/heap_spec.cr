@@ -45,7 +45,7 @@ describe Duktape do
 
   describe "create_heap_udata" do
     it "should create a heap with a user-argument (Void*)" do
-      data = "hello, world".to_unsafe as Void*
+      data = "hello, world".to_unsafe.as(Void*)
       heap = Duktape.create_heap_udata(data)
       Duktape.destroy_heap heap
     end

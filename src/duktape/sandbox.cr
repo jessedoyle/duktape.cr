@@ -54,7 +54,7 @@ module Duktape
       tv = timeout_timeval timeout
       data = LibDUK::TimeoutData.new start: start, timeout: tv
       slc = Slice(LibDUK::TimeoutData).new 1, data
-      slc.to_unsafe as Void*
+      slc.to_unsafe.as(Void*)
     end
 
     private def secure!

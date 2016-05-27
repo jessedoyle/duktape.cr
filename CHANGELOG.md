@@ -1,3 +1,12 @@
+# v0.9.0 - May 26, 2016
+
+- Update Duktape to `v1.5.0`. See [release info](https://github.com/svaarala/duktape/blob/master/RELEASES.rst).
+- Update to Crystal `0.17.4` syntax.
+- Format code using Crystal `0.17.4` formatter.
+- Add `NamedTuple` as a type that is allowed as parameter to `call` on a `Duktape::Runtime` instance. NamedTuples will be translated to a hash.
+- Optimize for speed (-O2) instead of size (-0s) when building the duktape library.
+- Use -Wpedantic as the compiler flag for warnings.
+
 # v0.8.2 - May 5, 2016
 
 - Update to Crystal `0.16.0` syntax.
