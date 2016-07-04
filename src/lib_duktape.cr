@@ -286,7 +286,6 @@ lib LibDUK
   fun require_c_function = duk_require_c_function(ctx : Context, index : Int32) : Int32
   fun require_context = duk_require_context(ctx : Context, index : Int32) : Context
   fun require_heapptr = duk_require_heapptr(ctx : Context, index : Int32) : Void*
-  @[Raises]
   fun require_function = duk_require_function(ctx : Context, index : Int32)
 
   # Coercion Operations

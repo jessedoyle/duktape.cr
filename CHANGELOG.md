@@ -1,3 +1,7 @@
+# Master
+
+- use `is_function(index)` to determine if a stack value is callable in `require_function(index)` instead of rescuing from InternalError.
+
 # v0.9.0 - May 26, 2016
 
 - Update Duktape to `v1.5.0`. See [release info](https://github.com/svaarala/duktape/blob/master/RELEASES.rst).
