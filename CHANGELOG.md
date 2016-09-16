@@ -1,3 +1,7 @@
+# v0.9.1 - Sept 21, 2016
+
+- Update Duktape to `v1.5.1`. See [release info](https://github.com/svaarala/duktape/blob/master/RELEASES.rst).
+
 # v0.9.0 - May 26, 2016
 
 - Update Duktape to `v1.5.0`. See [release info](https://github.com/svaarala/duktape/blob/master/RELEASES.rst).
