@@ -3,9 +3,9 @@
 CURRENT := $(shell pwd)
 EXT := $(CURRENT)
 PREV := $(shell dirname `pwd`])
-OUTPUT := $(PREV)/.build
-LIBDIR := $(PREV)/.build/lib
-INCLUDEDIR := $(PREV)/.build/include
+OUTPUT := $(PREV)/src/.build
+LIBDIR := $(OUTPUT)/lib
+INCLUDEDIR := $(OUTPUT)/include
 
 define DUK_TIMEOUT_C
 struct timeout_data \

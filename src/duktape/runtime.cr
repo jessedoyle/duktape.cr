@@ -59,6 +59,8 @@ module Duktape
   # and may be used in a standalone manner.
   #
   class Runtime
+    @context : Duktape::Sandbox | Duktape::Context
+
     def initialize
       @context = Duktape::Sandbox.new
     end
@@ -80,6 +82,16 @@ module Duktape
       yield @context
       # Remove all values from the stack left
       # over from initialization code
+      reset_stack!
+    end
+
+    def initialize(context : Duktape::Context)
+      @context = context
+    end
+
+    def initialize(context : Duktape::Context, &block)
+      @context = context
+      yield @context
       reset_stack!
     end
 
