@@ -52,6 +52,32 @@ describe Duktape::Runtime do
         rt.ctx.get_top.should eq(0)
       end
     end
+
+    context "with a Duktape::Context argument" do
+      context "without a block argument" do
+        it "executes code on the underlying context" do
+          ctx = Duktape::Context.new
+          rt = Duktape::Runtime.new ctx
+
+          rt.call("Duktape.version").should be_a(Float64)
+          rt.should be_a(Duktape::Runtime)
+        end
+      end
+
+      context "with a block argument" do
+        it "yeilds a Duktape::Context instance for initialization" do
+          ctx = Duktape::Context.new
+          rt = Duktape::Runtime.new(ctx) do |env|
+            env.should be_a(Duktape::Context)
+            env.eval!("function add(num){ return num + num; }")
+          end
+
+          rt.eval("add(9);").should eq(18)
+          rt.should be_a(Duktape::Runtime)
+          rt.ctx.get_top.should eq(0)
+        end
+      end
+    end
   end
 
   describe "call" do

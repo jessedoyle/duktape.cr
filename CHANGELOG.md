@@ -1,3 +1,15 @@
+# v0.10.0 - Nov 22, 2016
+
+- Update for Crystal 0.20.0. As shards now copies
+  the entire shard directory into `libs`, we can
+  move the `ext` directory to the shard root directory
+  for simplicity.
+- Update makefile output paths to match new structure.
+- Resolve [#25](https://github.com/jessedoyle/duktape.cr/issues/25)
+  by allowing a developer to pass a `Duktape::Context` instance when
+  initializing a `Dukatape::Runtime`. This allows the runtime to
+  use the internal `Duktape` global object.
+
 # v0.9.1 - Sept 21, 2016
 
 - Update Duktape to `v1.5.1`. See [release info](https://github.com/svaarala/duktape/blob/master/RELEASES.rst).
