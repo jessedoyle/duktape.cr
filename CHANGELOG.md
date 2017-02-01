@@ -1,3 +1,11 @@
+# v0.10.1 - Jan 31, 2017
+
+- Fix an incorrect type restriction that was causing
+  compiler issues on recent Crystal versions.
+- Fix Sandbox timeout tests by no longer running
+  a set number of iterations - instead infinite loop
+  until timeout.
+
 # v0.10.0 - Nov 22, 2016
 
 - Update for Crystal 0.20.0. As shards now copies

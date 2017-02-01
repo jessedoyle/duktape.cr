@@ -108,13 +108,10 @@ describe Duktape::Sandbox do
 
   context "timeout during evaluation" do
     it "should raise a Duktape::RangeError on timeout" do
-      sbx = Duktape::Sandbox.new(500)
+      sbx = Duktape::Sandbox.new(100)
       expect_raises Duktape::RangeError, /execution timeout/ do
         sbx.eval! <<-JS
-          var times = 1000000;
-          for(var i = 0; i < times; i++){
-            i * i;
-          }
+          while (true) {}
         JS
       end
     end

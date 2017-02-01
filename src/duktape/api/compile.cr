@@ -14,7 +14,7 @@ module Duktape
       LibDUK.compile_raw ctx, nil, 0, (flags | LibDUK::COMPILE_SAFE)
     end
 
-    def compile(str : String, flags : UInt32 = 0)
+    def compile(str : String, flags : UInt32 = 0_u32)
       compile_string str, flags
     end
 
