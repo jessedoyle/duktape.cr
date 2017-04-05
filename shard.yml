@@ -5,6 +5,6 @@ authors:
   - Jesse Doyle <jdoyle@ualberta.ca>
 
 scripts:
-  postinstall: "make -C ext clean libduktape"
+  postinstall: "cd src && make -C ext clean libduktape"
 
 license: MIT
