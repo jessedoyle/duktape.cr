@@ -22,6 +22,6 @@ module Duktape
     STRING = [MAJOR, MINOR, TINY, PRE].compact.join "."
 
     # Internal Duktape Version
-    API = [1, 5, 1].join "."
+    API = [2, 0, 2].join "."
   end
 end
