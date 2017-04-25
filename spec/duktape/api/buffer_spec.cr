@@ -66,7 +66,7 @@ describe Duktape::API::Buffer do
     it "should push a buffer of specified type to stack" do
       ctx = Duktape::Context.new
       ctx.push_dynamic_buffer 2
-      ctx.push_buffer_object -1, 2, 0, LibDUK::BUFOBJ_DUKTAPE_BUFFER
+      ctx.push_buffer_object -1, 2, 0, LibDUK::BufObj::Int32Array
 
       last_stack_type(ctx).should be_js_type(:object) # Duktape.Buffer
     end
@@ -76,7 +76,7 @@ describe Duktape::API::Buffer do
       ctx << 1
 
       expect_raises Duktape::TypeError, /not buffer/ do
-        ctx.push_buffer_object -1, 2, 0, LibDUK::BUFOBJ_DUKTAPE_BUFFER
+        ctx.push_buffer_object -1, 2, 0, LibDUK::BufObj::Int32Array
       end
     end
 
@@ -84,7 +84,7 @@ describe Duktape::API::Buffer do
       ctx = Duktape::Context.new
 
       expect_raises Duktape::StackError, /invalid index/ do
-        ctx.push_buffer_object -1, 2, 0, LibDUK::BUFOBJ_DUKTAPE_BUFFER
+        ctx.push_buffer_object -1, 2, 0, LibDUK::BufObj::Int32Array
       end
     end
   end

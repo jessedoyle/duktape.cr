@@ -6,32 +6,17 @@
 
 module Duktape
   class InternalError < Exception
-    @ctx : Void*?
     @stack : String?
 
-    getter msg, err
+    getter msg
 
     def initialize(@msg : String)
-      @err = LibDUK::ERR_INTERNAL_ERROR
       super msg
     end
 
-    def initialize(@ctx : LibDUK::Context, @msg : String, @err : Int32)
-      Duktape.logger.fatal "InternalError: #{msg} - #{err}"
-      Duktape.logger.debug "STACK: #{stack}"
+    def initialize(@msg : String)
+      Duktape.logger.fatal "InternalError: #{msg}"
       super msg
-    end
-
-    def stack
-      @stack ||= make_stack
-    end
-
-    private def make_stack
-      LibDUK.push_context_dump @ctx
-      ptr = LibDUK.safe_to_lstring @ctx, -1, out size
-      String.new(ptr.to_slice(size)).tap do
-        LibDUK.pop @ctx
-      end
     end
   end
 

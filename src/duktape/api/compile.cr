@@ -9,82 +9,77 @@ module Duktape
     # NOTE: These methods are all equivalent to the Duktape
     # `pcompile_xxx` functions because we wish to safely return
     # from errors.
-    def compile(flags = 0_u32)
+    def compile
       require_valid_index -2 # Source and filename
-      LibDUK.compile_raw ctx, nil, 0, (flags | LibDUK::COMPILE_SAFE)
+      options = LibDUK::Compile.new(2_u32) |
+        LibDUK::Compile::Safe
+      LibDUK.compile_raw ctx, nil, 0, options
     end
 
-    def compile(str : String, flags : UInt32 = 0_u32)
-      compile_string str, flags
+    def compile(str : String)
+      compile_string str
     end
 
-    def compile!(flags = 0_u32)
-      err = compile flags
+    def compile!
+      err = compile
       raise_error err
     end
 
-    def compile!(str : String, flags = 0_u32)
-      compile_string! str, flags
+    def compile!(str : String)
+      compile_string! str
     end
 
-    def compile_file(path : String, flags = 0_u32)
-      push_string_file path
-      push_string path
-      LibDUK.compile_raw ctx, nil, 0, (flags | LibDUK::COMPILE_SAFE)
+    def compile_lstring(src : String, length : Int32)
+      options = LibDUK::Compile.new(0_u32) |
+        LibDUK::Compile::Safe |
+        LibDUK::Compile::NoSource |
+        LibDUK::Compile::NoFilename
+      LibDUK.compile_raw ctx, src, length, options
     end
 
-    def compile_file!(path : String, flags = 0_u32)
-      err = compile_file path, flags
+    def compile_lstring!(src : String, length : Int32)
+      err = compile_lstring src, length
       raise_error err
     end
 
-    def compile_lstring(src : String, length : Int32, flags = 0_u32)
-      flags |= LibDUK::COMPILE_SAFE |
-        LibDUK::COMPILE_NOSOURCE
-      push_string __FILE__
-      LibDUK.compile_raw ctx, src, length, flags
-    end
-
-    def compile_lstring!(src : String, length : Int32, flags : UInt32 = 0_u32)
-      err = compile_lstring src, length, flags
-      raise_error err
-    end
-
-    def compile_lstring_filename(src : String, length : Int32, flags = 0_u32)
+    def compile_lstring_filename(src : String, length : Int32)
       require_valid_index -1 # filename
-      flags |= LibDUK::COMPILE_SAFE |
-        LibDUK::COMPILE_NOSOURCE
-      LibDUK.compile_raw ctx, src, length, flags
+      options = LibDUK::Compile.new(1_u32) |
+        LibDUK::Compile::Safe |
+        LibDUK::Compile::NoSource
+      LibDUK.compile_raw ctx, src, length, options
     end
 
-    def compile_lstring_filename!(src : String, length : Int32, flags = 0_u32)
-      err = compile_lstring_filename src, length, flags
+    def compile_lstring_filename!(src : String, length : Int32)
+      err = compile_lstring_filename src, length
       raise_error err
     end
 
-    def compile_string(src : String, flags = 0_u32)
-      flags |= LibDUK::COMPILE_SAFE |
-        LibDUK::COMPILE_NOSOURCE |
-        LibDUK::COMPILE_STRLEN
-      push_string __FILE__
-      LibDUK.compile_raw ctx, src, 0, flags
+    def compile_string(src : String)
+      options = LibDUK::Compile.new(0_u32) |
+        LibDUK::Compile::Safe |
+        LibDUK::Compile::NoSource |
+        LibDUK::Compile::StrLen |
+        LibDUK::Compile::NoFilename
+      LibDUK.compile_raw ctx, src, 0, options
     end
 
-    def compile_string!(src : String, flags = 0_u32)
-      err = compile_string src, flags
+    def compile_string!(src : String)
+      err = compile_string src
       raise_error err
     end
 
-    def compile_string_filename(src : String, flags = 0_u32)
+    def compile_string_filename(src : String)
       require_valid_index -1 # filename
-      flags |= LibDUK::COMPILE_SAFE |
-        LibDUK::COMPILE_NOSOURCE |
-        LibDUK::COMPILE_STRLEN
-      LibDUK.compile_raw ctx, src, 0, flags
+      options = LibDUK::Compile.new(1_u32) |
+        LibDUK::Compile::Safe |
+        LibDUK::Compile::NoSource |
+        LibDUK::Compile::StrLen
+      LibDUK.compile_raw ctx, src, 0, options
     end
 
-    def compile_string_filename!(src : String, flags = 0_u32)
-      err = compile_string_filename src, flags
+    def compile_string_filename!(src : String)
+      err = compile_string_filename src
       raise_error err
     end
 

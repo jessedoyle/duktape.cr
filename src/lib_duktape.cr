@@ -14,7 +14,7 @@ lib LibDUK
   INVALID_INDEX = Int32::MIN
   VARARGS       = -1
 
-  enum Type
+  enum Type : UInt32
     Min       = 0
     None      = 0
     Undefined # 1
@@ -29,7 +29,7 @@ lib LibDUK
     Max       = 9
   end
 
-  enum TypeMask
+  enum TypeMask : UInt32
     None      = 1 << Type::None
     Undefined = 1 << Type::Undefined
     Null      = 1 << Type::Null
@@ -44,14 +44,14 @@ lib LibDUK
     Promote   = 1 << 11 # Internal
   end
 
-  enum Hint
+  enum Hint : UInt32
     None   # 0
     String # 1
     Number # 2
   end
 
   @[Flags]
-  enum Enum
+  enum Enum : UInt32
     IncludeNonEnumerable # (1 << 0)
     IncludeHidden        # (1 << 1)
     IncludeSymbols       # (1 << 2)
@@ -62,7 +62,7 @@ lib LibDUK
     NoProxyBehavior      # (1 << 7)
   end
 
-  enum Compile
+  enum Compile : UInt32
     Eval       = (1 << 3)
     Function   = (1 << 4)
     Strict     = (1 << 5)
@@ -74,7 +74,7 @@ lib LibDUK
   end
 
   @[Flags]
-  enum DefProp
+  enum DefProp : UInt32
     Writable          # (1 << 0)
     Enumerable        # (1 << 1)
     Configurable      # (1 << 2)
@@ -122,25 +122,25 @@ lib LibDUK
     UriError       = -Err::UriError
   end
 
-  enum Exec
+  enum Exec : UInt32
     Success # 0
     Error   # 1
   end
 
-  enum Level
+  enum Level : UInt32
     Debug   # 0
     DDebug  # 1
     DDDebug # 2
   end
 
   @[Flags]
-  enum BufFlag
+  enum BufFlag : UInt32
     Dynamic  # (1 << 0)
     External # (1 << 1)
     NoZero   # (1 << 2)
   end
 
-  enum BufObj
+  enum BufObj : UInt32
     CreateArrBuf      = 1 << 4 # Internal
     ArrayBuffer       = 0
     NodeJsBuffer      = 1 | CreateArrBuf
@@ -218,6 +218,8 @@ lib LibDUK
   # Error Handling
   @[Raises]
   fun throw_raw = duk_throw_raw(ctx : Context)
+  @[Raises]
+  fun error_raw = duk_error_raw(ctx : Context, err_code : Int32, filename : UInt8*, line : Int32, fmt : UInt8*, ...)
   @[Raises]
   fun fatal_raw = duk_fatal_raw(ctx : Context, msg : UInt8*)
 
@@ -317,7 +319,7 @@ lib LibDUK
   fun is_external_buffer = duk_is_external_buffer(ctx : Context, index : Index) : Bool
 
   # Get Operations
-  fun get_error_code = duk_get_error_code(ctx : Context, index : Index) : Int32
+  fun get_error_code = duk_get_error_code(ctx : Context, index : Index) : Err
   fun get_boolean = duk_get_boolean(ctx : Context, index : Index) : Bool
   fun get_number = duk_get_number(ctx : Context, index : Index) : Float64
   fun get_int = duk_get_int(ctx : Context, index : Index) : Int32

@@ -110,61 +110,6 @@ describe Duktape::API::Compile do
     end
   end
 
-  describe "compile_file" do
-    it "should raise on invalid file" do
-      ctx = Duktape::Context.new
-
-      expect_raises Duktape::FileError, /invalid file/ do
-        ctx.compile_file "__invalid.js"
-      end
-    end
-
-    it "should compile valid js from a file" do
-      ctx = Duktape::Context.new
-      val = ctx.compile_file "#{JS_SOURCE_PATH}/valid.js"
-      top = ctx.is_function -1
-
-      val.should eq(0)
-      top.should be_true
-    end
-
-    it "should return non-zero on invalid js file" do
-      ctx = Duktape::Context.new
-      val = ctx.compile_file "#{JS_SOURCE_PATH}/invalid.js"
-      err = ctx.safe_to_string -1
-
-      val.should_not eq(0)
-      err.should match(/SyntaxError/)
-    end
-  end
-
-  describe "compile_file!" do
-    it "should raise on invalid file" do
-      ctx = Duktape::Context.new
-
-      expect_raises Duktape::FileError, /invalid file/ do
-        ctx.compile_file! "__invalid.js"
-      end
-    end
-
-    it "should compile valid js from a file" do
-      ctx = Duktape::Context.new
-      val = ctx.compile_file! "#{JS_SOURCE_PATH}/valid.js"
-      top = ctx.is_function -1
-
-      val.should eq(0)
-      top.should be_true
-    end
-
-    it "should raise on invalid js" do
-      ctx = Duktape::Context.new
-
-      expect_raises Duktape::SyntaxError, /eof or line terminator/ do
-        ctx.compile_file! "#{JS_SOURCE_PATH}/invalid.js"
-      end
-    end
-  end
-
   describe "compile_lstring" do
     it "should compile a valid string with length" do
       ctx = Duktape::Context.new

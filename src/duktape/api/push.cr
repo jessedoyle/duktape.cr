@@ -69,9 +69,13 @@ module Duktape
       LibDUK.push_error_object_raw ctx, err, __FILE__, __LINE__.to_i32, msg
     end
 
+    def push_error_object(err : LibDUK::Err, msg : String)
+      push_error_object err.value, msg
+    end
+
     def push_external_buffer
-      flags = LibDUK::BUF_FLAG_DYNAMIC |
-        LibDUK::BUF_FLAG_EXTERNAL
+      flags = LibDUK::BufFlag::Dynamic |
+        LibDUK::BufFlag::External
       LibDUK.push_buffer_raw ctx, 0, flags
     end
 
@@ -150,13 +154,6 @@ module Duktape
       String.new ptr
     end
 
-    def push_string_file(path : String)
-      validate_file! path
-
-      ptr = LibDUK.push_string_file_raw ctx, path, 0_u32
-      String.new ptr
-    end
-
     def push_this
       LibDUK.push_this ctx
     end
@@ -166,7 +163,7 @@ module Duktape
     end
 
     def push_thread_new_globalenv
-      LibDUK.push_thread_raw ctx, LibDUK::THREAD_NEW_GLOBAL_ENV
+      LibDUK.push_thread_raw ctx, LibDUK::Thread::NewGlobalEnv
     end
 
     def push_thread_stash(target_ctx : LibDUK::Context)

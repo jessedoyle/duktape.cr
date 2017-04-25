@@ -145,7 +145,7 @@ describe Duktape::API::Push do
 
   describe "push_error_object" do
     it "should push an error object onto the stack" do
-      ctx.push_error_object LibDUK::ERR_UNCAUGHT_ERROR, "TEST"
+      ctx.push_error_object LibDUK::Err::Error, "TEST"
 
       last_stack_type(ctx).should be_js_type(:object)
       ctx.is_error?(-1).should be_true
@@ -377,17 +377,10 @@ describe Duktape::API::Push do
       ctx.call 0
 
       ctx.is_error(-1).should be_true
-      ctx.safe_to_string(-1).should match(/error error/)
+      ctx.safe_to_string(-1).should match(/error: error/i)
     end
 
     # See spec/support/proc_helper.cr
-    proc_should_return_error(:unimplemented)
-    proc_should_return_error(:unsupported)
-    proc_should_return_error(:internal)
-    proc_should_return_error(:alloc)
-    proc_should_return_error(:assertion)
-    proc_should_return_error(:api)
-    proc_should_return_error(:uncaught)
     proc_should_return_error(:error)
     proc_should_return_error(:eval)
     proc_should_return_error(:range)
@@ -403,21 +396,6 @@ describe Duktape::API::Push do
 
       last_stack_type(ctx).should be_js_type(:string)
       str.should eq("Hello")
-    end
-  end
-
-  describe "push_string_file" do
-    it "should push a string path onto the stack" do
-      str = ctx.push_string_file __FILE__
-
-      last_stack_type(ctx).should be_js_type(:string)
-      str.should be_a(String)
-    end
-
-    it "should raise on missing file" do
-      expect_raises Duktape::FileError, /invalid file/ do
-        ctx.push_string_file "__invalid.txt"
-      end
     end
   end
 

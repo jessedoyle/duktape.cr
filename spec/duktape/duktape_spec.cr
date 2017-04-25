@@ -25,7 +25,7 @@ end
 describe "CoffeeScript" do
   it "should eval coffeescript" do
     ctx = Duktape::Context.new
-    ctx.eval_file! "#{JS_SOURCE_PATH}/coffeescript.js"
+    ctx.eval! File.read("#{JS_SOURCE_PATH}/coffeescript.js")
     ctx.eval_string! <<-JS
       CoffeeScript.eval("((x) -> x * x)(8)");
     JS
@@ -38,7 +38,7 @@ end
 describe "UglifyJS" do
   it "should uglify some javascript" do
     ctx = Duktape::Context.new
-    ctx.eval_file! "#{JS_SOURCE_PATH}/uglify.js"
+    ctx.eval! File.read( "#{JS_SOURCE_PATH}/uglify.js")
     ctx.eval_string <<-JS
       uglify('function add(x, y) {  return x + y;  }');
     JS

@@ -6,12 +6,12 @@ require "../../spec_helper"
 # to test that functionality here.
 
 describe Duktape::API::Prop do
-  flags = LibDUK::DEFPROP_HAVE_VALUE |
-    LibDUK::DEFPROP_HAVE_WRITABLE |
-    LibDUK::DEFPROP_WRITABLE |
-    LibDUK::DEFPROP_HAVE_ENUMERABLE |
-    LibDUK::DEFPROP_HAVE_CONFIGURABLE |
-    LibDUK::DEFPROP_CONFIGURABLE
+  flags = LibDUK::DefProp::HaveValue |
+    LibDUK::DefProp::HaveWritable |
+    LibDUK::DefProp::Writable |
+    LibDUK::DefProp::HaveEnumerable |
+    LibDUK::DefProp::HaveConfigurable |
+    LibDUK::DefProp::Configurable
 
   describe "def_prop" do
     it "should define a property on an object" do

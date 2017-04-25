@@ -12,6 +12,10 @@ module Duktape
       LibDUK.def_prop ctx, index, flags
     end
 
+    def def_prop(index : Int32, flags : LibDUK::DefProp)
+      def_prop index, flags.value
+    end
+
     def del_prop(index : Int32)
       require_valid_index index
       require_object_coercible index
