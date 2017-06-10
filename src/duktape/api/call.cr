@@ -25,10 +25,10 @@ module Duktape
       LibDUK.pcall(ctx, nargs) == 0
     end
 
-    def call_failure(value = :error)
-      ERRORS[value].value
+    def call_failure(error = :error)
+      ERRORS[error].value
     rescue KeyError
-      raise TypeError.new "invalid error type: #{value}"
+      raise TypeError.new "invalid error type: #{error}"
     end
 
     def call_method(nargs : Int32)

@@ -111,7 +111,7 @@ module Duktape
     def is_null_or_undefined(index : Int32)
       mask = [
         :null,
-        :undefined
+        :undefined,
       ]
       check_type_mask index, mask
     end

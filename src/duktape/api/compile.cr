@@ -6,13 +6,15 @@
 
 module Duktape
   module API::Compile
+    include Support::File
+
     # NOTE: These methods are all equivalent to the Duktape
     # `pcompile_xxx` functions because we wish to safely return
     # from errors.
     def compile
       require_valid_index -2 # Source and filename
       options = LibDUK::Compile.new(2_u32) |
-        LibDUK::Compile::Safe
+                LibDUK::Compile::Safe
       LibDUK.compile_raw ctx, nil, 0, options
     end
 
@@ -29,11 +31,19 @@ module Duktape
       compile_string! str
     end
 
+    def compile_file(str : String)
+      compile read_file(str)
+    end
+
+    def compile_file!(str : String)
+      compile! read_file(str)
+    end
+
     def compile_lstring(src : String, length : Int32)
       options = LibDUK::Compile.new(0_u32) |
-        LibDUK::Compile::Safe |
-        LibDUK::Compile::NoSource |
-        LibDUK::Compile::NoFilename
+                LibDUK::Compile::Safe |
+                LibDUK::Compile::NoSource |
+                LibDUK::Compile::NoFilename
       LibDUK.compile_raw ctx, src, length, options
     end
 
@@ -45,8 +55,8 @@ module Duktape
     def compile_lstring_filename(src : String, length : Int32)
       require_valid_index -1 # filename
       options = LibDUK::Compile.new(1_u32) |
-        LibDUK::Compile::Safe |
-        LibDUK::Compile::NoSource
+                LibDUK::Compile::Safe |
+                LibDUK::Compile::NoSource
       LibDUK.compile_raw ctx, src, length, options
     end
 
@@ -57,10 +67,10 @@ module Duktape
 
     def compile_string(src : String)
       options = LibDUK::Compile.new(0_u32) |
-        LibDUK::Compile::Safe |
-        LibDUK::Compile::NoSource |
-        LibDUK::Compile::StrLen |
-        LibDUK::Compile::NoFilename
+                LibDUK::Compile::Safe |
+                LibDUK::Compile::NoSource |
+                LibDUK::Compile::StrLen |
+                LibDUK::Compile::NoFilename
       LibDUK.compile_raw ctx, src, 0, options
     end
 
@@ -72,9 +82,9 @@ module Duktape
     def compile_string_filename(src : String)
       require_valid_index -1 # filename
       options = LibDUK::Compile.new(1_u32) |
-        LibDUK::Compile::Safe |
-        LibDUK::Compile::NoSource |
-        LibDUK::Compile::StrLen
+                LibDUK::Compile::Safe |
+                LibDUK::Compile::NoSource |
+                LibDUK::Compile::StrLen
       LibDUK.compile_raw ctx, src, 0, options
     end
 

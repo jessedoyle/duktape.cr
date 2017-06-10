@@ -7,8 +7,8 @@
 @[Link(ldflags: "-L#{__DIR__}/.build/lib -L#{__DIR__}/.build/include -lduktape -lm")]
 lib LibDUK
   alias Context = Void*
-  alias Size  = Int32
-  alias Bool  = Int32
+  alias Size = Int32
+  alias Bool = Int32
   alias Index = Int32
 
   INVALID_INDEX = Int32::MIN
@@ -75,16 +75,16 @@ lib LibDUK
 
   @[Flags]
   enum DefProp : UInt32
-    Writable          # (1 << 0)
-    Enumerable        # (1 << 1)
-    Configurable      # (1 << 2)
-    HaveWritable      # (1 << 3)
-    HaveEnumerable    # (1 << 4)
-    HaveConfigurable  # (1 << 5)
-    HaveValue         # (1 << 6)
-    HaveGetter        # (1 << 7)
-    HaveSetter        # (1 << 8)
-    Force             # (1 << 9)
+    Writable         # (1 << 0)
+    Enumerable       # (1 << 1)
+    Configurable     # (1 << 2)
+    HaveWritable     # (1 << 3)
+    HaveEnumerable   # (1 << 4)
+    HaveConfigurable # (1 << 5)
+    HaveValue        # (1 << 6)
+    HaveGetter       # (1 << 7)
+    HaveSetter       # (1 << 8)
+    Force            # (1 << 9)
     SetWritable       = HaveWritable | Writable
     ClearWritable     = HaveWritable
     SetEnumerable     = HaveEnumerable | Enumerable
@@ -379,7 +379,6 @@ lib LibDUK
   fun json_encode = duk_json_encode(ctx : Context, index : Index) : UInt8*
   fun json_decode = duk_json_decode(ctx : Context, index : Index)
   fun buffer_to_string = duk_buffer_to_string(ctx : Context, index : Index) : UInt8*
-
 
   # Buffer Operations
   fun resize_buffer = duk_resize_buffer(ctx : Context, index : Index, new_size : Size) : Void*

@@ -79,6 +79,86 @@ describe Duktape::API::Eval do
     end
   end
 
+  describe "eval_file" do
+    it "should evaluate a valid js file" do
+      ctx = Duktape::Context.new
+      err = ctx.eval_file "#{JS_SOURCE_PATH}/valid.js"
+
+      err.should eq(0)
+    end
+
+    it "should return non-zero on file containing invalid js" do
+      ctx = Duktape::Context.new
+      err = ctx.eval_file "#{JS_SOURCE_PATH}/invalid.js"
+
+      err.should_not eq(0)
+    end
+
+    it "should raise on invalid file" do
+      ctx = Duktape::Context.new
+
+      expect_raises Duktape::FileError, /invalid file/ do
+        ctx.eval_file "__invalid.js"
+      end
+    end
+  end
+
+  describe "eval_file!" do
+    it "should return 0 if file contains valid js" do
+      ctx = Duktape::Context.new
+      err = ctx.eval_file! "#{JS_SOURCE_PATH}/valid.js"
+
+      err.should eq(0)
+    end
+
+    it "should raise an error on invalid js" do
+      ctx = Duktape::Context.new
+
+      expect_raises Duktape::SyntaxError, /unterminated string/ do
+        ctx.eval_file! "#{JS_SOURCE_PATH}/invalid.js"
+      end
+    end
+  end
+
+  describe "eval_file_noresult" do
+    it "should evaluate valid js without leaving a stack value" do
+      ctx = Duktape::Context.new
+      err = ctx.eval_file_noresult "#{JS_SOURCE_PATH}/valid.js"
+
+      last_stack_type(ctx).should be_js_type(:none)
+      err.should eq(0)
+    end
+
+    it "should raise on invalid file" do
+      ctx = Duktape::Context.new
+
+      expect_raises Duktape::FileError, /invalid file/ do
+        ctx.eval_file_noresult "__invalid.js"
+      end
+    end
+  end
+
+  describe "eval_file_noresult!" do
+    it "should return 0 on valid js" do
+      ctx = Duktape::Context.new
+      err = ctx.eval_file_noresult! "#{JS_SOURCE_PATH}/valid.js"
+
+      last_stack_type(ctx).should be_js_type(:none)
+      err.should eq(0)
+    end
+
+    it "should raise an error on invalid js" do
+      ctx = Duktape::Context.new
+
+      # Because the NORESULT flag tells Duktape to
+      # not push the Error object on the stack after
+      # failure, we have to look for a StackError
+      expect_raises Duktape::StackError, /stack empty/ do
+        ctx.eval_file_noresult! "#{JS_SOURCE_PATH}/invalid.js"
+      end
+    end
+  end
+
   describe "eval_lstring" do
     it "should evaluate a valid js string and length" do
       ctx = Duktape::Context.new

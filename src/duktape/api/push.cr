@@ -75,7 +75,7 @@ module Duktape
 
     def push_external_buffer
       flags = LibDUK::BufFlag::Dynamic |
-        LibDUK::BufFlag::External
+              LibDUK::BufFlag::External
       LibDUK.push_buffer_raw ctx, 0, flags
     end
 

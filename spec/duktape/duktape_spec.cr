@@ -38,7 +38,7 @@ end
 describe "UglifyJS" do
   it "should uglify some javascript" do
     ctx = Duktape::Context.new
-    ctx.eval! File.read( "#{JS_SOURCE_PATH}/uglify.js")
+    ctx.eval! File.read("#{JS_SOURCE_PATH}/uglify.js")
     ctx.eval_string <<-JS
       uglify('function add(x, y) {  return x + y;  }');
     JS

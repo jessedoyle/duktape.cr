@@ -7,11 +7,11 @@ require "../../spec_helper"
 
 describe Duktape::API::Prop do
   flags = LibDUK::DefProp::HaveValue |
-    LibDUK::DefProp::HaveWritable |
-    LibDUK::DefProp::Writable |
-    LibDUK::DefProp::HaveEnumerable |
-    LibDUK::DefProp::HaveConfigurable |
-    LibDUK::DefProp::Configurable
+          LibDUK::DefProp::HaveWritable |
+          LibDUK::DefProp::Writable |
+          LibDUK::DefProp::HaveEnumerable |
+          LibDUK::DefProp::HaveConfigurable |
+          LibDUK::DefProp::Configurable
 
   describe "def_prop" do
     it "should define a property on an object" do
