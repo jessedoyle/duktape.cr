@@ -1,5 +1,6 @@
 require "../lib_duktape"
 require "./support/*"
+require "./builtin/base"
 require "./context"
 require "./error"
 require "./logger"

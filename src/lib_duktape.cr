@@ -334,6 +334,8 @@ lib LibDUK
   fun get_heapptr = duk_get_heapptr(ctx : Context, index : Index) : Void*
   fun get_length = duk_get_length(ctx : Context, index : Index) : Size
   fun set_length = duk_set_length(ctx : Context, index : Index, size : Size)
+  fun get_global_string = duk_get_global_string(ctx : Context, key : UInt8*) : Bool
+  fun get_prop_string = duk_get_prop_string(ctx : Context, index : Index, key : UInt8*) : Bool
 
   # Require Operations
   fun require_undefined = duk_require_undefined(ctx : Context, index : Index)

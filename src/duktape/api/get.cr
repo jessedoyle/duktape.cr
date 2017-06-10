@@ -27,6 +27,10 @@ module Duktape
       Context.new raw_ctx
     end
 
+    def get_global_string(key : String)
+      LibDUK.get_global_string(ctx, key) != 0
+    end
+
     def get_heapptr(index : Int32)
       require_valid_index index
       LibDUK.get_heapptr ctx, index
@@ -63,6 +67,11 @@ module Duktape
     def get_pointer(index : Int32)
       require_valid_index index
       LibDUK.get_pointer ctx, index
+    end
+
+    def get_prop_string(index : Int32, key : String)
+      require_object_coercible index
+      LibDUK.get_prop_string(ctx, index, key) != 0
     end
 
     def get_string(index : Int32)

@@ -31,12 +31,14 @@ module Duktape
       @ctx = Duktape.create_heap_default
       @heap_destroyed = false
       @should_gc = true
+      builtin_functions
     end
 
     def initialize(context : LibDUK::Context)
       @ctx = context
       @heap_destroyed = false
       @should_gc = false
+      builtin_functions
     end
 
     def finalize
@@ -80,6 +82,12 @@ module Duktape
 
     def timeout
       nil
+    end
+
+    private def builtin_functions
+      BuiltIn::Print.new(self).import!
+      BuiltIn::Alert.new(self).import!
+      BuiltIn::Console.new(self).import!
     end
   end
 end
