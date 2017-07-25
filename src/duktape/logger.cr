@@ -37,17 +37,17 @@ module Duktape
     end
   end
 
-  private def self.log_color(level : String)
+  private def self.log_color(level : Logger::Severity)
     case level
-    when "INFO"
+    when Logger::INFO
       :light_cyan
-    when "WARN"
+    when Logger::WARN
       :white
-    when "ERROR"
+    when Logger::ERROR
       :yellow
-    when "FATAL"
+    when Logger::FATAL
       :red
-    when "DEBUG"
+    when Logger::DEBUG
       :magenta
     else
       :light_gray
