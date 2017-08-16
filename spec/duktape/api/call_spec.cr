@@ -41,10 +41,10 @@ describe Duktape::API::Call do
     Duktape::API::Call::ERRORS.keys.each do |err|
       it "#{err}: should return a negative status code" do
         ctx = Duktape::Context.new
-        num = ctx.call_failure err
+        num = ctx.call_failure(err)
 
         (num < 0).should be_true
-        num.should eq(Duktape::API::Call::ERRORS[err])
+        num.should eq(Duktape::API::Call::ERRORS[err].value)
         num.should be_a(Int32)
       end
     end

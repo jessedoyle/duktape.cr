@@ -6,16 +6,16 @@
 
 module Duktape
   TYPES = {
-    LibDUK::TYPE_NONE      => :none,
-    LibDUK::TYPE_UNDEFINED => :undefined,
-    LibDUK::TYPE_NULL      => :null,
-    LibDUK::TYPE_BOOLEAN   => :boolean,
-    LibDUK::TYPE_NUMBER    => :number,
-    LibDUK::TYPE_STRING    => :string,
-    LibDUK::TYPE_OBJECT    => :object,
-    LibDUK::TYPE_BUFFER    => :buffer,
-    LibDUK::TYPE_POINTER   => :pointer,
-    LibDUK::TYPE_LIGHTFUNC => :lightfunc,
+    LibDUK::Type::None.value      => :none,
+    LibDUK::Type::Undefined.value => :undefined,
+    LibDUK::Type::Null.value      => :null,
+    LibDUK::Type::Boolean.value   => :boolean,
+    LibDUK::Type::Number.value    => :number,
+    LibDUK::Type::String.value    => :string,
+    LibDUK::Type::Object.value    => :object,
+    LibDUK::Type::Buffer.value    => :buffer,
+    LibDUK::Type::Pointer.value   => :pointer,
+    LibDUK::Type::Lightfunc.value => :lightfunc,
   }
 
   TYPE_TO_NUM = TYPES.invert
@@ -29,11 +29,16 @@ module Duktape
       LibDUK.check_type_mask(ctx, index, mask) == 1
     end
 
+    def check_type_mask(index : Int32, mask : LibDUK::TypeMask)
+      check_type_mask index, mask.value
+    end
+
     def check_type_mask(index, types : Array(Symbol))
       mask = 0_u32
 
       types.each do |t|
-        mask |= (1 << TYPE_TO_NUM[t]).to_u32
+        check = TYPE_TO_NUM[t]
+        mask |= (1 << check).to_u32
       end
 
       LibDUK.check_type_mask(ctx, index, mask) == 1
@@ -79,10 +84,6 @@ module Duktape
       LibDUK.is_ecmascript_function(ctx, index) == 1
     end
 
-    def is_error(index : Int32)
-      LibDUK.get_error_code(ctx, index) != 0
-    end
-
     def is_external_buffer(index : Int32)
       LibDUK.is_external_buffer(ctx, index) == 1
     end
@@ -108,7 +109,11 @@ module Duktape
     end
 
     def is_null_or_undefined(index : Int32)
-      LibDUK.is_null_or_undefined(ctx, index) == 1
+      mask = [
+        :null,
+        :undefined,
+      ]
+      check_type_mask index, mask
     end
 
     def is_number(index : Int32)

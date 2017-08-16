@@ -160,7 +160,7 @@ module Duktape
 
     # :nodoc:
     private def check_and_raise_error
-      if @context.is_valid_index(-1) && @context.is_error(-1)
+      if @context.is_error?(-1)
         code = @context.get_error_code -1
         @context.raise_error code
       end
@@ -196,13 +196,13 @@ module Duktape
         object_to_string index
       elsif @context.is_array index
         Array(JSPrimitive).new.tap do |array|
-          @context.enum index, LibDUK::ENUM_ARRAY_INDICIES_ONLY
+          @context.enum index, LibDUK::Enum::ArrayIndicesOnly
           next_array_element array
           @context.pop
         end
       elsif @context.is_object index
         Hash(String, JSPrimitive).new.tap do |hash|
-          @context.enum index, LibDUK::ENUM_OWN_PROPERTIES_ONLY
+          @context.enum index, LibDUK::Enum::OwnPropertiesOnly
           next_hash_element hash
           @context.pop
         end

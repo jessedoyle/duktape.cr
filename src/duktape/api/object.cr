@@ -20,6 +20,10 @@ module Duktape
       LibDUK.enum ctx, index, flags
     end
 
+    def enum(index : Int32, flags : LibDUK::Enum)
+      self.enum index, flags.value
+    end
+
     def equals(one : Int32, two : Int32)
       LibDUK.equals(ctx, one, two) == 1
     end

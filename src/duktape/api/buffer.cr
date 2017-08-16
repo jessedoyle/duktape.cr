@@ -24,6 +24,10 @@ module Duktape
       LibDUK.push_buffer_object ctx, index, byte_offset, byte_length, flags
     end
 
+    def push_buffer_object(index : Int32, byte_offset : Int32, byte_length : Int32, flags : LibDUK::BufObj)
+      push_buffer_object index, byte_offset, byte_length, flags.value
+    end
+
     def require_buffer_data(index : Int32)
       require_buffer index
       get_buffer_data index

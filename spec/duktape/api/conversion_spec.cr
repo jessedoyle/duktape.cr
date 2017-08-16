@@ -7,7 +7,7 @@ describe Duktape::API::Conversion do
     it "should base64 decode the string at index" do
       ctx << "Zm9v"
       ctx.base64_decode(-1) # Coerced to buffer
-      str = ctx.to_string(-1)
+      str = ctx.buffer_to_string(-1)
 
       str.should eq("foo")
     end
@@ -35,7 +35,7 @@ describe Duktape::API::Conversion do
     it "should hex decode a valid string" do
       ctx << "7465737420737472696e67"
       ctx.hex_decode(-1)
-      str = ctx.to_string(-1)
+      str = ctx.buffer_to_string(-1)
 
       str.should eq("test string")
     end

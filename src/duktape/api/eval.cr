@@ -9,11 +9,13 @@ module Duktape
   # `peval_xxx` functions because we wish to safely return
   # from errors.
   module API::Eval
+    include Support::File
+
     def eval
-      flags = 2 |
-        LibDUK::COMPILE_EVAL |
-        LibDUK::COMPILE_SAFE |
-        LibDUK::COMPILE_NOFILENAME
+      flags = LibDUK::Compile.new(1_u32) |
+              LibDUK::Compile::Eval |
+              LibDUK::Compile::Safe |
+              LibDUK::Compile::NoFilename
 
       LibDUK.eval_raw ctx, nil, 0, flags
     end
@@ -31,48 +33,31 @@ module Duktape
     end
 
     def eval_file(path : String)
-      validate_file! path
-
-      flags = 3 |
-        LibDUK::COMPILE_EVAL |
-        LibDUK::COMPILE_SAFE
-
-      LibDUK.push_string_file_raw ctx, path, LibDUK::STRING_PUSH_SAFE
-      LibDUK.push_string ctx, path
-      LibDUK.eval_raw ctx, nil, 0, flags
+      eval_string read_file(path)
     end
 
     def eval_file!(path : String)
-      raise_error eval_file(path)
+      eval_string! read_file(path)
     end
 
     def eval_file_noresult(path : String)
-      validate_file! path
-
-      flags = 3 |
-        LibDUK::COMPILE_EVAL |
-        LibDUK::COMPILE_SAFE |
-        LibDUK::COMPILE_NORESULT
-
-      LibDUK.push_string_file_raw ctx, path, LibDUK::STRING_PUSH_SAFE
-      LibDUK.push_string ctx, path
-      LibDUK.eval_raw ctx, nil, 0, flags
+      eval_string_noresult read_file(path)
     end
 
     def eval_file_noresult!(path : String)
-      raise_error eval_file_noresult(path)
+      eval_string_noresult! read_file(path)
     end
 
     def eval_lstring(src : String, length : Int)
       # We don't want to raise errors in non-bang
       # methods, so return with an error code.
-      return LibDUK::ERR_API_ERROR if length < 0
+      return LibDUK::Err::Error if length < 0
 
-      flags = 1 |
-        LibDUK::COMPILE_EVAL |
-        LibDUK::COMPILE_SAFE |
-        LibDUK::COMPILE_NOSOURCE |
-        LibDUK::COMPILE_NOFILENAME
+      flags = LibDUK::Compile.new(0_u32) |
+              LibDUK::Compile::Eval |
+              LibDUK::Compile::Safe |
+              LibDUK::Compile::NoSource |
+              LibDUK::Compile::NoFilename
 
       LibDUK.eval_raw ctx, src, length, flags
     end
@@ -88,14 +73,14 @@ module Duktape
     def eval_lstring_noresult(src : String, length : Int)
       # We don't want to raise errors in non-bang
       # methods, so return with an error code.
-      return LibDUK::ERR_API_ERROR if length < 0
+      return LibDUK::Err::Error if length < 0
 
-      flags = 1 |
-        LibDUK::COMPILE_EVAL |
-        LibDUK::COMPILE_SAFE |
-        LibDUK::COMPILE_NOSOURCE |
-        LibDUK::COMPILE_NORESULT |
-        LibDUK::COMPILE_NOFILENAME
+      flags = LibDUK::Compile.new(0_u32) |
+              LibDUK::Compile::Eval |
+              LibDUK::Compile::Safe |
+              LibDUK::Compile::NoSource |
+              LibDUK::Compile::NoResult |
+              LibDUK::Compile::NoFilename
 
       LibDUK.eval_raw ctx, src, length, flags
     end
@@ -109,11 +94,11 @@ module Duktape
     end
 
     def eval_noresult
-      flags = 2 |
-        LibDUK::COMPILE_EVAL |
-        LibDUK::COMPILE_SAFE |
-        LibDUK::COMPILE_NORESULT |
-        LibDUK::COMPILE_NOFILENAME
+      flags = LibDUK::Compile.new(1_u32) |
+              LibDUK::Compile::Eval |
+              LibDUK::Compile::Safe |
+              LibDUK::Compile::NoResult |
+              LibDUK::Compile::NoFilename
 
       LibDUK.eval_raw ctx, nil, 0, flags
     end
@@ -123,12 +108,12 @@ module Duktape
     end
 
     def eval_string(src : String)
-      flags = 1 |
-        LibDUK::COMPILE_EVAL |
-        LibDUK::COMPILE_NOSOURCE |
-        LibDUK::COMPILE_STRLEN |
-        LibDUK::COMPILE_SAFE |
-        LibDUK::COMPILE_NOFILENAME
+      flags = LibDUK::Compile.new(0_u32) |
+              LibDUK::Compile::Eval |
+              LibDUK::Compile::NoSource |
+              LibDUK::Compile::StrLen |
+              LibDUK::Compile::Safe |
+              LibDUK::Compile::NoFilename
 
       LibDUK.eval_raw ctx, src, 0, flags
     end
@@ -138,13 +123,13 @@ module Duktape
     end
 
     def eval_string_noresult(src : String)
-      flags = 1 |
-        LibDUK::COMPILE_EVAL |
-        LibDUK::COMPILE_SAFE |
-        LibDUK::COMPILE_NOSOURCE |
-        LibDUK::COMPILE_STRLEN |
-        LibDUK::COMPILE_NORESULT |
-        LibDUK::COMPILE_NOFILENAME
+      flags = LibDUK::Compile.new(0_u32) |
+              LibDUK::Compile::Eval |
+              LibDUK::Compile::Safe |
+              LibDUK::Compile::NoSource |
+              LibDUK::Compile::StrLen |
+              LibDUK::Compile::NoResult |
+              LibDUK::Compile::NoFilename
 
       LibDUK.eval_raw ctx, src, 0, flags
     end

@@ -163,6 +163,10 @@ module Duktape
       end
     end
 
+    def require_type_mask(index : Int32, types : LibDUK::TypeMask)
+      require_type_mask index, types.value
+    end
+
     def require_uint(index : Int32)
       require_valid_index index
 

@@ -48,10 +48,10 @@ describe Duktape::API::Type do
       end
     end
 
-    context "with LibDUK::TYPE_MASK_XXX" do
+    context "with LibDUK::TypeMask" do
       it "should return true when type matches" do
         ctx = Duktape::Context.new
-        mask = LibDUK::TYPE_MASK_NULL | LibDUK::TYPE_MASK_STRING
+        mask = LibDUK::TypeMask::Null | LibDUK::TypeMask::String
         ctx.push_null
 
         ctx.check_type_mask(-1, mask).should be_true
@@ -91,13 +91,13 @@ describe Duktape::API::Type do
       num = ctx.get_type_mask -1
 
       num.should be_a(UInt32)
-      num.should eq(LibDUK::TYPE_MASK_NUMBER)
+      num.should eq(LibDUK::TypeMask::Number.value)
     end
 
-    it "should return LibDUK::TYPE_MASK_NONE on invalid index" do
+    it "should return LibDUK::TypeMask::None on invalid index" do
       ctx = Duktape::Context.new
 
-      ctx.get_type_mask(-1).should eq(LibDUK::TYPE_MASK_NONE)
+      ctx.get_type_mask(-1).should eq(LibDUK::TypeMask::None.value)
     end
   end
 
@@ -257,28 +257,6 @@ describe Duktape::API::Type do
       ctx = Duktape::Context.new
 
       ctx.is_ecmascript_function(-1).should be_false
-    end
-  end
-
-  describe "is_error" do
-    it "should return true when element is an error object" do
-      ctx = Duktape::Context.new
-      ctx.push_error_object 56, "test"
-
-      ctx.is_error(-1).should be_true
-    end
-
-    it "should return false when not an error" do
-      ctx = Duktape::Context.new
-      ctx << "test"
-
-      ctx.is_error(-1).should be_false
-    end
-
-    it "should return false on invalid index" do
-      ctx = Duktape::Context.new
-
-      ctx.is_error(-1).should be_false
     end
   end
 

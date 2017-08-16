@@ -12,6 +12,6 @@ macro proc_should_return_error(error)
     ctx.call 0
 
     ctx.is_error(-1).should be_true
-    ctx.safe_to_string(-1).should match(/{{error.id}}/)
+    ctx.safe_to_string(-1).should match(/{{error.id}}/i)
   end
 end

@@ -1,3 +1,7 @@
+# v0.12.0 - August 2017
+
+- TODO
+
 # v0.11.0 - July 24, 2017
 
 - Fix compiler issues with Crystal `0.23.0` by making `Duktape::Logger#log_color` accept a `Logger::Severity`. [@kostya, #35]

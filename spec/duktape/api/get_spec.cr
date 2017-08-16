@@ -56,6 +56,18 @@ describe Duktape::API::Get do
     end
   end
 
+  describe "get_global_string" do
+    context "when property exists" do
+      ctx.get_global_string("Duktape").should be_true
+    end
+
+    context "when property does not exist" do
+      it "should return false" do
+        ctx.get_global_string("foo").should be_false
+      end
+    end
+  end
+
   describe "get_heapptr" do
     it "should get a heap pointer from the stack" do
       ctx.eval_string! "({ foo: 'bar' })"
@@ -166,6 +178,29 @@ describe Duktape::API::Get do
 
       buf.class.should eq(Pointer(Void))
       buf.should eq(Pointer(Void).null)
+    end
+  end
+
+  describe "get_prop_string" do
+    context "when the property exists" do
+      it "returns true" do
+        ctx.get_global_string "Duktape"
+        ctx.get_prop_string(-1, "version").should be_true
+      end
+    end
+
+    context "when the property does not exist" do
+      it "returns false" do
+        ctx.get_prop_string(-1, "foo").should be_false
+      end
+    end
+
+    context "when index is invalid" do
+      it "raises an error" do
+        expect_raises Duktape::StackError do
+          ctx.get_prop_string(LibDUK::INVALID_INDEX, "foo").should be_false
+        end
+      end
     end
   end
 

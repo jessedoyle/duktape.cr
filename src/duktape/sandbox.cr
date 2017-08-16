@@ -14,6 +14,7 @@ module Duktape
       @heap_destroyed = false
       @timeout = nil
       @should_gc = true
+      builtin_functions
       secure!
     end
 
@@ -24,6 +25,7 @@ module Duktape
       # NOTE: Don't automatically destroy the heap
       # on finalization when given a `LibDUK::Context`.
       @should_gc = false
+      builtin_functions
       secure!
     end
 
@@ -38,6 +40,7 @@ module Duktape
       @heap_destroyed = false
       @timeout = timeout
       @should_gc = true
+      builtin_functions
       secure!
     end
 
