@@ -168,7 +168,7 @@ lib LibDUK
   end
 
   struct ThreadState
-    data : UInt8*
+    data : UInt8[128]
   end
 
   struct MemoryFunctions
@@ -400,11 +400,11 @@ lib LibDUK
   fun del_prop_string = duk_del_prop_string(ctx : Context, obj_index : Index, key : UInt8*) : Bool
   fun del_prop_lstring = duk_del_prop_lstring(ctx : Context, obj_index : Index, key : UInt8*, length : Size) : Bool
   fun del_prop_index = duk_del_prop_index(ctx : Context, obj_index : Index, arr_index : UInt32) : Bool
-  fun has_prop = duk_has_prop(ctx : Context, obj_index : Int32) : Int32
+  fun has_prop = duk_has_prop(ctx : Context, obj_index : Index) : Int32
   fun has_prop_string = duk_has_prop_string(ctx : Context, obj_index : Index, key : UInt8*) : Bool
   fun has_prop_lstring = duk_has_prop_lstring(ctx : Context, obj_index : Index, key : UInt8*, length : Size) : Bool
   fun has_prop_index = duk_has_prop_index(ctx : Context, obj_Index : Index, arr_index : UInt32) : Bool
-  fun def_prop = duk_def_prop(ctx : Context, obj_index : Int32, flags : UInt32)
+  fun def_prop = duk_def_prop(ctx : Context, obj_index : Index, flags : UInt32)
   fun get_prop_desc = duk_get_prop_desc(ctx : Context, index : Index, flags : UInt32)
   fun def_prop = duk_def_prop(ctx : Context, index : Index, flags : UInt32)
   fun get_global_string = duk_get_global_string(ctx : Context, key : UInt8*) : Bool
@@ -472,10 +472,6 @@ lib LibDUK
   fun compile_raw = duk_compile_raw(ctx : Context, src_buffer : UInt8*, src_length : Size, flags : UInt32) : Int32
   fun dump_function = duk_dump_function(ctx : Context)
   fun load_function = duk_load_function(ctx : Context)
-
-  # Logging
-  fun log = duk_log(ctx : Context, level : Int32, fmt : UInt8*, ...)
-  fun log_va = duk_log_va(ctx : Context, level : Int32, fmt : UInt8*, ap : Void*)
 
   # Debugging
   fun push_context_dump = duk_push_context_dump(ctx : Context)

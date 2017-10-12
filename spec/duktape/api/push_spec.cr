@@ -74,6 +74,14 @@ describe Duktape::API::Push do
     end
   end
 
+  describe "push_bare_object" do
+    it "should push an empty object onto the stack" do
+      ctx.push_bare_object
+
+      last_stack_type(ctx).should be_js_type(:object)
+    end
+  end
+
   describe "push_buffer" do
     context "resizable/dynamic" do
       it "should push a buffer onto the stack" do

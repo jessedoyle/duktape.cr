@@ -170,7 +170,8 @@ describe Duktape::API::Type do
 
     it "should return false if element is not a buffer" do
       ctx = Duktape::Context.new
-      ctx.push_undefined
+      ctx.push_buffer 2, false
+      ctx.push_buffer_object -1, 1, 2, LibDUK::BufObj::ArrayBuffer
 
       ctx.is_buffer(-1).should be_false
     end
@@ -181,6 +182,37 @@ describe Duktape::API::Type do
       ctx.is_buffer(-1).should be_false
     end
   end
+
+  describe "is_buffer_data" do
+    it "should return true if element is a plainbuffer" do
+      ctx = Duktape::Context.new
+      ctx.push_buffer 1
+
+      ctx.is_buffer_data(-1).should be_true
+    end
+
+    it "should return true if element is a buffer object" do
+      ctx = Duktape::Context.new
+      ctx.push_buffer 2, false
+      ctx.push_buffer_object -1, 1, 2, LibDUK::BufObj::ArrayBuffer
+
+      ctx.is_buffer_data(-1).should be_true
+    end
+
+    it "should return false on a non-buffer type" do
+      ctx = Duktape::Context.new
+      ctx.push_boolean true
+
+      ctx.is_buffer_data(-1).should be_false
+    end
+
+    it "should return false on invalid index" do
+      ctx = Duktape::Context.new
+
+      ctx.is_buffer_data(-1).should be_false
+    end
+  end
+
 
   describe "is_callable" do
     it "should return true if element is callable" do
@@ -550,6 +582,28 @@ describe Duktape::API::Type do
       ctx = Duktape::Context.new
 
       ctx.is_string(-1).should be_false
+    end
+  end
+
+  describe "is_symbol" do
+    it "should return true when element is a symbol" do
+      ctx = Duktape::Context.new
+      ctx.eval("Symbol('test');")
+
+      ctx.is_symbol(-1).should be_true
+    end
+
+    it "should return false when not a symbol" do
+      ctx = Duktape::Context.new
+      ctx << 3.14
+
+      ctx.is_string(-1).should be_false
+    end
+
+    it "should return false on invalid index" do
+      ctx = Duktape::Context.new
+
+      ctx.is_symbol(-1).should be_false
     end
   end
 

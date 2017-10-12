@@ -6,7 +6,7 @@
 
 module Duktape
   module API::Require
-    def require_boolean(index : Int32)
+    def require_boolean(index : LibDUK::Index)
       require_valid_index index
 
       unless is_boolean(index)
@@ -16,7 +16,7 @@ module Duktape
       LibDUK.require_boolean(ctx, index) == 1
     end
 
-    def require_buffer(index : Int32)
+    def require_buffer(index : LibDUK::Index)
       require_valid_index index
 
       unless is_buffer(index)
@@ -27,11 +27,11 @@ module Duktape
       ptr.to_slice size
     end
 
-    def require_callable(index : Int32)
+    def require_callable(index : LibDUK::Index)
       require_function index
     end
 
-    def require_context(index : Int32)
+    def require_context(index : LibDUK::Index)
       require_valid_index index
 
       unless is_thread(index)
@@ -42,7 +42,7 @@ module Duktape
       Context.new raw
     end
 
-    def require_function(index : Int32)
+    def require_function(index : LibDUK::Index)
       require_valid_index index
 
       begin
@@ -52,7 +52,7 @@ module Duktape
       end
     end
 
-    def require_heapptr(index : Int32)
+    def require_heapptr(index : LibDUK::Index)
       require_valid_index index
       mask = [:object, :buffer, :string]
 
@@ -63,7 +63,7 @@ module Duktape
       LibDUK.require_heapptr ctx, index
     end
 
-    def require_int(index : Int32)
+    def require_int(index : LibDUK::Index)
       require_valid_index index
 
       unless is_number(index)
@@ -73,7 +73,7 @@ module Duktape
       LibDUK.require_int ctx, index
     end
 
-    def require_lstring(index : Int32)
+    def require_lstring(index : LibDUK::Index)
       require_valid_index index
 
       unless is_string(index)
@@ -86,7 +86,7 @@ module Duktape
       {str, size}
     end
 
-    def require_null(index : Int32)
+    def require_null(index : LibDUK::Index)
       require_valid_index index
 
       unless is_null(index)
@@ -96,7 +96,7 @@ module Duktape
       LibDUK.require_null ctx, index
     end
 
-    def require_number(index : Int32)
+    def require_number(index : LibDUK::Index)
       require_valid_index index
 
       unless is_number(index)
@@ -106,7 +106,7 @@ module Duktape
       LibDUK.require_number ctx, index
     end
 
-    def require_object_coercible(index : Int32)
+    def require_object_coercible(index : LibDUK::Index)
       require_valid_index index
 
       mask = [
@@ -124,7 +124,7 @@ module Duktape
       end
     end
 
-    def require_pointer(index : Int32)
+    def require_pointer(index : LibDUK::Index)
       require_valid_index index
 
       unless is_pointer(index)
@@ -134,7 +134,7 @@ module Duktape
       LibDUK.require_pointer ctx, index
     end
 
-    def require_proc(index : Int32)
+    def require_proc(index : LibDUK::Index)
       require_valid_index index
 
       unless is_proc(index)
@@ -144,7 +144,7 @@ module Duktape
       LibDUK.require_c_function ctx, index
     end
 
-    def require_string(index : Int32)
+    def require_string(index : LibDUK::Index)
       require_valid_index index
 
       unless is_string(index)
@@ -155,7 +155,7 @@ module Duktape
       String.new ptr
     end
 
-    def require_type_mask(index : Int32, types : Array(Symbol) | UInt32)
+    def require_type_mask(index : LibDUK::Index, types : Array(Symbol) | UInt32)
       require_valid_index index
 
       unless check_type_mask(index, types)
@@ -163,11 +163,11 @@ module Duktape
       end
     end
 
-    def require_type_mask(index : Int32, types : LibDUK::TypeMask)
+    def require_type_mask(index : LibDUK::Index, types : LibDUK::TypeMask)
       require_type_mask index, types.value
     end
 
-    def require_uint(index : Int32)
+    def require_uint(index : LibDUK::Index)
       require_valid_index index
 
       unless is_number(index)
@@ -177,7 +177,7 @@ module Duktape
       LibDUK.require_uint ctx, index
     end
 
-    def require_undefined(index : Int32)
+    def require_undefined(index : LibDUK::Index)
       require_valid_index index
 
       unless is_undefined(index)

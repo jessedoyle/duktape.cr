@@ -21,15 +21,15 @@ module Duktape
   TYPE_TO_NUM = TYPES.invert
 
   module API::Type
-    def check_type(index : Int32, type : Symbol)
+    def check_type(index : LibDUK::Index, type : Symbol)
       LibDUK.check_type(ctx, index, TYPE_TO_NUM[type]) == 1
     end
 
-    def check_type_mask(index : Int32, mask : UInt32)
+    def check_type_mask(index : LibDUK::Index, mask : UInt32)
       LibDUK.check_type_mask(ctx, index, mask) == 1
     end
 
-    def check_type_mask(index : Int32, mask : LibDUK::TypeMask)
+    def check_type_mask(index : LibDUK::Index, mask : LibDUK::TypeMask)
       check_type_mask index, mask.value
     end
 
@@ -44,31 +44,35 @@ module Duktape
       LibDUK.check_type_mask(ctx, index, mask) == 1
     end
 
-    def get_type(index : Int32)
+    def get_type(index : LibDUK::Index)
       TYPES[LibDUK.get_type ctx, index]
     end
 
-    def get_type_mask(index : Int32)
+    def get_type_mask(index : LibDUK::Index)
       LibDUK.get_type_mask ctx, index
     end
 
-    def is_array(index : Int32)
+    def is_array(index : LibDUK::Index)
       LibDUK.is_array(ctx, index) == 1
     end
 
-    def is_boolean(index : Int32)
+    def is_boolean(index : LibDUK::Index)
       LibDUK.is_boolean(ctx, index) == 1
     end
 
-    def is_bound_function(index : Int32)
+    def is_bound_function(index : LibDUK::Index)
       LibDUK.is_bound_function(ctx, index) == 1
     end
 
-    def is_buffer(index : Int32)
+    def is_buffer(index : LibDUK::Index)
       LibDUK.is_buffer(ctx, index) == 1
     end
 
-    def is_callable(index : Int32)
+    def is_buffer_data(index : LibDUK::Index)
+      LibDUK.is_buffer_data(ctx, index) == 1
+    end
+
+    def is_callable(index : LibDUK::Index)
       is_function index
     end
 
@@ -76,39 +80,39 @@ module Duktape
       LibDUK.is_constructor_call(ctx) != 0
     end
 
-    def is_dynamic_buffer(index : Int32)
+    def is_dynamic_buffer(index : LibDUK::Index)
       LibDUK.is_dynamic_buffer(ctx, index) == 1
     end
 
-    def is_ecmascript_function(index : Int32)
+    def is_ecmascript_function(index : LibDUK::Index)
       LibDUK.is_ecmascript_function(ctx, index) == 1
     end
 
-    def is_external_buffer(index : Int32)
+    def is_external_buffer(index : LibDUK::Index)
       LibDUK.is_external_buffer(ctx, index) == 1
     end
 
-    def is_fixed_buffer(index : Int32)
+    def is_fixed_buffer(index : LibDUK::Index)
       LibDUK.is_fixed_buffer(ctx, index) == 1
     end
 
-    def is_function(index : Int32)
+    def is_function(index : LibDUK::Index)
       LibDUK.is_function(ctx, index) == 1
     end
 
-    def is_lightfunc(index : Int32)
+    def is_lightfunc(index : LibDUK::Index)
       LibDUK.is_lightfunc(ctx, index) == 1
     end
 
-    def is_nan(index : Int32)
+    def is_nan(index : LibDUK::Index)
       LibDUK.is_nan(ctx, index) == 1
     end
 
-    def is_null(index : Int32)
+    def is_null(index : LibDUK::Index)
       LibDUK.is_null(ctx, index) == 1
     end
 
-    def is_null_or_undefined(index : Int32)
+    def is_null_or_undefined(index : LibDUK::Index)
       mask = [
         :null,
         :undefined,
@@ -116,15 +120,15 @@ module Duktape
       check_type_mask index, mask
     end
 
-    def is_number(index : Int32)
+    def is_number(index : LibDUK::Index)
       LibDUK.is_number(ctx, index) == 1
     end
 
-    def is_object(index : Int32)
+    def is_object(index : LibDUK::Index)
       LibDUK.is_object(ctx, index) == 1
     end
 
-    def is_object_coercible(index : Int32)
+    def is_object_coercible(index : LibDUK::Index)
       mask = [
         :boolean,
         :string,
@@ -136,11 +140,11 @@ module Duktape
       check_type_mask index, mask
     end
 
-    def is_pointer(index : Int32)
+    def is_pointer(index : LibDUK::Index)
       LibDUK.is_pointer(ctx, index) == 1
     end
 
-    def is_primitive(index : Int32)
+    def is_primitive(index : LibDUK::Index)
       mask = [
         :undefined,
         :null,
@@ -153,7 +157,7 @@ module Duktape
       check_type_mask index, mask
     end
 
-    def is_proc(index : Int32)
+    def is_proc(index : LibDUK::Index)
       LibDUK.is_c_function(ctx, index) == 1
     end
 
@@ -161,15 +165,19 @@ module Duktape
       LibDUK.is_strict_call(ctx) == 1
     end
 
-    def is_string(index : Int32)
+    def is_string(index : LibDUK::Index)
       LibDUK.is_string(ctx, index) == 1
     end
 
-    def is_thread(index : Int32)
+    def is_symbol(index : LibDUK::Index)
+      LibDUK.is_symbol(ctx, index) == 1
+    end
+
+    def is_thread(index : LibDUK::Index)
       LibDUK.is_thread(ctx, index) == 1
     end
 
-    def is_undefined(index : Int32)
+    def is_undefined(index : LibDUK::Index)
       LibDUK.is_undefined(ctx, index) == 1
     end
   end

@@ -157,6 +157,26 @@ describe Duktape::API::Object do
     end
   end
 
+  describe "samevalue" do
+    it "should return true if two values are the same" do
+      ctx = Duktape::Context.new
+      ctx << "one"
+      ctx << "one"
+      val = ctx.samevalue(-1, -2)
+
+      val.should be_true
+    end
+
+    it "should return false on invalid index" do
+      ctx = Duktape::Context.new
+      ctx << "one"
+      ctx << "one"
+      val = ctx.samevalue(-1, -3)
+
+      val.should be_false
+    end
+  end
+
   describe "set_finalizer" do
     it "should set the finalizer of an object" do
       ctx = Duktape::Context.new
@@ -192,6 +212,25 @@ describe Duktape::API::Object do
 
       expect_raises Duktape::TypeError, /invalid object/ do
         ctx.set_global_object
+      end
+    end
+  end
+
+  describe "set_length" do
+    it "should set the length of an object" do
+      ctx = Duktape::Context.new
+      ctx.push_array
+      ctx.set_length -1, 2
+
+      ctx.get_length(-1).should eq(2)
+    end
+
+    it "should raise on invalid object" do
+      ctx = Duktape::Context.new
+      ctx.push_null
+
+      expect_raises Duktape::TypeError, /invalid object/ do
+        ctx.set_length -1, 2
       end
     end
   end

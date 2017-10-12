@@ -14,15 +14,15 @@ module Duktape
       LibDUK.fatal_raw ctx, msg
     end
 
-    def get_error_code(index : Int32)
+    def get_error_code(index : LibDUK::Index)
       LibDUK.get_error_code ctx, index
     end
 
-    def is_error(index : Int32)
+    def is_error(index : LibDUK::Index)
       get_error_code(index) != LibDUK::Err::None
     end
 
-    def is_error?(index : Int32)
+    def is_error?(index : LibDUK::Index)
       valid_index?(index) && is_error(index)
     end
 

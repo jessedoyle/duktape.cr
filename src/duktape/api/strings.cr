@@ -6,7 +6,7 @@
 
 module Duktape
   module API::Strings
-    def char_code_at(index : Int32, offset : Int32)
+    def char_code_at(index : LibDUK::Index, offset : Int32)
       require_string index
       LibDUK.char_code_at(ctx, index, offset).tap do |code|
         if code == 0
@@ -21,7 +21,7 @@ module Duktape
     end
 
     # Experimental
-    def decode_string(index : Int32, &func : Void*, Int32 -> Int32)
+    def decode_string(index : LibDUK::Index, &func : Void*, Int32 -> Int32)
       require_string index
       LibDUK.decode_string ctx, index, func.pointer, nil
     end
@@ -32,17 +32,17 @@ module Duktape
     end
 
     # Experimental
-    def map_string(index : Int32, &func : Void*, Int32 -> Int32)
+    def map_string(index : LibDUK::Index, &func : Void*, Int32 -> Int32)
       require_string index
       LibDUK.map_string ctx, index, func.pointer, nil
     end
 
-    def substring(index : Int32, start : Int32, last : Int32)
+    def substring(index : LibDUK::Index, start : Int32, last : Int32)
       require_string index
       LibDUK.substring ctx, index, start, last
     end
 
-    def trim(index : Int32)
+    def trim(index : LibDUK::Index)
       require_string index
       LibDUK.trim ctx, index
     end

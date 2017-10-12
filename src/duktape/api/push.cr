@@ -34,6 +34,10 @@ module Duktape
       LibDUK.push_array ctx
     end
 
+    def push_bare_object
+      LibDUK.push_bare_object ctx
+    end
+
     def push_boolean(value : Bool)
       num = value ? 1 : 0
       LibDUK.push_boolean ctx, num

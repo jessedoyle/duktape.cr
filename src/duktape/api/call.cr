@@ -37,7 +37,7 @@ module Duktape
       LibDUK.pcall_method(ctx, nargs) == 0
     end
 
-    def call_prop(index : Int32, nargs : Int32)
+    def call_prop(index : LibDUK::Index, nargs : Int32)
       require_valid_index index
       require_valid_nargs nargs
       LibDUK.pcall_prop(ctx, index, nargs) == 0
@@ -65,7 +65,9 @@ module Duktape
     def safe_call(nargs : Int32 = 0, nrets : Int32 = 0, &block : LibDUK::Context -> Int32)
       require_valid_nargs nargs
       require_valid_nargs nrets
-      LibDUK.safe_call ctx, block, nargs, nrets
+      # TODO: We should be able to pass a *udata argument here
+      # to allow for closure variables.
+      LibDUK.safe_call ctx, block, Pointer(Void).null, nargs, nrets
     end
 
     private def require_valid_nargs(nargs : Int32) # :nodoc:

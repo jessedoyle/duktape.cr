@@ -25,6 +25,8 @@ module Duktape
     include API::Require
     include API::Stack
     include API::Strings
+    include API::Thread
+    include API::Time
     include API::Type
 
     def initialize
