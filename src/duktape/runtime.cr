@@ -160,14 +160,14 @@ module Duktape
 
     # :nodoc:
     private def check_and_raise_error
-      if @context.is_valid_index(-1) && @context.is_error(-1)
+      if @context.is_error?(-1)
         code = @context.get_error_code -1
         @context.raise_error code
       end
     end
 
     # :nodoc:
-    private def invalid_type(index : Int32)
+    private def invalid_type(index : LibDUK::Index)
       raise TypeError.new "invalid type at index #{index}"
     end
 
@@ -189,20 +189,20 @@ module Duktape
     end
 
     # :nodoc:
-    private def object_to_crystal(index : Int32)
+    private def object_to_crystal(index : LibDUK::Index)
       if @context.is_function index
         # TODO: can we do better than just get a string
         # when the object is a function?
         object_to_string index
       elsif @context.is_array index
         Array(JSPrimitive).new.tap do |array|
-          @context.enum index, LibDUK::ENUM_ARRAY_INDICIES_ONLY
+          @context.enum index, LibDUK::Enum::ArrayIndicesOnly
           next_array_element array
           @context.pop
         end
       elsif @context.is_object index
         Hash(String, JSPrimitive).new.tap do |hash|
-          @context.enum index, LibDUK::ENUM_OWN_PROPERTIES_ONLY
+          @context.enum index, LibDUK::Enum::OwnPropertiesOnly
           next_hash_element hash
           @context.pop
         end
@@ -212,7 +212,7 @@ module Duktape
     end
 
     # :nodoc:
-    private def object_to_string(index : Int32)
+    private def object_to_string(index : LibDUK::Index)
       @context.safe_to_string index
     end
 
@@ -326,7 +326,7 @@ module Duktape
     end
 
     # :nodoc:
-    private def stack_to_crystal(index : Int32)
+    private def stack_to_crystal(index : LibDUK::Index)
       case @context.get_type(index)
       when :none
         nil

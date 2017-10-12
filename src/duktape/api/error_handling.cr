@@ -10,43 +10,46 @@ module Duktape
       LibDUK.error_raw ctx, code, __FILE__, __LINE__, msg
     end
 
-    def fatal(code : Int32, msg : String)
-      LibDUK.fatal ctx, code, msg
+    def fatal(msg : String)
+      LibDUK.fatal_raw ctx, msg
     end
 
-    def get_error_code(index : Int32)
-      require_valid_index index
+    def get_error_code(index : LibDUK::Index)
       LibDUK.get_error_code ctx, index
     end
 
-    def is_error?(index : Int32)
-      get_error_code(index) != 0
+    def is_error(index : LibDUK::Index)
+      get_error_code(index) != LibDUK::Err::None
     end
 
-    def raise_error(err = 0) # :nodoc:
+    def is_error?(index : LibDUK::Index)
+      valid_index?(index) && is_error(index)
+    end
+
+    def raise_error(err = 0)
       # We want to return the code (0) if no
       # error is raised
       err.tap do |error|
-        unless error == 0
+        if error != 0
           unless valid_index? -1
             raise StackError.new "stack empty"
           end
 
           code = LibDUK.get_error_code ctx, -1
-          msg = safe_to_string(-1).gsub(/\A.*Error:\s/, "")
+          msg = safe_to_string(-1)
 
           case code
-          when LibDUK::ERR_EVAL_ERROR
+          when LibDUK::Err::EvalError
             raise EvalError.new msg
-          when LibDUK::ERR_RANGE_ERROR
+          when LibDUK::Err::RangeError
             raise RangeError.new msg
-          when LibDUK::ERR_REFERENCE_ERROR
+          when LibDUK::Err::ReferenceError
             raise ReferenceError.new msg
-          when LibDUK::ERR_SYNTAX_ERROR
+          when LibDUK::Err::SyntaxError
             raise SyntaxError.new msg
-          when LibDUK::ERR_TYPE_ERROR
+          when LibDUK::Err::TypeError
             raise TypeError.new msg
-          when LibDUK::ERR_URI_ERROR
+          when LibDUK::Err::UriError
             raise URIError.new msg
           else
             raise Error.new msg
@@ -56,7 +59,7 @@ module Duktape
     end
 
     def throw
-      LibDUK.throw ctx
+      LibDUK.throw_raw ctx
     end
   end
 end

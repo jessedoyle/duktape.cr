@@ -19,6 +19,7 @@ describe Duktape::Runtime do
         rt.should be_a(Duktape::Runtime)
       end
     end
+
     context "with timeout argument" do
       it "should create a Runtime instance" do
         rt = Duktape::Runtime.new 1000

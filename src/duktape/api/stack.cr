@@ -48,19 +48,19 @@ module Duktape
       LibDUK.insert ctx, to
     end
 
-    def is_valid_index(index : Int32)
+    def is_valid_index(index : LibDUK::Index)
       LibDUK.is_valid_index(ctx, index) == 1
     end
 
-    def valid_index?(index : Int32)
+    def valid_index?(index : LibDUK::Index)
       is_valid_index index
     end
 
-    def normalize_index(index : Int32)
+    def normalize_index(index : LibDUK::Index)
       LibDUK.normalize_index ctx, index
     end
 
-    def remove(index : Int32)
+    def remove(index : LibDUK::Index)
       require_valid_index index
       LibDUK.remove ctx, index
     end
@@ -71,7 +71,7 @@ module Duktape
       LibDUK.replace ctx, to
     end
 
-    def require_normalize_index(index : Int32)
+    def require_normalize_index(index : LibDUK::Index)
       normalize_index(index).tap do |idx|
         if idx < 0
           raise StackError.new "invalid index: #{index}"
@@ -103,7 +103,7 @@ module Duktape
       end
     end
 
-    def require_valid_index(index : Int32)
+    def require_valid_index(index : LibDUK::Index)
       is_valid_index(index).tap do |idx|
         unless idx
           raise StackError.new "invalid index: #{index}"
@@ -111,7 +111,7 @@ module Duktape
       end
     end
 
-    def set_top(index : Int32)
+    def set_top(index : LibDUK::Index)
       require_valid_index index
       LibDUK.set_top ctx, index
     end

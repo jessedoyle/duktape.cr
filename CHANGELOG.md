@@ -1,3 +1,15 @@
+# v0.12.0 - Oct 2017
+
+- [**breaking change**] All `LibDUK` hardcoded types are now `enum` values (i.e. `LibDUK::TYPE_NULL` becomes `LibDUK::Type::Null`). Where possible, methods accept both the original types as well as enumerated values.
+- [**breaking change**] Remove the `UInt32 flags` arguments from all `Duktape::Context#compile` methods.
+- [**breaking change**] Remove some bindings from `LibDUK` as they were removed upstream. See [duktape releases](https://github.com/svaarala/duktape/blob/master/RELEASES.rst) for more info.
+- Update Duktape to `v2.0.2`.
+- Add `Duktape::Builtin` helpers that allow for modular extensions into a `Duktape::Context` instance.
+- Add builtins for `console.log`, `alert` and `print`.
+- Implement file operations natively in Crystal as they have been removed from Duktape.
+- The Duktape stack is no longer logged as a debug value when `Duktape::InternalError` is raised.
+- Alias `Int32` as `LibDUK::Index` to allow for quicker changes to indexes in the future.
+
 # v0.11.0 - July 24, 2017
 
 - Fix compiler issues with Crystal `0.23.0` by making `Duktape::Logger#log_color` accept a `Logger::Severity`. [@kostya, #35]
@@ -19,7 +31,7 @@
 - Update makefile output paths to match new structure.
 - Resolve [#25](https://github.com/jessedoyle/duktape.cr/issues/25)
   by allowing a developer to pass a `Duktape::Context` instance when
-  initializing a `Dukatape::Runtime`. This allows the runtime to
+  initializing a `Duktape::Runtime`. This allows the runtime to
   use the internal `Duktape` global object.
 
 # v0.9.1 - Sept 21, 2016

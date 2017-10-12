@@ -159,7 +159,7 @@ describe Duktape::API::Compile do
     it "should raise on invalid js" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::SyntaxError, /eof or line terminator/ do
+      expect_raises Duktape::SyntaxError, /unterminated string/ do
         ctx.compile_file! "#{JS_SOURCE_PATH}/invalid.js"
       end
     end

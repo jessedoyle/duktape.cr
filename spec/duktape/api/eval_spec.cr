@@ -114,7 +114,7 @@ describe Duktape::API::Eval do
     it "should raise an error on invalid js" do
       ctx = Duktape::Context.new
 
-      expect_raises Duktape::SyntaxError, /eof or line terminator/ do
+      expect_raises Duktape::SyntaxError, /unterminated string/ do
         ctx.eval_file! "#{JS_SOURCE_PATH}/invalid.js"
       end
     end
@@ -167,11 +167,11 @@ describe Duktape::API::Eval do
       err.should eq(0)
     end
 
-    it "should return ERR_API_ERROR if length < 0" do
+    it "should return Err::Error if length < 0" do
       ctx = Duktape::Context.new
       err = ctx.eval_lstring valid_js, -1
 
-      err.should eq(LibDUK::ERR_API_ERROR)
+      err.should eq(LibDUK::Err::Error)
     end
   end
 
@@ -217,11 +217,11 @@ describe Duktape::API::Eval do
       last_stack_type(ctx).should be_js_type(:none)
     end
 
-    it "should return ERR_API_ERROR if length < 0" do
+    it "should return Err::Error if length < 0" do
       ctx = Duktape::Context.new
       err = ctx.eval_lstring_noresult valid_js, -1
 
-      err.should eq(LibDUK::ERR_API_ERROR)
+      err.should eq(LibDUK::Err::Error)
     end
   end
 

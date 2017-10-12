@@ -18,7 +18,7 @@ describe Duktape::API::Object do
     it "should create an enumerator for object" do
       ctx = Duktape::Context.new
       ctx.push_object
-      ctx.enum -1, LibDUK::ENUM_INCLUDE_NONENUMERABLE
+      ctx.enum -1, LibDUK::Enum::IncludeNonEnumerable
       ctx.next -1, false
       str = ctx.get_string(-1)
 
@@ -30,7 +30,7 @@ describe Duktape::API::Object do
       ctx.push_undefined
 
       expect_raises Duktape::TypeError, /invalid object/ do
-        ctx.enum -1, LibDUK::ENUM_INCLUDE_NONENUMERABLE
+        ctx.enum -1, LibDUK::Enum::IncludeNonEnumerable
       end
     end
   end
@@ -98,7 +98,7 @@ describe Duktape::API::Object do
   describe "instanceof" do
     it "should return true if one instanceof(two)" do
       ctx = Duktape::Context.new
-      ctx.push_error_object 101, "Test"
+      ctx.push_error_object LibDUK::Err.new(101), "Test"
       ctx.get_global_string "Error"
 
       ctx.instanceof(-2, -1).should be_true
@@ -145,7 +145,7 @@ describe Duktape::API::Object do
 
       ctx << json
       ctx.json_decode -1
-      ctx.enum -1, LibDUK::ENUM_INCLUDE_NONENUMERABLE
+      ctx.enum -1, LibDUK::Enum::IncludeNonEnumerable
       count = 0
 
       while ctx.next(-1)
@@ -154,6 +154,26 @@ describe Duktape::API::Object do
       end
 
       count.should eq(10)
+    end
+  end
+
+  describe "samevalue" do
+    it "should return true if two values are the same" do
+      ctx = Duktape::Context.new
+      ctx << "one"
+      ctx << "one"
+      val = ctx.samevalue(-1, -2)
+
+      val.should be_true
+    end
+
+    it "should return false on invalid index" do
+      ctx = Duktape::Context.new
+      ctx << "one"
+      ctx << "one"
+      val = ctx.samevalue(-1, -3)
+
+      val.should be_false
     end
   end
 
@@ -192,6 +212,25 @@ describe Duktape::API::Object do
 
       expect_raises Duktape::TypeError, /invalid object/ do
         ctx.set_global_object
+      end
+    end
+  end
+
+  describe "set_length" do
+    it "should set the length of an object" do
+      ctx = Duktape::Context.new
+      ctx.push_array
+      ctx.set_length -1, 2
+
+      ctx.get_length(-1).should eq(2)
+    end
+
+    it "should raise on invalid object" do
+      ctx = Duktape::Context.new
+      ctx.push_null
+
+      expect_raises Duktape::TypeError, /invalid object/ do
+        ctx.set_length -1, 2
       end
     end
   end

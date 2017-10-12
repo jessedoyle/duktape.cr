@@ -300,7 +300,7 @@ describe Duktape::API::Require do
 
     context "with UInt32" do
       it "should not raise when types match in mask" do
-        mask = LibDUK::TYPE_MASK_BOOLEAN | LibDUK::TYPE_MASK_UNDEFINED
+        mask = LibDUK::TypeMask::Boolean | LibDUK::TypeMask::Undefined
         ctx.push_undefined
         ctx.require_type_mask(-1, mask)
 
@@ -309,7 +309,7 @@ describe Duktape::API::Require do
       end
 
       it "should raise TypeError when types are mismatched" do
-        mask = LibDUK::TYPE_MASK_BOOLEAN | LibDUK::TYPE_MASK_UNDEFINED
+        mask = LibDUK::TypeMask::Boolean | LibDUK::TypeMask::Undefined
         ctx << 123
 
         expect_raises Duktape::TypeError, /type mismatch/ do

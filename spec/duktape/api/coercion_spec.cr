@@ -1,6 +1,34 @@
 require "../../spec_helper"
 
 describe Duktape::API::Coercion do
+  describe "buffer_to_string" do
+    it "should coerce a buffer to a string" do
+      ctx = Duktape::Context.new
+      ctx << "a string buffer"
+      ctx.to_buffer -1
+      str = ctx.buffer_to_string -1
+
+      str.should eq("a string buffer")
+    end
+
+    it "should raise TypeError when index is not a buffer" do
+      ctx = Duktape::Context.new
+      ctx << "not a buffer"
+
+      expect_raises Duktape::TypeError, /is not buffer/ do
+        ctx.buffer_to_string -1
+      end
+    end
+
+    it "should raise on invalid index" do
+      ctx = Duktape::Context.new
+
+      expect_raises Duktape::StackError, /invalid index/ do
+        ctx.buffer_to_string -1
+      end
+    end
+  end
+
   describe "safe_to_lstring" do
     it "should safely coerce values to strings (returning tuple)" do
       ctx = Duktape::Context.new
@@ -77,33 +105,6 @@ describe Duktape::API::Coercion do
 
       expect_raises Duktape::StackError, /invalid index/ do
         ctx.to_buffer -1
-      end
-    end
-  end
-
-  describe "to_defaultvalue" do
-    it "should coerce the value to a string" do
-      ctx = Duktape::Context.new
-      ctx.push_global_object
-      ctx.to_defaultvalue -1
-
-      last_stack_type(ctx).should be_js_type(:string)
-    end
-
-    it "should raise when not object" do
-      ctx = Duktape::Context.new
-      ctx.push_undefined
-
-      expect_raises Duktape::TypeError, /invalid object/ do
-        ctx.to_defaultvalue -1
-      end
-    end
-
-    it "should raise on invalid index" do
-      ctx = Duktape::Context.new
-
-      expect_raises Duktape::StackError, /invalid index/ do
-        ctx.to_defaultvalue -1
       end
     end
   end

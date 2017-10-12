@@ -6,6 +6,12 @@
 
 module Duktape
   module API::Coercion
+    def buffer_to_string(index : Int)
+      require_buffer index
+      ptr = LibDUK.buffer_to_string ctx, index
+      String.new ptr
+    end
+
     def safe_to_lstring(index : Int)
       require_valid_index index
       ptr = LibDUK.safe_to_lstring ctx, index, out size
@@ -23,31 +29,23 @@ module Duktape
     end
 
     # Returns a slice to the buffer that was coerced at `index`.
-    def to_buffer(index)
+    def to_buffer(index : Int)
       require_valid_index index
-      flags = LibDUK::BUF_MODE_DONTCARE
+      flags = LibDUK::BufMode::DontCare
       ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags).as(UInt8*)
       ptr.to_slice size
     end
 
-    def to_defaultvalue(index : Int, hint = LibDUK::HINT_STRING)
-      require_valid_index index
-      unless is_object index
-        raise TypeError.new "invalid object"
-      end
-      LibDUK.to_defaultvalue ctx, index, hint
-    end
-
     def to_dynamic_buffer(index : Int)
       require_valid_index index
-      flags = LibDUK::BUF_MODE_DYNAMIC
+      flags = LibDUK::BufMode::Dynamic
       ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags).as(UInt8*)
       Slice.new ptr, size
     end
 
     def to_fixed_buffer(index : Int)
       require_valid_index index
-      flags = LibDUK::BUF_MODE_FIXED
+      flags = LibDUK::BufMode::Fixed
       ptr = LibDUK.to_buffer_raw(ctx, index, out size, flags).as(UInt8*)
       Slice.new ptr, size
     end
@@ -89,7 +87,7 @@ module Duktape
       LibDUK.to_pointer ctx, index
     end
 
-    def to_primitive(index : Int, hint = LibDUK::HINT_STRING)
+    def to_primitive(index : Int, hint = LibDUK::Hint::String)
       require_valid_index index
       LibDUK.to_primitive ctx, index, hint
     end

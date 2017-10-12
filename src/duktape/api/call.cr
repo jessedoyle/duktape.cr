@@ -10,20 +10,13 @@ module Duktape
   # from errors.
   module API::Call
     ERRORS = {
-      unimplemented: -LibDUK::ERR_UNIMPLEMENTED_ERROR,
-      unsupported:   -LibDUK::ERR_UNSUPPORTED_ERROR,
-      internal:      -LibDUK::ERR_INTERNAL_ERROR,
-      alloc:         -LibDUK::ERR_ALLOC_ERROR,
-      assertion:     -LibDUK::ERR_ASSERTION_ERROR,
-      api:           -LibDUK::ERR_API_ERROR,
-      uncaught:      -LibDUK::ERR_UNCAUGHT_ERROR,
-      error:         -LibDUK::ERR_ERROR,
-      eval:          -LibDUK::ERR_EVAL_ERROR,
-      range:         -LibDUK::ERR_RANGE_ERROR,
-      reference:     -LibDUK::ERR_REFERENCE_ERROR,
-      syntax:        -LibDUK::ERR_SYNTAX_ERROR,
-      type:          -LibDUK::ERR_TYPE_ERROR,
-      uri:           -LibDUK::ERR_URI_ERROR,
+      error:     LibDUK::Ret::Error,
+      eval:      LibDUK::Ret::EvalError,
+      range:     LibDUK::Ret::RangeError,
+      reference: LibDUK::Ret::ReferenceError,
+      syntax:    LibDUK::Ret::SyntaxError,
+      type:      LibDUK::Ret::TypeError,
+      uri:       LibDUK::Ret::UriError,
     }
 
     def call(nargs : Int32)
@@ -32,10 +25,10 @@ module Duktape
       LibDUK.pcall(ctx, nargs) == 0
     end
 
-    def call_failure(value = :error)
-      ERRORS[value]
+    def call_failure(error = :error)
+      ERRORS[error].value
     rescue KeyError
-      raise TypeError.new "invalid error type: #{value}"
+      raise TypeError.new "invalid error type: #{error}"
     end
 
     def call_method(nargs : Int32)
@@ -44,7 +37,7 @@ module Duktape
       LibDUK.pcall_method(ctx, nargs) == 0
     end
 
-    def call_prop(index : Int32, nargs : Int32)
+    def call_prop(index : LibDUK::Index, nargs : Int32)
       require_valid_index index
       require_valid_nargs nargs
       LibDUK.pcall_prop(ctx, index, nargs) == 0
@@ -72,7 +65,9 @@ module Duktape
     def safe_call(nargs : Int32 = 0, nrets : Int32 = 0, &block : LibDUK::Context -> Int32)
       require_valid_nargs nargs
       require_valid_nargs nrets
-      LibDUK.safe_call ctx, block, nargs, nrets
+      # TODO: We should be able to pass a *udata argument here
+      # to allow for closure variables.
+      LibDUK.safe_call ctx, block, Pointer(Void).null, nargs, nrets
     end
 
     private def require_valid_nargs(nargs : Int32) # :nodoc:

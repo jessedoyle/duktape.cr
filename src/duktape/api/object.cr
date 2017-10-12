@@ -6,12 +6,12 @@
 
 module Duktape
   module API::Object
-    def compact(index : Int32)
+    def compact(index : LibDUK::Index)
       require_valid_index index
       LibDUK.compact ctx, index
     end
 
-    def enum(index : Int32, flags : UInt32)
+    def enum(index : LibDUK::Index, flags : UInt32)
       require_valid_index index
       unless is_object index
         raise TypeError.new "invalid object"
@@ -20,16 +20,20 @@ module Duktape
       LibDUK.enum ctx, index, flags
     end
 
+    def enum(index : LibDUK::Index, flags : LibDUK::Enum)
+      self.enum index, flags.value
+    end
+
     def equals(one : Int32, two : Int32)
       LibDUK.equals(ctx, one, two) == 1
     end
 
-    def get_finalizer(index : Int32)
+    def get_finalizer(index : LibDUK::Index)
       require_valid_index index
       LibDUK.get_finalizer ctx, index
     end
 
-    def get_prototype(index : Int32)
+    def get_prototype(index : LibDUK::Index)
       require_valid_index index
       unless is_object index
         raise TypeError.new "invalid object"
@@ -49,13 +53,17 @@ module Duktape
       LibDUK.instanceof(ctx, one, two) == 1
     end
 
-    def next(index : Int32, get_val = false)
+    def next(index : LibDUK::Index, get_val = false)
       require_valid_index index
       val = get_val ? 1 : 0
       LibDUK.next(ctx, index, val) == 1
     end
 
-    def set_finalizer(index : Int32)
+    def samevalue(one : LibDUK::Index, two : LibDUK::Index)
+      LibDUK.samevalue(ctx, one, two) == 1
+    end
+
+    def set_finalizer(index : LibDUK::Index)
       require_valid_index index
       unless is_object index
         raise TypeError.new "invalid object"
@@ -73,7 +81,16 @@ module Duktape
       LibDUK.set_global_object ctx
     end
 
-    def set_prototype(index : Int32)
+    def set_length(index : LibDUK::Index, size : Int)
+      require_valid_index index
+      unless is_object -1
+        raise TypeError.new "invalid object"
+      end
+
+      LibDUK.set_length ctx, index, size
+    end
+
+    def set_prototype(index : LibDUK::Index)
       require_valid_index index
       unless is_object index
         raise TypeError.new "invalid object"
