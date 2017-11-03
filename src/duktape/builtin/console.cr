@@ -66,7 +66,7 @@ module Duktape
 
       private def prop_flags
         LibDUK::DefProp::Force.value |
-        LibDUK::DefProp::HaveValue.value
+          LibDUK::DefProp::HaveValue.value
       end
     end
   end

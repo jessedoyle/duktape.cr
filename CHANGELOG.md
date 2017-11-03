@@ -1,3 +1,8 @@
+# v0.12.1 - Nov 2, 2017
+
+- [_bugfix_] - Fix an unintended `Duktape` heap instantiation when creating a new `Duktape::Context`.
+- Run `crystal tool format` on all source code.
+
 # v0.12.0 - Oct 2017
 
 - [**breaking change**] All `LibDUK` hardcoded types are now `enum` values (i.e. `LibDUK::TYPE_NULL` becomes `LibDUK::Type::Null`). Where possible, methods accept both the original types as well as enumerated values.
