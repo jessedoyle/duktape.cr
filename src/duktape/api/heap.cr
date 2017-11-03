@@ -20,7 +20,6 @@ module Duktape
   end
 
   def self.create_heap_default
-    LibDUK.create_heap(nil, nil, nil, nil, nil)
     create_heap do |udata, msg|
       str = String.new msg
       raise Duktape::InternalError.new str

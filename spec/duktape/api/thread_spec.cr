@@ -5,7 +5,7 @@ describe Duktape::API::Thread do
     it "suspends Duktape execution" do
       ctx = Duktape::Context.new
       ctx.push_global_proc("test") do |ptr|
-      env = Duktape::Context.new ptr
+        env = Duktape::Context.new ptr
         state = env.suspend
         # as the engine is suspended, we should not evaluate 'true'
         env.eval("true")
@@ -20,7 +20,7 @@ describe Duktape::API::Thread do
     it "resumes Duktape execution" do
       ctx = Duktape::Context.new
       ctx.push_global_proc("test") do |ptr|
-      env = Duktape::Context.new ptr
+        env = Duktape::Context.new ptr
         state = env.suspend
         # do some blocking I/0 here...
         env.resume(state)

@@ -213,7 +213,6 @@ describe Duktape::API::Type do
     end
   end
 
-
   describe "is_callable" do
     it "should return true if element is callable" do
       ctx = Duktape::Context.new
