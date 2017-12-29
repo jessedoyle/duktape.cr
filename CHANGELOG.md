@@ -1,3 +1,24 @@
+# v0.13.0 - Dec 28, 2017
+
+- Update Duktape to version `2.2.0`, rebuilding all necessary
+  configuration and header files.
+- [**upstream change**]
+  `LibDUK::Compile::*` and `LibDUK::BufObj::*` constant values have
+  been changed - remap these constants to their updated values.
+- [**upstream change**]
+  `LibDUK::Bool` is now of type `UInt32` (as opposed to `Int32`).
+- Add bindings for new public API methods:
+  `duk_pus_proxy`, `duk_seal`, `duk_freeze`, `duk_require_object`, `duk_is_constructable`
+  and `duk_opt_xxx` methods. The `duk_opt` methods work similar to
+  `duk_require_xxx`, but allow a default value to be passed in that
+  is used when there is no value at the given stack index.
+- Alias `LibDUK::Number` as `Float64` for more simple type changes in
+  the future.
+- Add the `Duktape::API::Opt` module to encapsulate binding wrapper code
+  for the `duk_opt` methods implemented.
+- Run all code through the crystal `0.24.1` formatter.
+- See [duktape releases](https://github.com/svaarala/duktape/blob/master/RELEASES.rst) for more info.
+
 # v0.12.1 - Nov 2, 2017
 
 - [_bugfix_] - Fix an unintended `Duktape` heap instantiation when creating a new `Duktape::Context`.

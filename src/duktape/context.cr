@@ -19,6 +19,7 @@ module Duktape
     include API::Get
     include API::Heap
     include API::Object
+    include API::Opt
     include API::Pop
     include API::Prop
     include API::Push

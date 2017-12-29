@@ -76,6 +76,10 @@ module Duktape
       is_function index
     end
 
+    def is_constructable(index : LibDUK::Index)
+      LibDUK.is_constructable(ctx, index) == 1
+    end
+
     def is_constructor_call
       LibDUK.is_constructor_call(ctx) != 0
     end

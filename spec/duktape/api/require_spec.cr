@@ -211,6 +211,35 @@ describe Duktape::API::Require do
     end
   end
 
+  describe "require_object" do
+    context "with an invalid index" do
+      it "raises Duktape::StackError" do
+        expect_raises(Duktape::StackError, /invalid index/) do
+          ctx.require_object(LibDUK::INVALID_INDEX)
+        end
+      end
+    end
+
+    context "with a valid index" do
+      context "when the value at index is an object" do
+        it "does not raise an error" do
+          ctx.push_object
+          ctx.require_object(-1)
+
+          ctx.is_object(-1).should be_true
+        end
+      end
+
+      context "when the value at index is not an object" do
+        ctx << 1
+
+        expect_raises(Duktape::TypeError, /not an object/) do
+          ctx.require_object(-1)
+        end
+      end
+    end
+  end
+
   describe "require_object_coercible" do
     it "should not raise on valid input" do
       ctx << "object coercible"

@@ -12,6 +12,7 @@
  *      - Generic BSD
  *      - Atari ST TOS
  *      - AmigaOS
+ *      - Durango (XboxOne)
  *      - Windows
  *      - Flashplayer (Crossbridge)
  *      - QNX
@@ -126,6 +127,11 @@
 #else
 #define DUK_F_PPC32
 #endif
+#endif
+
+/* Durango (Xbox One) */
+#if defined(_DURANGO) || defined(_XBOX_ONE)
+#define DUK_F_DURANGO
 #endif
 
 /* Windows, both 32-bit and 64-bit */
@@ -354,6 +360,11 @@
 #define DUK_F_ANDROID
 #endif
 
+/* Atari Mint */
+#if defined(__MINT__)
+#define DUK_F_MINT
+#endif
+
 /*
  *  Platform autodetection
  */
@@ -478,8 +489,47 @@
 #if !defined(DUK_USE_BYTEORDER) && (defined(DUK_F_M68K) || defined(DUK_F_PPC))
 #define DUK_USE_BYTEORDER 3
 #endif
+#elif defined(DUK_F_DURANGO)
+/* --- Durango (XboxOne) --- */
+/* Durango = XboxOne
+ * Configuration is nearly identical to Windows, except for
+ * DUK_USE_DATE_TZO_WINDOWS.
+ */
+
+/* Initial fix: disable secure CRT related warnings when compiling Duktape
+ * itself (must be defined before including Windows headers).  Don't define
+ * for user code including duktape.h.
+ */
+#if defined(DUK_COMPILING_DUKTAPE) && !defined(_CRT_SECURE_NO_WARNINGS)
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+/* MSVC does not have sys/param.h */
+#define DUK_USE_DATE_NOW_WINDOWS
+#define DUK_USE_DATE_TZO_WINDOWS_NO_DST
+/* Note: PRS and FMT are intentionally left undefined for now.  This means
+ * there is no platform specific date parsing/formatting but there is still
+ * the ISO 8601 standard format.
+ */
+#if defined(DUK_COMPILING_DUKTAPE)
+/* Only include when compiling Duktape to avoid polluting application build
+ * with a lot of unnecessary defines.
+ */
+#include <windows.h>
+#endif
+
+#define DUK_USE_OS_STRING "durango"
+
+#if !defined(DUK_USE_BYTEORDER)
+#define DUK_USE_BYTEORDER 1
+#endif
 #elif defined(DUK_F_WINDOWS)
 /* --- Windows --- */
+/* Windows version can't obviously be determined at compile time,
+ * but _WIN32_WINNT indicates the minimum version targeted:
+ * - https://msdn.microsoft.com/en-us/library/6sehtctf.aspx
+ */
+
 /* Initial fix: disable secure CRT related warnings when compiling Duktape
  * itself (must be defined before including Windows headers).  Don't define
  * for user code including duktape.h.
@@ -490,17 +540,40 @@
 
 /* Windows 32-bit and 64-bit are currently the same. */
 /* MSVC does not have sys/param.h */
-#define DUK_USE_DATE_NOW_WINDOWS
-#define DUK_USE_DATE_TZO_WINDOWS
-/* Note: PRS and FMT are intentionally left undefined for now.  This means
- * there is no platform specific date parsing/formatting but there is still
- * the ISO 8601 standard format.
- */
+
 #if defined(DUK_COMPILING_DUKTAPE)
 /* Only include when compiling Duktape to avoid polluting application build
  * with a lot of unnecessary defines.
  */
 #include <windows.h>
+#endif
+
+/* GetSystemTimePreciseAsFileTime() available from Windows 8:
+ * https://msdn.microsoft.com/en-us/library/windows/desktop/hh706895(v=vs.85).aspx
+ */
+#if defined(DUK_USE_DATE_NOW_WINDOWS_SUBMS) || defined(DUK_USE_DATE_NOW_WINDOWS)
+/* User forced provider. */
+#else
+#if defined(_WIN32_WINNT) && (_WIN32_WINNT >= 0x0602)
+#define DUK_USE_DATE_NOW_WINDOWS_SUBMS
+#else
+#define DUK_USE_DATE_NOW_WINDOWS
+#endif
+#endif
+
+#define DUK_USE_DATE_TZO_WINDOWS
+
+/* Note: PRS and FMT are intentionally left undefined for now.  This means
+ * there is no platform specific date parsing/formatting but there is still
+ * the ISO 8601 standard format.
+ */
+
+/* QueryPerformanceCounter() may go backwards in Windows XP, so enable for
+ * Vista and later: https://msdn.microsoft.com/en-us/library/windows/desktop/dn553408(v=vs.85).aspx#qpc_support_in_windows_versions
+ */
+#if !defined(DUK_USE_GET_MONOTONIC_TIME_WINDOWS_QPC) && \
+    defined(_WIN32_WINNT) && (_WIN32_WINNT >= 0x0600)
+#define DUK_USE_GET_MONOTONIC_TIME_WINDOWS_QPC
 #endif
 
 #define DUK_USE_OS_STRING "windows"
@@ -547,6 +620,10 @@
 #define DUK_USE_OS_STRING "qnx"
 #elif defined(DUK_F_TINSPIRE)
 /* --- TI-Nspire --- */
+#if defined(DUK_COMPILING_DUKTAPE) && !defined(_XOPEN_SOURCE)
+#define _XOPEN_SOURCE    /* e.g. strptime */
+#endif
+
 #define DUK_USE_DATE_NOW_GETTIMEOFDAY
 #define DUK_USE_DATE_TZO_GMTIME_R
 #define DUK_USE_DATE_PRS_STRPTIME
@@ -617,6 +694,10 @@
 #define DUK_USE_DATE_TZO_GMTIME_R
 #define DUK_USE_DATE_PRS_STRPTIME
 #define DUK_USE_DATE_FMT_STRFTIME
+
+#if 0  /* XXX: safe condition? */
+#define DUK_USE_GET_MONOTONIC_TIME_CLOCK_GETTIME
+#endif
 
 #define DUK_USE_OS_STRING "linux"
 #elif defined(DUK_F_SUN)
@@ -827,12 +908,8 @@
 /* --- MIPS 32-bit --- */
 #define DUK_USE_ARCH_STRING "mips32"
 /* MIPS byte order varies so rely on autodetection. */
-/* Based on 'make checkalign' there are no alignment requirements on
- * Linux MIPS except for doubles, which need align by 4.  Alignment
- * requirements vary based on target though.
- */
 #if !defined(DUK_USE_ALIGN_BY)
-#define DUK_USE_ALIGN_BY 4
+#define DUK_USE_ALIGN_BY 8
 #endif
 #define DUK_USE_PACKED_TVAL
 #define DUK_F_PACKED_TVAL_PROVIDED
@@ -840,9 +917,6 @@
 /* --- MIPS 64-bit --- */
 #define DUK_USE_ARCH_STRING "mips64"
 /* MIPS byte order varies so rely on autodetection. */
-/* Good default is a bit arbitrary because alignment requirements
- * depend on target.  See https://github.com/svaarala/duktape/issues/102.
- */
 #if !defined(DUK_USE_ALIGN_BY)
 #define DUK_USE_ALIGN_BY 8
 #endif
@@ -966,6 +1040,9 @@
 #define DUK_ALWAYS_INLINE   inline __attribute__((always_inline))
 #endif
 
+/* DUK_HOT */
+/* DUK_COLD */
+
 #if defined(DUK_F_DLL_BUILD) && defined(DUK_F_WINDOWS)
 /* MSVC dllexport/dllimport: appropriate __declspec depends on whether we're
  * compiling Duktape or the application.
@@ -1074,6 +1151,12 @@
 #define DUK_NOINLINE        __attribute__((noinline))
 #define DUK_INLINE          inline
 #define DUK_ALWAYS_INLINE   inline __attribute__((always_inline))
+#endif
+
+#if (defined(DUK_F_C99) || defined(DUK_F_CPP11)) && \
+    defined(DUK_F_GCC_VERSION) && (DUK_F_GCC_VERSION >= 40300)
+#define DUK_HOT             __attribute__((hot))
+#define DUK_COLD            __attribute__((cold))
 #endif
 
 #if defined(DUK_F_DLL_BUILD) && defined(DUK_F_WINDOWS)
@@ -1256,7 +1339,16 @@
 #endif
 
 /* Avoid warning when doing DUK_UNREF(some_function). */
+#if defined(_MSC_VER) && (_MSC_VER < 1500)
+#pragma warning(disable: 4100 4101 4550 4551)
+#define DUK_UNREF(x)
+#else
 #define DUK_UNREF(x)  do { __pragma(warning(suppress:4100 4101 4550 4551)) (x); } while (0)
+#endif
+
+/* Older versions of MSVC don't support the LL/ULL suffix. */
+#define DUK_U64_CONSTANT(x) x##ui64
+#define DUK_I64_CONSTANT(x) x##i64
 #elif defined(DUK_F_EMSCRIPTEN)
 /* --- Emscripten --- */
 #define DUK_NORETURN(decl)  decl __attribute__((noreturn))
@@ -1484,12 +1576,14 @@
     defined(DUK_F_BCC) || \
     (defined(__WORDSIZE) && (__WORDSIZE == 32)) || \
     ((defined(DUK_F_OLD_SOLARIS) || defined(DUK_F_AIX) || \
-      defined(DUK_F_HPUX)) && defined(_ILP32))
+      defined(DUK_F_HPUX)) && defined(_ILP32)) || \
+    defined(DUK_F_ARM32)
 #define DUK_F_32BIT_PTRS
 #elif defined(DUK_F_X64) || \
       (defined(__WORDSIZE) && (__WORDSIZE == 64)) || \
    ((defined(DUK_F_OLD_SOLARIS) || defined(DUK_F_AIX) || \
-     defined(DUK_F_HPUX)) && defined(_LP64))
+     defined(DUK_F_HPUX)) && defined(_LP64)) || \
+    defined(DUK_F_ARM64)
 #define DUK_F_64BIT_PTRS
 #else
 /* not sure, not needed with C99 anyway */
@@ -1692,12 +1786,15 @@ typedef unsigned long long duk_uint64_t;
 typedef signed long long duk_int64_t;
 #endif
 #endif
-#if !defined(DUK_F_HAVE_64BIT) && \
-    (defined(DUK_F_MINGW) || defined(DUK_F_MSVC))
-/* Both MinGW and MSVC have a 64-bit type. */
+#if !defined(DUK_F_HAVE_64BIT) && defined(DUK_F_MINGW)
 #define DUK_F_HAVE_64BIT
 typedef unsigned long duk_uint64_t;
 typedef signed long duk_int64_t;
+#endif
+#if !defined(DUK_F_HAVE_64BIT) && defined(DUK_F_MSVC)
+#define DUK_F_HAVE_64BIT
+typedef unsigned __int64 duk_uint64_t;
+typedef signed __int64 duk_int64_t;
 #endif
 #if !defined(DUK_F_HAVE_64BIT)
 /* cannot detect 64-bit type, not always needed so don't error */
@@ -1906,8 +2003,8 @@ typedef duk_uint_fast16_t duk_small_uint_fast_t;
 #define DUK_SMALL_UINT_FAST_MIN   DUK_UINT_FAST16_MIN
 #define DUK_SMALL_UINT_FAST_MAX   DUK_UINT_FAST16_MAX
 
-/* Boolean values are represented with the platform 'int'. */
-typedef duk_small_int_t duk_bool_t;
+/* Boolean values are represented with the platform 'unsigned int'. */
+typedef duk_small_uint_t duk_bool_t;
 #define DUK_BOOL_MIN              DUK_SMALL_INT_MIN
 #define DUK_BOOL_MAX              DUK_SMALL_INT_MAX
 
@@ -1978,7 +2075,10 @@ typedef double duk_double_t;
 #endif
 #endif
 
-/* Type for public API calls. */
+/* Type used in public API declarations and user code.  Typedef maps to
+ * 'struct duk_hthread' like the 'duk_hthread' typedef which is used
+ * exclusively in internals.
+ */
 typedef struct duk_hthread duk_context;
 
 /* Check whether we should use 64-bit integers or not.
@@ -2272,7 +2372,8 @@ typedef struct duk_hthread duk_context;
  * these functions also exist in MSVC 2013 and later so include a clause for
  * that too.  Android doesn't have log2; disable all of these for Android.
  */
-#if (defined(DUK_F_C99) || defined(DUK_F_CPP11) || (defined(_MSC_VER) && (_MSC_VER >= 1800))) && !defined(DUK_F_ANDROID)
+#if (defined(DUK_F_C99) || defined(DUK_F_CPP11) || (defined(_MSC_VER) && (_MSC_VER >= 1800))) && \
+    !defined(DUK_F_ANDROID) && !defined(DUK_F_MINT)
 #if !defined(DUK_CBRT)
 #define DUK_CBRT             cbrt
 #endif
@@ -2498,7 +2599,8 @@ typedef struct duk_hthread duk_context;
 /* Macro for suppressing warnings for potentially unreferenced variables.
  * The variables can be actually unreferenced or unreferenced in some
  * specific cases only; for instance, if a variable is only debug printed,
- * it is unreferenced when debug printing is disabled.
+ * it is unreferenced when debug printing is disabled.  May cause warnings
+ * for volatile arguments.
  */
 #define DUK_UNREF(x)  do { (void) (x); } while (0)
 #endif
@@ -2538,6 +2640,13 @@ typedef struct duk_hthread duk_context;
 #endif
 #if !defined(DUK_ALWAYS_INLINE)
 #define DUK_ALWAYS_INLINE  /*nop*/
+#endif
+
+#if !defined(DUK_HOT)
+#define DUK_HOT            /*nop*/
+#endif
+#if !defined(DUK_COLD)
+#define DUK_COLD           /*nop*/
 #endif
 
 #if !defined(DUK_EXTERNAL_DECL)
@@ -2614,6 +2723,13 @@ typedef struct duk_hthread duk_context;
 
 #if 0  /* not defined by default */
 #undef DUK_USE_GCC_PRAGMAS
+#endif
+
+#if !defined(DUK_U64_CONSTANT)
+#define DUK_U64_CONSTANT(x) x##ULL
+#endif
+#if !defined(DUK_I64_CONSTANT)
+#define DUK_I64_CONSTANT(x) x##LL
 #endif
 
 /* Workaround for GH-323: avoid inlining control when compiling from
@@ -2731,6 +2847,9 @@ typedef struct duk_hthread duk_context;
 #define DUK_USE_BUFFEROBJECT_SUPPORT
 #undef DUK_USE_BUFLEN16
 #define DUK_USE_BYTECODE_DUMP_SUPPORT
+#define DUK_USE_CACHE_ACTIVATION
+#define DUK_USE_CACHE_CATCHER
+#define DUK_USE_CALLSTACK_LIMIT 10000
 #define DUK_USE_COMMONJS_MODULES
 #define DUK_USE_COMPILER_RECLIMIT 2500
 #define DUK_USE_COROUTINE_SUPPORT
@@ -2764,7 +2883,10 @@ typedef struct duk_hthread duk_context;
 #define DUK_USE_ES6_PROXY
 #define DUK_USE_ES6_REGEXP_SYNTAX
 #define DUK_USE_ES6_UNICODE_ESCAPE
+#define DUK_USE_ES7
 #define DUK_USE_ES7_EXP_OPERATOR
+#define DUK_USE_ES8
+#define DUK_USE_ES9
 #define DUK_USE_ESBC_LIMITS
 #define DUK_USE_ESBC_MAX_BYTES 2147418112L
 #define DUK_USE_ESBC_MAX_LINENUMBER 2147418112L
@@ -2777,7 +2899,9 @@ typedef struct duk_hthread duk_context;
 #undef DUK_USE_EXTSTR_INTERN_CHECK
 #define DUK_USE_FAST_REFCOUNT_DEFAULT
 #undef DUK_USE_FATAL_HANDLER
+#define DUK_USE_FATAL_MAXLEN 128
 #define DUK_USE_FINALIZER_SUPPORT
+#undef DUK_USE_FINALIZER_TORTURE
 #undef DUK_USE_FUNCPTR16
 #undef DUK_USE_FUNCPTR_DEC16
 #undef DUK_USE_FUNCPTR_ENC16
@@ -2785,17 +2909,29 @@ typedef struct duk_hthread duk_context;
 #define DUK_USE_FUNC_FILENAME_PROPERTY
 #define DUK_USE_FUNC_NAME_PROPERTY
 #undef DUK_USE_GC_TORTURE
+#undef DUK_USE_GET_MONOTONIC_TIME
 #undef DUK_USE_GET_RANDOM_DOUBLE
+#undef DUK_USE_GLOBAL_BINDING
 #define DUK_USE_GLOBAL_BUILTIN
 #undef DUK_USE_HEAPPTR16
 #undef DUK_USE_HEAPPTR_DEC16
 #undef DUK_USE_HEAPPTR_ENC16
 #define DUK_USE_HEX_FASTPATH
+#define DUK_USE_HOBJECT_ARRAY_ABANDON_LIMIT 2
+#define DUK_USE_HOBJECT_ARRAY_FAST_RESIZE_LIMIT 9
+#define DUK_USE_HOBJECT_ARRAY_MINGROW_ADD 16
+#define DUK_USE_HOBJECT_ARRAY_MINGROW_DIVISOR 8
+#define DUK_USE_HOBJECT_ENTRY_MINGROW_ADD 16
+#define DUK_USE_HOBJECT_ENTRY_MINGROW_DIVISOR 8
 #define DUK_USE_HOBJECT_HASH_PART
+#define DUK_USE_HOBJECT_HASH_PROP_LIMIT 8
 #define DUK_USE_HSTRING_ARRIDX
 #define DUK_USE_HSTRING_CLEN
 #undef DUK_USE_HSTRING_EXTDATA
+#define DUK_USE_HSTRING_LAZY_CLEN
+#define DUK_USE_HTML_COMMENTS
 #define DUK_USE_IDCHAR_FASTPATH
+#undef DUK_USE_INJECT_HEAP_ALLOC_ERROR
 #undef DUK_USE_INTERRUPT_DEBUG_FIXUP
 #define DUK_USE_JC
 #define DUK_USE_JSON_BUILTIN
@@ -2809,10 +2945,8 @@ typedef struct duk_hthread duk_context;
 #define DUK_USE_JX
 #define DUK_USE_LEXER_SLIDING_WINDOW
 #undef DUK_USE_LIGHTFUNC_BUILTINS
-#undef DUK_USE_MARKANDSWEEP_FINALIZER_TORTURE
 #define DUK_USE_MARK_AND_SWEEP_RECLIMIT 256
 #define DUK_USE_MATH_BUILTIN
-#define DUK_USE_MS_STRINGTABLE_RESIZE
 #define DUK_USE_NATIVE_CALL_RECLIMIT 1000
 #define DUK_USE_NONSTD_ARRAY_CONCAT_TRAILER
 #define DUK_USE_NONSTD_ARRAY_MAP_TRAILER
@@ -2829,12 +2963,15 @@ typedef struct duk_hthread duk_context;
 #undef DUK_USE_OBJSIZES16
 #undef DUK_USE_PARANOID_ERRORS
 #define DUK_USE_PC2LINE
+#define DUK_USE_PERFORMANCE_BUILTIN
 #undef DUK_USE_PREFER_SIZE
+#undef DUK_USE_PROMISE_BUILTIN
 #define DUK_USE_PROVIDE_DEFAULT_ALLOC_FUNCTIONS
 #undef DUK_USE_REFCOUNT16
+#define DUK_USE_REFCOUNT32
 #define DUK_USE_REFERENCE_COUNTING
 #define DUK_USE_REFLECT_BUILTIN
-#undef DUK_USE_REFZERO_FINALIZER_TORTURE
+#define DUK_USE_REGEXP_CANON_BITMAP
 #undef DUK_USE_REGEXP_CANON_WORKAROUND
 #define DUK_USE_REGEXP_COMPILER_RECLIMIT 10000
 #define DUK_USE_REGEXP_EXECUTOR_RECLIMIT 10000
@@ -2846,6 +2983,7 @@ typedef struct duk_hthread duk_context;
 #undef DUK_USE_ROM_STRINGS
 #define DUK_USE_SECTION_B
 #undef DUK_USE_SELF_TESTS
+#define DUK_USE_SHEBANG_COMMENTS
 #undef DUK_USE_SHUFFLE_TORTURE
 #define DUK_USE_SOURCE_NONBMP
 #undef DUK_USE_STRHASH16
@@ -2855,9 +2993,13 @@ typedef struct duk_hthread duk_context;
 #undef DUK_USE_STRICT_UTF8_SOURCE
 #define DUK_USE_STRING_BUILTIN
 #undef DUK_USE_STRLEN16
-#undef DUK_USE_STRTAB_CHAIN
-#undef DUK_USE_STRTAB_CHAIN_SIZE
-#define DUK_USE_STRTAB_PROBE
+#define DUK_USE_STRTAB_GROW_LIMIT 17
+#define DUK_USE_STRTAB_MAXSIZE 268435456L
+#define DUK_USE_STRTAB_MINSIZE 1024
+#undef DUK_USE_STRTAB_PTRCOMP
+#define DUK_USE_STRTAB_RESIZE_CHECK_MASK 255
+#define DUK_USE_STRTAB_SHRINK_LIMIT 6
+#undef DUK_USE_STRTAB_TORTURE
 #define DUK_USE_TAILCALL
 #define DUK_USE_TRACEBACKS
 #define DUK_USE_TRACEBACK_DEPTH 10
@@ -2900,6 +3042,10 @@ DUK_INTERNAL_DECL duk_bool_t duk_cr_timeout(void *udata) \
 		return 0; \
 	} \
 }
+#define DUK_USE_VALSTACK_GROW_SHIFT 2
+#define DUK_USE_VALSTACK_LIMIT 1000000L
+#define DUK_USE_VALSTACK_SHRINK_CHECK_SHIFT 2
+#define DUK_USE_VALSTACK_SHRINK_SLACK_SHIFT 4
 #undef DUK_USE_VALSTACK_UNSAFE
 #define DUK_USE_VERBOSE_ERRORS
 #define DUK_USE_VERBOSE_EXECUTOR_ERRORS
@@ -2927,21 +3073,25 @@ DUK_INTERNAL_DECL duk_bool_t duk_cr_timeout(void *udata) \
 #if defined(DUK_USE_DATE_GET_NOW)
 /* External provider already defined. */
 #elif defined(DUK_USE_DATE_NOW_GETTIMEOFDAY)
-#define DUK_USE_DATE_GET_NOW(ctx)            duk_bi_date_get_now_gettimeofday((ctx))
+#define DUK_USE_DATE_GET_NOW(ctx)            duk_bi_date_get_now_gettimeofday()
 #elif defined(DUK_USE_DATE_NOW_TIME)
-#define DUK_USE_DATE_GET_NOW(ctx)            duk_bi_date_get_now_time((ctx))
+#define DUK_USE_DATE_GET_NOW(ctx)            duk_bi_date_get_now_time()
 #elif defined(DUK_USE_DATE_NOW_WINDOWS)
-#define DUK_USE_DATE_GET_NOW(ctx)            duk_bi_date_get_now_windows((ctx))
+#define DUK_USE_DATE_GET_NOW(ctx)            duk_bi_date_get_now_windows()
+#elif defined(DUK_USE_DATE_NOW_WINDOWS_SUBMS)
+#define DUK_USE_DATE_GET_NOW(ctx)            duk_bi_date_get_now_windows_subms()
 #else
 #error no provider for DUK_USE_DATE_GET_NOW()
 #endif
 
 #if defined(DUK_USE_DATE_GET_LOCAL_TZOFFSET)
 /* External provider already defined. */
-#elif defined(DUK_USE_DATE_TZO_GMTIME_R) || defined(DUK_USE_DATE_TZO_GMTIME)
+#elif defined(DUK_USE_DATE_TZO_GMTIME_R) || defined(DUK_USE_DATE_TZO_GMTIME_S) || defined(DUK_USE_DATE_TZO_GMTIME)
 #define DUK_USE_DATE_GET_LOCAL_TZOFFSET(d)   duk_bi_date_get_local_tzoffset_gmtime((d))
 #elif defined(DUK_USE_DATE_TZO_WINDOWS)
 #define DUK_USE_DATE_GET_LOCAL_TZOFFSET(d)   duk_bi_date_get_local_tzoffset_windows((d))
+#elif defined(DUK_USE_DATE_TZO_WINDOWS_NO_DST)
+#define DUK_USE_DATE_GET_LOCAL_TZOFFSET(d)   duk_bi_date_get_local_tzoffset_windows_no_dst((d))
 #else
 #error no provider for DUK_USE_DATE_GET_LOCAL_TZOFFSET()
 #endif
@@ -2963,6 +3113,16 @@ DUK_INTERNAL_DECL duk_bool_t duk_cr_timeout(void *udata) \
 	duk_bi_date_format_parts_strftime((ctx), (parts), (tzoffset), (flags))
 #else
 /* No provider for DUK_USE_DATE_FORMAT_STRING(), fall back to ISO 8601 only. */
+#endif
+
+#if defined(DUK_USE_GET_MONOTONIC_TIME)
+/* External provider already defined. */
+#elif defined(DUK_USE_GET_MONOTONIC_TIME_CLOCK_GETTIME)
+#define DUK_USE_GET_MONOTONIC_TIME(ctx)  duk_bi_date_get_monotonic_time_clock_gettime()
+#elif defined(DUK_USE_GET_MONOTONIC_TIME_WINDOWS_QPC)
+#define DUK_USE_GET_MONOTONIC_TIME(ctx)  duk_bi_date_get_monotonic_time_windows_qpc()
+#else
+/* No provider for DUK_USE_GET_MONOTONIC_TIME(), fall back to DUK_USE_DATE_GET_NOW(). */
 #endif
 
 #endif  /* DUK_COMPILING_DUKTAPE */
