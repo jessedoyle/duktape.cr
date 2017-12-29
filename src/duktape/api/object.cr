@@ -28,6 +28,11 @@ module Duktape
       LibDUK.equals(ctx, one, two) == 1
     end
 
+    def freeze(index : LibDUK::Index)
+      require_valid_index index
+      LibDUK.freeze ctx, index
+    end
+
     def get_finalizer(index : LibDUK::Index)
       require_valid_index index
       LibDUK.get_finalizer ctx, index
@@ -61,6 +66,11 @@ module Duktape
 
     def samevalue(one : LibDUK::Index, two : LibDUK::Index)
       LibDUK.samevalue(ctx, one, two) == 1
+    end
+
+    def seal(index : LibDUK::Index)
+      require_valid_index index
+      LibDUK.seal ctx, index
     end
 
     def set_finalizer(index : LibDUK::Index)

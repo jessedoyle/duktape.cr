@@ -8,8 +8,9 @@
 lib LibDUK
   alias Context = Void*
   alias Size = Int32
-  alias Bool = Int32
+  alias Bool = UInt32
   alias Index = Int32
+  alias Number = Float64
 
   INVALID_INDEX = Int32::MIN
   VARARGS       = -1
@@ -66,11 +67,13 @@ lib LibDUK
     Eval       = (1 << 3)
     Function   = (1 << 4)
     Strict     = (1 << 5)
-    Safe       = (1 << 6)
-    NoResult   = (1 << 7)
-    NoSource   = (1 << 8)
-    StrLen     = (1 << 9)
-    NoFilename = (1 << 10)
+    Shebang    = (1 << 6)
+    Safe       = (1 << 7)
+    NoResult   = (1 << 8)
+    NoSource   = (1 << 9)
+    StrLen     = (1 << 10)
+    NoFilename = (1 << 11)
+    FuncExpr   = (1 << 12)
   end
 
   @[Flags]
@@ -141,19 +144,18 @@ lib LibDUK
   end
 
   enum BufObj : UInt32
-    CreateArrBuf      = 1 << 4 # Internal
-    ArrayBuffer       = 0
-    NodeJsBuffer      = 1 | CreateArrBuf
-    DataView          = 2 | CreateArrBuf
-    Int8Array         = 3 | CreateArrBuf
-    UInt8Array        = 4 | CreateArrBuf
-    UInt8ClampedArray = 5 | CreateArrBuf
-    Int16Array        = 6 | CreateArrBuf
-    UInt16Array       = 7 | CreateArrBuf
-    Int32Array        = 8 | CreateArrBuf
-    UInt32Array       = 9 | CreateArrBuf
-    Float32Array      = 10 | CreateArrBuf
-    Float64Array      = 11 | CreateArrBuf
+    ArrayBuffer       # 0
+    NodeJsBuffer      # 1
+    DataView          # 2
+    Int8Array         # 3
+    UInt8Array        # 4
+    UInt8ClampedArray # 5
+    Int16Array        # 6
+    UInt16Array       # 7
+    Int32Array        # 8
+    UInt32Array       # 9
+    Float32Array      # 10
+    Float64Array      # 11
   end
 
   enum BufMode
@@ -186,17 +188,17 @@ lib LibDUK
 
   struct NumberListEntry
     key : UInt8*
-    value : Float64
+    value : Number
   end
 
   struct TimeComponents
-    year : Float64
-    month : Float64
-    day : Float64
-    hours : Float64
-    minutes : Float64
-    milliseconds : Float64
-    weekday : Float64
+    year : Number
+    month : Number
+    day : Number
+    hours : Number
+    minutes : Number
+    milliseconds : Number
+    weekday : Number
   end
 
   # Context Management
@@ -258,7 +260,7 @@ lib LibDUK
   fun push_boolean = duk_push_boolean(ctx : Context, val : Bool)
   fun push_true = duk_push_true(ctx : Context)
   fun push_false = duk_push_false(ctx : Context)
-  fun push_number = duk_push_number(ctx : Context, val : Float64)
+  fun push_number = duk_push_number(ctx : Context, val : Number)
   fun push_nan = duk_push_nan(ctx : Context)
   fun push_int = duk_push_int(ctx : Context, val : Int32)
   fun push_uint = duk_push_uint(ctx : Context, val : UInt32)
@@ -277,6 +279,7 @@ lib LibDUK
   fun push_array = duk_push_array(ctx : Context) : Index
   fun push_c_function = duk_push_c_function(ctx : Context, func : Context -> Int32, nargs : Index) : Index
   fun push_c_lightfunc = duk_push_c_lightfunc(ctx : Context, func : Context -> Int32, nargs : Index) : Index
+  fun push_proxy = duk_push_proxy(ctx : Context, flags : UInt32) : Index
   fun push_thread_raw = duk_push_thread_raw(ctx : Context, flags : UInt32) : Index
   fun push_error_object_raw = duk_push_error_object_raw(ctx : Context, err : Int32, filename : UInt8*, line : Int32, fmt : UInt8*, ...) : Index
   fun push_error_object_stash = duk_push_error_object_stash(ctx : Context, err : Int32, fmt : UInt8*, ...) : Int32
@@ -314,6 +317,7 @@ lib LibDUK
   fun is_ecmascript_function = duk_is_ecmascript_function(ctx : Context, index : Index) : Bool
   fun is_bound_function = duk_is_bound_function(ctx : Context, index : Index) : Bool
   fun is_thread = duk_is_thread(ctx : Context, index : Index) : Bool
+  fun is_constructable = duk_is_constructable(context : Context, index : Index) : Bool
   fun is_dynamic_buffer = duk_is_dynamic_buffer(ctx : Context, index : Index) : Bool
   fun is_fixed_buffer = duk_is_fixed_buffer(ctx : Context, index : Index) : Bool
   fun is_external_buffer = duk_is_external_buffer(ctx : Context, index : Index) : Bool
@@ -321,7 +325,7 @@ lib LibDUK
   # Get Operations
   fun get_error_code = duk_get_error_code(ctx : Context, index : Index) : Err
   fun get_boolean = duk_get_boolean(ctx : Context, index : Index) : Bool
-  fun get_number = duk_get_number(ctx : Context, index : Index) : Float64
+  fun get_number = duk_get_number(ctx : Context, index : Index) : Number
   fun get_int = duk_get_int(ctx : Context, index : Index) : Int32
   fun get_uint = duk_get_uint(ctx : Context, index : Index) : UInt32
   fun get_string = duk_get_string(ctx : Context, index : Index) : UInt8*
@@ -341,11 +345,12 @@ lib LibDUK
   fun require_undefined = duk_require_undefined(ctx : Context, index : Index)
   fun require_null = duk_require_null(ctx : Context, index : Index)
   fun require_boolean = duk_require_boolean(ctx : Context, index : Index) : Bool
-  fun require_number = duk_require_number(ctx : Context, index : Index) : Float64
+  fun require_number = duk_require_number(ctx : Context, index : Index) : Number
   fun require_int = duk_require_int(ctx : Context, index : Index) : Int32
   fun require_uint = duk_require_uint(ctx : Context, index : Index) : UInt32
   fun require_string = duk_require_string(ctx : Context, index : Index) : UInt8*
   fun require_lstring = duk_require_lstring(ctx : Context, index : Index, out_len : Size*) : UInt8*
+  fun require_object = duk_require_object(ctx : Context, index : Index)
   fun require_buffer = duk_require_buffer(ctx : Context, index : Index, out_size : Size*) : Void*
   fun require_buffer_data = duk_require_buffer_data(ctx : Context, index : Index, out_size : Size*) : Void*
   fun require_pointer = duk_require_pointer(ctx : Context, index : Index) : Void*
@@ -355,11 +360,25 @@ lib LibDUK
   @[Raises]
   fun require_function = duk_require_function(ctx : Context, index : Index)
 
+  # Stack Defaults (like duk_require_xxx, allows a default value to be passed)
+  fun opt_boolean = duk_opt_boolean(ctx : Context, index : Index, value : Bool) : Bool
+  fun opt_number = duk_opt_number(ctx : Context, index : Index, value : Number) : Number
+  fun opt_int = duk_opt_int(ctx : Context, index : Index, value : Int32) : Int32
+  fun opt_uint = duk_opt_uint(ctx : Context, index : Index, value : UInt32) : UInt32
+  fun opt_string = duk_opt_string(ctx : Context, index : Index, value : UInt8*) : UInt8*
+  fun opt_lstring = duk_opt_lstring(ctx : Context, index : Index, out_size : Size*, value : UInt8*, size : Size) : UInt8*
+  fun opt_buffer = duk_opt_buffer(ctx : Context, index : Index, out_size : Size*, value : Void*, size : Size) : Void*
+  fun opt_buffer_data = duk_opt_buffer_data(ctx : Context, index : Index, out_size : Size*, value : Void*, size : Size) : Void*
+  fun opt_pointer = duk_opt_pointer(ctx : Context, index : Index, value : Void*) : Void*
+  fun opt_c_function = duk_opt_c_function(ctx : Context, index : Index, value : Void*) : Void*
+  fun opt_context = duk_opt_context(ctx : Context, index : Index, value : Context) : Context
+  fun opt_heapptr = duk_opt_heapptr(ctx : Context, index : Index, value : Void*) : Void*
+
   # Coercion Operations
   fun to_undefined = duk_to_undefined(ctx : Context, index : Index)
   fun to_null = duk_to_null(ctx : Context, index : Index)
   fun to_boolean = duk_to_boolean(ctx : Context, index : Index) : Bool
-  fun to_number = duk_to_number(ctx : Context, index : Index) : Float64
+  fun to_number = duk_to_number(ctx : Context, index : Index) : Number
   fun to_int = duk_to_int(ctx : Context, index : Index) : Int32
   fun to_uint = duk_to_uint(ctx : Context, index : Index) : UInt32
   fun to_int32 = duk_to_int32(ctx : Context, index : Index) : Int32
@@ -440,6 +459,8 @@ lib LibDUK
   fun compact = duk_compact(ctx : Context, obj_index : Index)
   fun enum = duk_enum(ctx : Context, obj_index : Index, flags : UInt32)
   fun next = duk_next(ctx : Context, index : Index, value : Bool) : Bool
+  fun seal = duk_seal(ctx : Context, index : Index)
+  fun freeze = duk_freeze(ctx : Context, index : Index)
 
   # String Manipulation
   fun concat = duk_concat(ctx : Context, count : Index)
@@ -484,7 +505,7 @@ lib LibDUK
   fun debugger_pause = duk_debugger_pause(ctx : Context)
 
   # Time Handling
-  fun get_now = duk_get_now(ctx : Context) : Float64
-  fun time_to_components = duk_time_to_components(ctx : Context, timeval : Float64, components : TimeComponents*)
-  fun components_to_time = duk_components_to_time(ctx : Context, components : TimeComponents*) : Float64
+  fun get_now = duk_get_now(ctx : Context) : Number
+  fun time_to_components = duk_time_to_components(ctx : Context, timeval : Number, components : TimeComponents*)
+  fun components_to_time = duk_components_to_time(ctx : Context, components : TimeComponents*) : Number
 end

@@ -153,6 +153,10 @@ module Duktape
       LibDUK.push_c_function ctx, block, nargs
     end
 
+    def push_proxy
+      LibDUK.push_proxy ctx, 0_u32
+    end
+
     def push_string(str : String)
       ptr = LibDUK.push_string ctx, str
       String.new ptr

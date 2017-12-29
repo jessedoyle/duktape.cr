@@ -55,6 +55,26 @@ describe Duktape::API::Object do
     end
   end
 
+  describe "freeze" do
+    it "freezes an object on valid index" do
+      ctx = Duktape::Context.new
+      ctx.eval!("var object = {}; object;")
+      ctx.freeze(-1)
+      ctx.eval!("Object.isFrozen(object);")
+      frozen = ctx.get_boolean(-1)
+
+      frozen.should be_true
+    end
+
+    it "raises Duktape::StackError on invalid index" do
+      ctx = Duktape::Context.new
+
+      expect_raises(Duktape::StackError, /invalid index/) do
+        ctx.freeze(-1)
+      end
+    end
+  end
+
   describe "get_finalizer" do
     it "should raise on invalid index" do
       ctx = Duktape::Context.new
@@ -145,7 +165,7 @@ describe Duktape::API::Object do
 
       ctx << json
       ctx.json_decode -1
-      ctx.enum -1, LibDUK::Enum::IncludeNonEnumerable
+      ctx.enum -1, LibDUK::Enum::OwnPropertiesOnly
       count = 0
 
       while ctx.next(-1)
@@ -153,7 +173,7 @@ describe Duktape::API::Object do
         ctx.pop
       end
 
-      count.should eq(10)
+      count.should eq(2)
     end
   end
 
@@ -174,6 +194,26 @@ describe Duktape::API::Object do
       val = ctx.samevalue(-1, -3)
 
       val.should be_false
+    end
+  end
+
+  describe "seal" do
+    it "seals the object on valid index" do
+      ctx = Duktape::Context.new
+      ctx.eval!("var object = {}; object;")
+      ctx.seal(-1)
+      ctx.eval!("Object.isSealed(object);")
+      sealed = ctx.get_boolean(-1)
+
+      sealed.should be_true
+    end
+
+    it "raises Duktape::StackError on invalid index" do
+      ctx = Duktape::Context.new
+
+      expect_raises(Duktape::StackError, /invalid index/) do
+        ctx.seal(-1)
+      end
     end
   end
 

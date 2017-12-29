@@ -398,6 +398,16 @@ describe Duktape::API::Push do
     proc_should_return_error(:uri)
   end
 
+  describe "push_proxy" do
+    it "pushes a proxy object" do
+      ctx.push_object # target
+      ctx.push_object # handler
+      ctx.push_proxy
+
+      last_stack_type(ctx).should be_js_type(:object)
+    end
+  end
+
   describe "push_string" do
     it "should push a string onto the stack" do
       str = ctx.push_string "Hello"

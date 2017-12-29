@@ -106,6 +106,16 @@ module Duktape
       LibDUK.require_number ctx, index
     end
 
+    def require_object(index : LibDUK::Index)
+      require_valid_index index
+
+      unless is_object(index)
+        raise TypeError.new "type at #{index} is not an object"
+      end
+
+      LibDUK.require_object ctx, index
+    end
+
     def require_object_coercible(index : LibDUK::Index)
       require_valid_index index
 

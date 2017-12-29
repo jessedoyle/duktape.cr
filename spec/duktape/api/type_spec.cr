@@ -241,6 +241,25 @@ describe Duktape::API::Type do
     end
   end
 
+  describe "is_constructable" do
+    context "with an invalid index" do
+      it "returns false" do
+        ctx = Duktape::Context.new
+
+        ctx.is_constructable(-1).should be_false
+      end
+    end
+
+    context "with a valid index" do
+      it "returns true if the function is constructable" do
+        ctx = Duktape::Context.new
+        ctx.eval!("var func = function(){}; func;")
+
+        ctx.is_constructable(-1).should be_true
+      end
+    end
+  end
+
   describe "is_dynamic_buffer" do
     it "should return true if element is a dynamic buffer" do
       ctx = Duktape::Context.new
