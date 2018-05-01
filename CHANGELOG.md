@@ -1,3 +1,8 @@
+# v0.14.0 - Apr 30, 2018
+
+- Update Duktape to version `2.2.1`.
+- See the [release](https://github.com/svaarala/duktape/blob/master/RELEASES.rst#221-2018-04-26) for more info.
+
 # v0.13.0 - Dec 28, 2017
 
 - Update Duktape to version `2.2.0`, rebuilding all necessary
