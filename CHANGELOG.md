@@ -1,3 +1,7 @@
+# v0.14.1 - May 13, 2018
+
+- Fix a type inference error on the Sandbox `@timeout` instance variable that occurs due to recent changes in Crystal master [#43]. Thanks @kostya!
+
 # v0.14.0 - Apr 30, 2018
 
 - Update Duktape to version `2.2.1`.

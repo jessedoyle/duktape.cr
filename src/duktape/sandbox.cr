@@ -7,7 +7,7 @@
 module Duktape
   class Sandbox < Context
     include Support::Time
-    getter timeout
+    getter timeout : Int32 | Int64 | Nil
 
     def initialize
       @ctx = Duktape.create_heap_default
