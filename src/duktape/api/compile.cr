@@ -18,12 +18,25 @@ module Duktape
       LibDUK.compile_raw ctx, nil, 0, options
     end
 
+    def compile(options : LibDUK::Compile)
+      require_valid_index -2 # Source and filename
+      flags = LibDUK::Compile.new(2_u32) |
+              LibDUK::Compile::Safe |
+              options
+      LibDUK.compile_raw ctx, nil, 0, flags
+    end
+
     def compile(str : String)
       compile_string str
     end
 
     def compile!
       err = compile
+      raise_error err
+    end
+
+    def compile!(options : LibDUK::Compile)
+      err = compile options
       raise_error err
     end
 

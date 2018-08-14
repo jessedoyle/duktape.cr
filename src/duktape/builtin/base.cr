@@ -6,8 +6,7 @@
 module Duktape
   module BuiltIn
     abstract struct Base
-      getter ctx
-      @ctx : Duktape::Context | Duktape::Sandbox
+      getter ctx : Duktape::Context | Duktape::Sandbox
 
       def initialize(@ctx : Duktape::Context | Duktape::Sandbox)
       end
@@ -20,3 +19,4 @@ end
 require "./alert"
 require "./console"
 require "./print"
+require "./require"

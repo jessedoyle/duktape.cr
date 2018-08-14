@@ -6,6 +6,10 @@
 
 module Duktape
   module API::ErrorHandling
+    def error(code : LibDUK::Err, msg : String)
+      error(code.value, msg)
+    end
+
     def error(code : Int32, msg : String)
       LibDUK.error_raw ctx, code, __FILE__, __LINE__, msg
     end
