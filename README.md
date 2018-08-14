@@ -18,7 +18,7 @@ version: 1.0.0 # your project's version
 dependencies:
   duktape:
     github: jessedoyle/duktape.cr
-    version: ~> 0.14.1
+    version: ~> 0.15.0
 ```
 
 then execute:
@@ -27,7 +27,7 @@ then execute:
 shards install
 ```
 
-Shards `v0.4.0` or greater will automatically make the native library. You can make the library manually by calling `make libduktape` from `libs/duktape/ext`.
+Shards will automatically make the native library. You can make the library manually by calling `make libduktape`.
 
 ## Usage
 

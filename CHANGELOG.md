@@ -1,3 +1,10 @@
+# v0.15.0 - Aug 14, 2018
+
+- Update Duktape version to `2.3.0`.
+- See the [release notes](https://github.com/svaarala/duktape/blob/5a6f30caabc8a856b113577fffd3468e8dfab621/doc/release-notes-v2-3.rst) for more info.
+- Fix a missing `it` block expectation in tests.
+- Add bindings for `random`, `push_new_target`, `get_global_heaptr` and `put_global_heapptr`.
+
 # v0.14.1 - May 13, 2018
 
 - Fix a type inference error on the Sandbox `@timeout` instance variable that occurs due to recent changes in Crystal master [#43]. Thanks @kostya!

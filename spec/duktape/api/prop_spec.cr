@@ -418,6 +418,28 @@ describe Duktape::API::Prop do
     end
   end
 
+  describe "put_global_heapptr" do
+    it "should put a property on the global object from a Duktape heap pointer" do
+      ctx = Duktape::Context.new
+      ctx << "string"
+      ptr = ctx.get_heapptr(-1)
+      val = ctx.put_global_heapptr(ptr)
+      ctx.get_global_string("string")
+      str = ctx.require_string(-1)
+
+      str.should eq("string")
+      val.should be_true
+    end
+
+    it "should raise if the stack is empty" do
+      ctx = Duktape::Context.new
+
+      expect_raises Duktape::StackError, /invalid index/ do
+        ctx.put_global_heapptr(Pointer(Void).null)
+      end
+    end
+  end
+
   describe "put_prop" do
     it "should put a prop key with value val and return true" do
       ctx = Duktape::Context.new

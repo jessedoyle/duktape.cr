@@ -36,6 +36,10 @@ module Duktape
       LibDUK.get_heapptr ctx, index
     end
 
+    def get_global_heapptr(key : Void*)
+      LibDUK.get_global_heapptr(ctx, key) != 0
+    end
+
     def get_int(index : LibDUK::Index)
       require_valid_index index
       LibDUK.get_int ctx, index
