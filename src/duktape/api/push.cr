@@ -166,6 +166,10 @@ module Duktape
       LibDUK.push_this ctx
     end
 
+    def push_new_target
+      LibDUK.push_new_target ctx
+    end
+
     def push_thread
       LibDUK.push_thread_raw ctx, 0_u32
     end

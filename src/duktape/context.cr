@@ -18,6 +18,7 @@ module Duktape
     include API::Eval
     include API::Get
     include API::Heap
+    include API::Math
     include API::Object
     include API::Opt
     include API::Pop

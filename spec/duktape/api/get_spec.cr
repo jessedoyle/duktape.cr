@@ -58,7 +58,9 @@ describe Duktape::API::Get do
 
   describe "get_global_string" do
     context "when property exists" do
-      ctx.get_global_string("Duktape").should be_true
+      it "returns true" do
+        ctx.get_global_string("Duktape").should be_true
+      end
     end
 
     context "when property does not exist" do
@@ -74,6 +76,30 @@ describe Duktape::API::Get do
       heap = ctx.get_heapptr -1
 
       heap.class.should eq(Pointer(Void))
+    end
+  end
+
+  describe "get_global_heapptr" do
+    context "when the property exists" do
+      it "returns true" do
+        ctx << "Duktape"
+        ptr = ctx.get_heapptr(-1)
+        val = ctx.get_global_heapptr(ptr)
+
+        val.should be_true
+        last_stack_type(ctx).should be_js_type(:object)
+      end
+    end
+
+    context "when the property does not exist" do
+      it "return false" do
+        ctx << "foo"
+        ptr = ctx.get_heapptr(-1)
+        val = ctx.get_global_heapptr(ptr)
+
+        val.should be_false
+        last_stack_type(ctx).should be_js_type(:undefined)
+      end
     end
   end
 

@@ -268,6 +268,7 @@ lib LibDUK
   fun push_lstring = duk_push_lstring(ctx : Context, str : UInt8*, len : Size) : UInt8*
   fun push_pointer = duk_push_pointer(ctx : Context, ptr : Void*)
   fun push_this = duk_push_this(ctx : Context)
+  fun push_new_target = duk_push_new_target(ctx : Context)
   fun push_current_function = duk_push_current_function(ctx : Context)
   fun push_current_thread = duk_push_current_thread(ctx : Context)
   fun push_global_object = duk_push_global_object(ctx : Context)
@@ -336,6 +337,7 @@ lib LibDUK
   fun get_c_function = duk_get_c_function(ctx : Context, index : Index) : Void*
   fun get_context = duk_get_context(ctx : Context, index : Index) : Context
   fun get_heapptr = duk_get_heapptr(ctx : Context, index : Index) : Void*
+  fun get_global_heapptr = duk_get_global_heapptr(ctx : Context, key : Void*) : Bool
   fun get_length = duk_get_length(ctx : Context, index : Index) : Size
   fun set_length = duk_set_length(ctx : Context, index : Index, size : Size)
   fun get_global_string = duk_get_global_string(ctx : Context, key : UInt8*) : Bool
@@ -430,6 +432,7 @@ lib LibDUK
   fun get_global_lstring = duk_get_global_lstring(ctx : Context, key : UInt8*, length : Size) : Bool
   fun put_global_string = duk_put_global_string(ctx : Context, key : UInt8*) : Bool
   fun put_global_lstring = duk_put_global_lstring(ctx : Context, key : UInt8*, length : Size) : Bool
+  fun put_global_heapptr = duk_put_global_heapptr(ctx : Context, key : Void*) : Bool
 
   # Inspection
   fun inspect_value = duk_inspect_value(ctx : Context, index : Index)
@@ -476,6 +479,9 @@ lib LibDUK
   fun strict_equals = duk_strict_equals(ctx : Context, one : Index, two : Index) : Bool
   fun samevalue = duk_samevalue(ctx : Context, one : Index, two : Index) : Bool
   fun instanceof = duk_instanceof(ctx : Context, one : Index, two : Index) : Bool
+
+  # Random
+  fun random = duk_random(ctx : Context) : Number
 
   # Method Calls
   fun call = duk_call(ctx : Context, nargs : Index)

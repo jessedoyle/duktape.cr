@@ -425,6 +425,14 @@ describe Duktape::API::Push do
     end
   end
 
+  describe "push_new_target" do
+    it "pushes undefined if the current running function is not a constructor" do
+      ctx.push_new_target
+
+      last_stack_type(ctx).should be_js_type(:undefined)
+    end
+  end
+
   describe "push_thread" do
     it "should push object to the stack" do
       ctx.push_thread

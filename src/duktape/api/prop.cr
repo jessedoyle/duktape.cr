@@ -84,9 +84,13 @@ module Duktape
     end
 
     def put_global_string(key : String)
-      # See: http://duktape.org/api.html#duk_put_global_string
       require_valid_index -1
       LibDUK.put_global_string(ctx, key) == 1
+    end
+
+    def put_global_heapptr(key : Void*)
+      require_valid_index -1
+      LibDUK.put_global_heapptr(ctx, key) == 1
     end
 
     def put_prop(index : LibDUK::Index)
