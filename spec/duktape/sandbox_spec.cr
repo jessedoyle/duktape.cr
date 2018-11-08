@@ -14,7 +14,7 @@ describe Duktape::Sandbox do
     context "with timeout" do
       it "should raise if timeout < 100" do
         expect_raises ArgumentError, /> 100ms/ do
-          sbx = Duktape::Sandbox.new 99
+          Duktape::Sandbox.new 99
         end
       end
 

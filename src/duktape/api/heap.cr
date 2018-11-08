@@ -20,14 +20,14 @@ module Duktape
   end
 
   def self.create_heap_default
-    create_heap do |udata, msg|
+    create_heap do |_, msg|
       str = String.new msg
       raise Duktape::InternalError.new str
     end
   end
 
   def self.create_heap_udata(udata : Void*)
-    create_heap(udata) do |udata, msg|
+    create_heap(udata) do |_, msg|
       str = String.new msg
       raise Duktape::InternalError.new str
     end

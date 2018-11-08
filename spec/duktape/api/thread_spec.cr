@@ -6,7 +6,7 @@ describe Duktape::API::Thread do
       ctx = Duktape::Context.new
       ctx.push_global_proc("test") do |ptr|
         env = Duktape::Context.new ptr
-        state = env.suspend
+        env.suspend
         # as the engine is suspended, we should not evaluate 'true'
         env.eval("true")
         env.get_boolean(-1).should be_false

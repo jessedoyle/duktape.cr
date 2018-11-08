@@ -23,7 +23,7 @@ describe Duktape do
 
   describe "create_heap" do
     it "should create a heap with a custom fatal func" do
-      heap = Duktape.create_heap do |ctx, msg|
+      heap = Duktape.create_heap do
         num = 3 + 5
         raise Exception.new num.to_s
       end
