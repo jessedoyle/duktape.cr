@@ -1,3 +1,8 @@
+# v0.15.1 - Nov 7, 2018
+
+- Add [ameba](https://github.com/veelenga/ameba) as a development dependency for static analysis.
+- Fix `ameba` lint exceptions consisting of unused variable definitions and block variables.
+
 # v0.15.0 - Aug 14, 2018
 
 - Update Duktape version to `2.3.0`.

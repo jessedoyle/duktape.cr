@@ -3,3 +3,6 @@
 .build/
 src/.build
 /doc/
+/lib
+/bin
+/shard.lock
