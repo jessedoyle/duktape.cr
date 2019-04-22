@@ -1,3 +1,9 @@
+# v0.16.0 - Apr, 21 2019
+
+- Update `ameba` to the current latest version of `v0.9.1`.
+- Build specs with all warnings enabled in Crystal >= `0.28.0`.
+- Fix a deprecation warning with Crystal `0.28.0` where integer division will return a float in future versions. Use `Int#//` to retain backwards compatibility.
+
 # v0.15.1 - Nov 7, 2018
 
 - Add [ameba](https://github.com/veelenga/ameba) as a development dependency for static analysis.

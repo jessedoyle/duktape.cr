@@ -1,5 +1,5 @@
 name: duktape
-version: 0.15.1
+version: 0.16.0
 
 authors:
   - Jesse Doyle <jdoyle@ualberta.ca>
@@ -10,6 +10,6 @@ scripts:
 development_dependencies:
   ameba:
     github: veelenga/ameba
-    version: 0.8.1
+    version: 0.9.1
 
 license: MIT

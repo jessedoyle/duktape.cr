@@ -16,10 +16,10 @@ spec: all_spec
 all_spec: $(OUTPUT)/all_spec
 $(OUTPUT)/all_spec: $(SOURCES) $(SPEC_SOURCES)
 	@mkdir -p $(OUTPUT)
-	$(CRYSTAL_BIN) build -o $@ spec/all_spec.cr 2>/dev/null
+	$(CRYSTAL_BIN) build -o $@ spec/all_spec.cr --warnings all
 $(OUTPUT)/duktape: $(SOURCES)
 	@mkdir -p $(OUTPUT)
-	$(CRYSTAL_BIN) build -o $@ src/duktape.cr 2>/dev/null
+	$(CRYSTAL_BIN) build -o $@ src/duktape.cr --warnings all
 clean:
 	rm -rf $(OUTPUT)
 	rm -rf $(CURRENT)/.crystal
