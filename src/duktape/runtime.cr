@@ -328,11 +328,7 @@ module Duktape
     # :nodoc:
     private def stack_to_crystal(index : LibDUK::Index)
       case @context.get_type(index)
-      when :none
-        nil
-      when :undefined
-        nil
-      when :null
+      when :none, :undefined, :null
         nil
       when :boolean
         @context.get_boolean index
