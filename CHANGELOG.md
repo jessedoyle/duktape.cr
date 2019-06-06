@@ -1,3 +1,8 @@
+# v0.17.0 - June 6, 2019
+
+- Update `ameba` to the latest current version (`0.10.0`) as previous versions no longer compile in CI.
+- Relax the restriction on `ameba` to pull in newer minor versions.
+
 # v0.16.0 - Apr, 21 2019
 
 - Update `ameba` to the current latest version of `v0.9.1`.
