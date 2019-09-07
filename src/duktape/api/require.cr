@@ -31,6 +31,24 @@ module Duktape
       require_function index
     end
 
+    def require_constructable(index : LibDUK::Index)
+      require_valid_index index
+
+      unless is_constructable(index)
+        raise TypeError.new "type at #{index} is not constructable"
+      end
+
+      LibDUK.require_constructable ctx, index
+    end
+
+    def require_constructor_call
+      unless is_constructor_call
+        raise TypeError.new "current function is not a constructor call"
+      end
+
+      LibDUK.require_constructor_call ctx
+    end
+
     def require_context(index : LibDUK::Index)
       require_valid_index index
 

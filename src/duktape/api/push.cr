@@ -34,6 +34,10 @@ module Duktape
       LibDUK.push_array ctx
     end
 
+    def push_bare_array
+      LibDUK.push_bare_array ctx
+    end
+
     def push_bare_object
       LibDUK.push_bare_object ctx
     end
