@@ -7,7 +7,7 @@ OUTPUT := $(PREV)/src/.build
 LIBDIR := $(OUTPUT)/lib
 INCLUDEDIR := $(OUTPUT)/include
 
-CFLAGS = \
+CFLAGS ?= \
 	-pedantic \
 	-c \
 	-std=c99 \

@@ -74,6 +74,15 @@ describe Duktape::API::Push do
     end
   end
 
+  describe "push_bare_array" do
+    it "should push an empty array onto the stack" do
+      ctx.push_bare_array
+      condition = ctx.is_array -1
+
+      condition.should eq(true)
+    end
+  end
+
   describe "push_bare_object" do
     it "should push an empty object onto the stack" do
       ctx.push_bare_object

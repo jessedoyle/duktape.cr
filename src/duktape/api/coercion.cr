@@ -19,6 +19,12 @@ module Duktape
       {str, size}
     end
 
+    def safe_to_stacktrace(index : Int)
+      require_valid_index index
+      LibDUK.safe_to_stacktrace ctx, index
+      to_lstring(index).first
+    end
+
     def safe_to_string(index : Int)
       safe_to_lstring(index).first
     end
@@ -90,6 +96,12 @@ module Duktape
     def to_primitive(index : Int, hint = LibDUK::Hint::String)
       require_valid_index index
       LibDUK.to_primitive ctx, index, hint
+    end
+
+    def to_stacktrace(index : Int)
+      require_valid_index index
+      LibDUK.to_stacktrace ctx, index
+      to_lstring(index).first
     end
 
     def to_string(index : Int)

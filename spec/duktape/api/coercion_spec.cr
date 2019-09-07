@@ -51,6 +51,24 @@ describe Duktape::API::Coercion do
     end
   end
 
+  describe "safe_to_stacktrace" do
+    it "should raise on invalid index" do
+      ctx = Duktape::Context.new
+
+      expect_raises Duktape::StackError, /invalid index/ do
+        ctx.safe_to_stacktrace -1
+      end
+    end
+
+    it "stringifies the stack of error objects" do
+      ctx = Duktape::Context.new
+      ctx.eval "1 + 2 +" # SyntaxError
+      trace = ctx.safe_to_stacktrace(-1)
+
+      trace.should match(/SyntaxError: parse error/)
+    end
+  end
+
   describe "safe_to_string" do
     it "should safely coerce values to strings" do
       ctx = Duktape::Context.new
@@ -307,6 +325,32 @@ describe Duktape::API::Coercion do
       expect_raises Duktape::StackError, /invalid index/ do
         ctx.to_primitive -1
       end
+    end
+  end
+
+  describe "to_stacktrace" do
+    it "should raise on invalid index" do
+      ctx = Duktape::Context.new
+
+      expect_raises Duktape::StackError, /invalid index/ do
+        ctx.to_stacktrace -1
+      end
+    end
+
+    it "stringifies an error object stack" do
+      ctx = Duktape::Context.new
+      ctx.push_error_object LibDUK::Err::Error, "TEST"
+      trace = ctx.to_stacktrace -1
+
+      trace.should match(/Error: TEST.*at \[anon\]/m)
+    end
+
+    it "stringifies a non-error object" do
+      ctx = Duktape::Context.new
+      ctx << true
+      trace = ctx.to_stacktrace -1
+
+      trace.should eq("true")
     end
   end
 

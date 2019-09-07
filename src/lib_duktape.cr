@@ -288,6 +288,7 @@ lib LibDUK
   fun push_buffer_raw = duk_push_buffer_raw(ctx : Context, size : Size, flags : UInt32) : Void*
   fun push_buffer_object = duk_push_buffer_object(ctx : Context, buffer : Index, offset : Size, length : Size, flags : UInt32)
   fun push_heapptr = duk_push_heapptr(ctx : Context, ptr : Void*) : Index
+  fun push_bare_array = duk_push_bare_array(ctx : Context) : Index
 
   # Pop Operations
   fun pop = duk_pop(ctx : Context)
@@ -361,6 +362,8 @@ lib LibDUK
   fun require_heapptr = duk_require_heapptr(ctx : Context, index : Index) : Void*
   @[Raises]
   fun require_function = duk_require_function(ctx : Context, index : Index)
+  fun require_constructable = duk_require_constructable(ctx : Context, index : Index)
+  fun require_constructor_call = duk_require_constructor_call(ctx : Context)
 
   # Stack Defaults (like duk_require_xxx, allows a default value to be passed)
   fun opt_boolean = duk_opt_boolean(ctx : Context, index : Index, value : Bool) : Bool
@@ -393,6 +396,8 @@ lib LibDUK
   fun to_object = duk_to_object(ctx : Context, index : Index)
   fun to_primitive = duk_to_primitive(cts : Context, index : Index, hint : Int32)
   fun safe_to_lstring = duk_safe_to_lstring(ctx : Context, index : Index, out_len : Size*) : UInt8*
+  fun safe_to_stacktrace = duk_safe_to_stacktrace(ctx : Context, index : Index) : UInt8*
+  fun to_stacktrace = duk_to_stacktrace(ctx : Context, index : Index) : UInt8*
 
   # Misc Conversion
   fun base64_encode = duk_base64_encode(ctx : Context, index : Index) : UInt8*

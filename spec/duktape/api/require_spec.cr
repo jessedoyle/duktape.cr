@@ -65,6 +65,32 @@ describe Duktape::API::Require do
     end
   end
 
+  describe "require_constructable" do
+    it "should raise on invalid index" do
+      ctx.set_top(0)
+
+      expect_raises Duktape::StackError, /invalid index/ do
+        ctx.require_constructable -1
+      end
+    end
+
+    it "raises when the function is not constructable" do
+      ctx.push_undefined
+
+      expect_raises Duktape::TypeError, /is not constructable/ do
+        ctx.require_constructable -1
+      end
+    end
+  end
+
+  describe "require_constructor_call" do
+    it "should raise when not a constructor call" do
+      expect_raises Duktape::TypeError, /is not a constructor call/ do
+        ctx.require_constructor_call
+      end
+    end
+  end
+
   describe "require_context" do
     it "should return a Duktape::Context when valid" do
       ctx.push_thread

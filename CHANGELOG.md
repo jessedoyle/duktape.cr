@@ -1,3 +1,11 @@
+# v0.18.0 - Sept 6, 2019
+
+- Update Duktape version to `2.4.0`.
+- See the [release notes](https://github.com/svaarala/duktape/blob/bcb37439d6b0a589707f4d611962d7381868dce4/doc/release-notes-v2-4.rst) for more info.
+- Add bindings for `to_stacktrace`, `safe_to_stacktrace`, `push_bare_array`, `require_constructable`, and `require_constructor_call`.
+- Allow C compiler flag overrides when compiling Duktape. Define the `CFLAGS` variable during `shards install` (i.e. `CFLAGS=-O1 shards install`).
+- No longer explicitly enable Duktape's Symbol builtin as it is now enabled by default.
+
 # v0.17.0 - June 6, 2019
 
 - Update `ameba` to the latest current version (`0.10.0`) as previous versions no longer compile in CI.
@@ -173,4 +181,4 @@ sbx = Duktape::Sandbox.new(500) # 500 millisecond execution limit
 
 # v0.5.0 - September 8, 2015
 
-- Intial public release.
+- Initial public release.
