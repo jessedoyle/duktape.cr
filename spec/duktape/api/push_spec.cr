@@ -504,6 +504,4 @@ describe Duktape::API::Push do
       last_stack_type(ctx).should be_js_type(:undefined)
     end
   end
-
-  ctx.destroy_heap!
 end
