@@ -263,6 +263,4 @@ describe Duktape::API::Get do
       val.should eq(0_u32)
     end
   end
-
-  ctx.destroy_heap!
 end

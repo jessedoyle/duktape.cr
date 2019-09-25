@@ -1,3 +1,9 @@
+# v0.18.1 - Sept 24, 2019
+
+- Update for Crystal v0.31.0 support.
+- Fix test cases that were failing because Crystal's Spec library now executes `it` blocks at the end of the program (https://github.com/crystal-lang/crystal/pull/8125). Instead of manually destroying the Duktape head in specs, let the GC take care of it.
+- Update `ameba` to 0.10.1.
+
 # v0.18.0 - Sept 6, 2019
 
 - Update Duktape version to `2.4.0`.

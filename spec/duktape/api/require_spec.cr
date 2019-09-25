@@ -417,6 +417,4 @@ describe Duktape::API::Require do
       end
     end
   end
-
-  ctx.destroy_heap!
 end
