@@ -60,6 +60,11 @@ module Duktape
       LibDUK.normalize_index ctx, index
     end
 
+    def pull(from : LibDUK::Index)
+      require_valid_index from
+      LibDUK.pull ctx, from
+    end
+
     def remove(index : LibDUK::Index)
       require_valid_index index
       LibDUK.remove ctx, index

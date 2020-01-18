@@ -1,3 +1,9 @@
+# v0.19.0 - Jan 17, 2020
+
+- Update Duktape version to `2.5.0`.
+- See the [release notes](https://github.com/svaarala/duktape/blob/1fd2171840a88cc89e7a86b84d4d051940b1c654/doc/release-notes-v2-5.rst) for more info.
+- Add bindings for the `pull` API function.
+
 # v0.18.1 - Sept 24, 2019
 
 - Update for Crystal v0.31.0 support.
