@@ -15,13 +15,13 @@ module Duktape
 
   module VERSION
     MAJOR =  0
-    MINOR = 18
-    TINY  =  1
+    MINOR = 19
+    TINY  =  0
     PRE   = nil
 
     STRING = [MAJOR, MINOR, TINY, PRE].compact.join "."
 
     # Internal Duktape Version
-    API = [2, 4, 0].join "."
+    API = [2, 5, 0].join "."
   end
 end

@@ -223,6 +223,26 @@ describe Duktape::API::Stack do
     end
   end
 
+  describe "pull" do
+    it "should raise when the index is invalid" do
+      ctx = Duktape::Context.new
+
+      expect_raises Duktape::StackError, /invalid index/ do
+        ctx.pull -1
+      end
+    end
+
+    it "removes the value from the index and pushes to stack top" do
+      ctx = Duktape::Context.new
+      ctx << 0
+      ctx << 1
+      ctx << 2
+      ctx.pull(-3)
+
+      ctx.require_int(-1).should eq(0)
+    end
+  end
+
   describe "remove" do
     it "should remove the value at index" do
       ctx = Duktape::Context.new

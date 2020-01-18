@@ -249,6 +249,7 @@ lib LibDUK
   fun dup = duk_dup(ctx : Context, from_index : Index)
   fun dup_top = duk_dup_top(ctx : Context)
   fun insert = duk_insert(ctx : Context, to_index : Index)
+  fun pull = duk_pull(ctx : Context, from_index : Index)
   fun replace = duk_replace(ctx : Context, to_index : Index)
   fun copy = duk_copy(ctx : Context, from_index : Index, to_index : Index)
   fun remove = duk_remove(ctx : Context, index : Index)
