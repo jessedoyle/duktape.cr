@@ -1,3 +1,7 @@
+# v0.19.1 - March 3, 2020
+
+- **Bugfix**: Call function properties when using `Duktape::Runtime#call` with no function arguments. [PR 58](https://github.com/jessedoyle/duktape.cr/pull/58), [Issue 57](https://github.com/jessedoyle/duktape.cr/issues/57). Thanks @dinh for reporting!
+
 # v0.19.0 - Jan 17, 2020
 
 - Update Duktape version to `2.5.0`.

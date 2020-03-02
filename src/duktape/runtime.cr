@@ -218,17 +218,14 @@ module Duktape
 
     # :nodoc:
     private def perform_call(args)
+      push_args(args)
+
+      obj_idx = -(args.size + 2)
       if args.size > 0
-        push_args args
-        # We want a reference to the last property that was
-        # successfully accessed via `get_prop`. Because we
-        # leave the last property name in the chain as a string
-        # , this should only depend on the number of arguments
-        # on the stack.
-        obj_idx = -(args.size + 2)
-        @context.call_prop obj_idx, args.size
+        @context.call_prop(obj_idx, args.size)
       else
-        @context.get_prop -2
+        @context.get_prop(obj_idx)
+        @context.call(0) if @context.is_callable(-1)
       end
     end
 

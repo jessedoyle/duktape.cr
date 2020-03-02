@@ -7,7 +7,7 @@ module Spec
     end
 
     def failure_message(actual_value)
-      "expected #{@target.inspect}\, got #{Duktape::TYPES[actual_value].inspect}"
+      "expected #{@target.inspect}, got #{Duktape::TYPES[actual_value].inspect}"
     end
 
     def negative_failure_message(actual_value)
