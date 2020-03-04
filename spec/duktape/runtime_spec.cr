@@ -275,6 +275,26 @@ describe Duktape::Runtime do
         rt.ctx.get_top.should eq(0)
       end
     end
+
+    context "fix: https://github.com/jessedoyle/duktape.cr/issues/57", tags: "bugfix" do
+      it "calls functions when no arguments are provided" do
+        rt = Duktape::Runtime.new do |sbx|
+          sbx.eval! <<-JS
+            var called = false
+
+            function test() {
+              called = true;
+              return called;
+            }
+          JS
+        end
+
+        rt.call("test")
+        result = rt.call("called")
+
+        result.should be_true
+      end
+    end
   end
 
   describe "eval" do
