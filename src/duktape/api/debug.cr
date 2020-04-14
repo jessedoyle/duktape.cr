@@ -12,7 +12,7 @@ module Duktape
     end
 
     def dump!
-      Duktape.logger.info "STACK: #{stack}"
+      Duktape::Log::Base.info { "STACK: #{stack}" }
     end
   end
 end

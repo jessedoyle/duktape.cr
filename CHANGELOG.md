@@ -1,3 +1,24 @@
+# v0.20.0 - April 13, 2020
+
+* **breaking change**: Remove the `Duktape::Logger` module and constants.
+* **breaking change**: Remove the `Duktape.logger` and `Duktape.headerize` class methods.
+* **breaking change**: Alert messages are no longer written to STDERR. Instead they are written to STDOUT.
+* Upgrade for Crystal 0.34 support! A minimum crystal version of 0.34 is required for this release.
+* Add the `Duktape::Log` with the `Base`, `Alert` and `Console` constants that act as sources for general log messages, alert messages, and console messages.
+* Log messages are no longer colorized by default.
+* Log output can be controlled using the newly-standardized `CRYSTAL_LOG_SOURCES` and `CRYSTAL_LOG_LEVEL` environment variables.
+* Log output messages are now formatted by default as JSON with the following schema:
+
+```graphql
+{
+  exception : String?,
+  message : String,
+  severity : String,
+  source : String,
+  timestamp : String
+}
+```
+
 # v0.19.1 - March 3, 2020
 
 - **Bugfix**: Call function properties when using `Duktape::Runtime#call` with no function arguments. [PR 58](https://github.com/jessedoyle/duktape.cr/pull/58), [Issue 57](https://github.com/jessedoyle/duktape.cr/issues/57). Thanks @dinh for reporting!
