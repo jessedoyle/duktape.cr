@@ -16,7 +16,8 @@ module Duktape
               str << env.safe_to_string index
             end
           end
-          STDERR.puts output.colorize(:yellow)
+
+          Duktape::Log::Alert.info { output }
           env.return_undefined
         end
       end

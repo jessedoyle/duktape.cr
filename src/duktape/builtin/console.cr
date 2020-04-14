@@ -54,7 +54,7 @@ module Duktape
           env.insert 0
           env.join top
           output = env.to_string -1
-          STDOUT.puts output.colorize(:white)
+          Duktape::Log::Console.info { output }
           env.return_undefined
         end
 

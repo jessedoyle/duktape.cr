@@ -16,7 +16,7 @@ module Duktape
               str << env.safe_to_string index
             end
           end
-          STDOUT.puts output.colorize(:light_cyan)
+          Duktape::Log::Base.info { output }
           env.return_undefined
         end
       end

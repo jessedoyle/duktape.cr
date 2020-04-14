@@ -15,14 +15,14 @@ module Duktape
     end
 
     def initialize(@msg : String)
-      Duktape.logger.fatal "InternalError: #{msg}"
+      Duktape::Log::Base.fatal { "InternalError: #{msg}" }
       super msg
     end
   end
 
   class Error < Exception
     def initialize(msg : String)
-      Duktape.logger.error msg
+      Duktape::Log::Base.error(exception: self) { msg }
       super msg
     end
   end

@@ -8,7 +8,7 @@ module Duktape
   module Support::File
     private def read_file(path : String)
       ::File.read path
-    rescue ex : Errno
+    rescue ex : ::File::Error
       raise FileError.new "invalid file: #{ex.message}"
     end
   end

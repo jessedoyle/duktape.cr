@@ -1,6 +1,8 @@
 .PHONY: all spec duktape libduktape clean cleanlib
 
 CRYSTAL_BIN := $(shell which crystal)
+CRYSTAL_LOG_LEVEL ?= NONE
+CRYSTAL_LOG_SOURCES ?= *
 SOURCES := $(shell find src -name '*.cr')
 SPEC_SOURCES := $(shell find spec -name '*.cr')
 CURRENT := $(shell pwd)
@@ -12,7 +14,7 @@ duktape: $(OUTPUT)/duktape
 libduktape:
 	$(MAKE) -C $(EXT) libduktape
 spec: all_spec
-	$(OUTPUT)/all_spec
+	@CRYSTAL_LOG_LEVEL=$(CRYSTAL_LOG_LEVEL) CRYSTAL_LOG_SOURCES=$(CRYSTAL_LOG_SOURCES) $(OUTPUT)/all_spec
 all_spec: $(OUTPUT)/all_spec
 $(OUTPUT)/all_spec: $(SOURCES) $(SPEC_SOURCES)
 	@mkdir -p $(OUTPUT)
