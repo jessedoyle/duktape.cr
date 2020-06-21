@@ -150,7 +150,7 @@ module Duktape
       # Can we read the file?
       begin
         file = File.open path, "r"
-      rescue ex : Errno
+      rescue ex : File::Error
         msg = String.new LibC.strerror(ex.errno)
         raise Duktape::FileError.new "#{path} : #{msg}"
       ensure
