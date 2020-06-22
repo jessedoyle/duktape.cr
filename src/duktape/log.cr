@@ -8,8 +8,7 @@ require "log"
 require "json"
 
 Log.setup_from_env(
-  log_level_env: "CRYSTAL_LOG_LEVEL",
-  default_sources: ENV.fetch("CRYSTAL_LOG_SOURCES", "duktape.*"),
+  default_sources: ENV.fetch("LOG_SOURCES", "duktape.*"),
   backend: Log::IOBackend.new.tap do |backend|
     backend.formatter = Duktape::Log.formatter
   end
