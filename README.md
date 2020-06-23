@@ -18,7 +18,7 @@ version: 1.0.0 # your project's version
 dependencies:
   duktape:
     github: jessedoyle/duktape.cr
-    version: ~> 0.20.0
+    version: ~> 0.21.0
 ```
 
 then execute:
