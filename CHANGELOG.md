@@ -1,3 +1,8 @@
+# v0.21.0 - June 22, 2020
+
+* **breaking change**: Rename the `CRYSTAL_LOG_LEVEL` and `CRYSTAL_LOG_SOURCES` environment variables to `LOG_LEVEL` and `LOG_SOURCES` respectively to match changes in Crystal core.
+* Support Crystal >= 0.35.1.
+
 # v0.20.0 - April 13, 2020
 
 * **breaking change**: Remove the `Duktape::Logger` module and constants.

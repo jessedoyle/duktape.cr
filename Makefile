@@ -14,7 +14,7 @@ duktape: $(OUTPUT)/duktape
 libduktape:
 	$(MAKE) -C $(EXT) libduktape
 spec: all_spec
-	@CRYSTAL_LOG_LEVEL=$(CRYSTAL_LOG_LEVEL) CRYSTAL_LOG_SOURCES=$(CRYSTAL_LOG_SOURCES) $(OUTPUT)/all_spec
+	@LOG_LEVEL=$(CRYSTAL_LOG_LEVEL) LOG_SOURCES=$(CRYSTAL_LOG_SOURCES) $(OUTPUT)/all_spec
 all_spec: $(OUTPUT)/all_spec
 $(OUTPUT)/all_spec: $(SOURCES) $(SPEC_SOURCES)
 	@mkdir -p $(OUTPUT)
