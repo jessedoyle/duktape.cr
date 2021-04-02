@@ -1,3 +1,7 @@
+# v1.0.0 - April 2, 2021
+
+* Specify a `crystal` constraint of `>= 0.35.1` for compatibility with Crystal 1.0.0. Thanks @Kanezoh!
+
 # v0.21.0 - June 22, 2020
 
 * **breaking change**: Rename the `CRYSTAL_LOG_LEVEL` and `CRYSTAL_LOG_SOURCES` environment variables to `LOG_LEVEL` and `LOG_SOURCES` respectively to match changes in Crystal core.
