@@ -1,4 +1,6 @@
-# v0.22.0 - April 1, 2021
+# v1.0.0 - April 2, 2021
+
+* Specify a `crystal` constraint of `>= 0.35.1` for compatibility with Crystal 1.0.0. Thanks @Kanezoh!
 
 # v0.21.0 - June 22, 2020
 

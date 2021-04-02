@@ -14,8 +14,8 @@ module Duktape
   end
 
   module VERSION
-    MAJOR =  0
-    MINOR = 22
+    MAJOR =  1
+    MINOR = 0
     TINY  =  0
     PRE   = nil
 
