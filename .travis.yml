@@ -1,9 +1,0 @@
-language: crystal
-before_install: make libduktape
-install:
-  - shards install
-script:
-  - make spec
-  - bin/ameba
-sudo: false
-email: false

@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        crystal: [latest, nightly]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Install Crystal
+        uses: oprypin/install-crystal@v1
+        with:
+          crystal: ${{ matrix.crystal }}
+      - name: Download source
+        uses: actions/checkout@v2
+      - name: Dependencies
+        run: shards install
+      - name: Build
+        run: make libduktape
+      - name: Run specs
+        run: make spec
+      - name: Check formatting
+        run: crystal tool format --check src spec
+      - name: Lint
+        run: bin/ameba
