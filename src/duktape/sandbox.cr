@@ -4,6 +4,17 @@
 #
 # This is free software. Please see LICENSE for details.
 
+# This is an exported function that is called by libduktape every so often by
+# an executing VM in order to check if a timeout has occurred. The pointer
+# passed is an instance of TimeoutData, which is also pointed to by a respective
+# Sandbox instance.
+fun duk_cr_timeout(ptr : Void*) : LibC::Int
+  return 0 if ptr.null?
+
+  timeout = ptr.unsafe_as(Duktape::TimeoutData)
+  timeout.elapsed? ? 1 : 0
+end
+
 module Duktape
   class TimeoutData
     property start : Time::Span

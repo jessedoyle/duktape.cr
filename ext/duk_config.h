@@ -3109,44 +3109,7 @@ typedef struct duk_hthread duk_context;
 /* __OVERRIDE_DEFINES__ */
 /* CUSTOM: timeout function */
 #define DUK_CR_USE_USER_DECLARE() \
-struct timeout_data \
-{ \
-	struct timeval start; \
-	struct timeval timeout; \
-}; \
-DUK_INTERNAL_DECL duk_bool_t duk_cr_timeout(void *udata) \
-{ \
-	if (udata) \
-	{ \
-		duk_ret_t rc; \
-		struct timeout_data data = *(struct timeout_data*) udata; \
-		struct timeval now; \
-		struct timeval diff; \
-		rc = gettimeofday(&now, NULL); \
-		if (rc != 0) \
-		{ \
-			return 1; \
-		} \
-		diff.tv_sec = now.tv_sec - data.start.tv_sec; \
-		diff.tv_usec = now.tv_usec - data.start.tv_usec; \
-		if (diff.tv_sec > data.timeout.tv_sec) \
-		{ \
-			return 1; \
-		} \
-		else if ((diff.tv_sec == data.timeout.tv_sec) && (diff.tv_usec > data.timeout.tv_usec)) \
-		{ \
-			return 1; \
-		} \
-		else \
-		{	\
-			return 0; \
-		}	\
-	} \
-	else \
-	{ \
-		return 0; \
-	} \
-}
+duk_bool_t duk_cr_timeout(void *udata);
 
 /*
  *  Conditional includes
