@@ -123,5 +123,31 @@ describe Duktape::Sandbox do
         JS
       end
     end
+
+    it "should respect an updated timeout when altered" do
+      sbx = Duktape::Sandbox.new(100)
+
+      t = Time.measure do
+        begin
+          sbx.eval! <<-JS
+              while (true) {}
+            JS
+        rescue ex
+        end
+      end
+      t.should be >= 100.milliseconds
+
+      sbx.timeout = 500.milliseconds
+
+      t = Time.measure do
+        begin
+          sbx.eval! <<-JS
+              while (true) {}
+            JS
+        rescue ex
+        end
+      end
+      t.should be >= 100.milliseconds
+    end
   end
 end
