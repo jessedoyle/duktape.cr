@@ -106,6 +106,14 @@ describe Duktape::Sandbox do
     end
   end
 
+  describe "timeout=" do
+    it "should alter the timeout value" do
+      sbx = Duktape::Sandbox.new(200.milliseconds)
+      sbx.timeout = 500.milliseconds
+      sbx.timeout.should eq 500
+    end
+  end
+
   context "timeout during evaluation" do
     it "should raise a Duktape::RangeError on timeout" do
       sbx = Duktape::Sandbox.new(100)
