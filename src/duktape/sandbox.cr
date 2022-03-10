@@ -17,15 +17,22 @@ end
 
 module Duktape
   class TimeoutData
-    property start : Time::Span
-    property timeout : Time::Span
+    property start : Time::Span?
+    property timeout : Time::Span?
 
     def initialize(@start, @timeout)
     end
 
     def elapsed? : Bool
-      dt = Time.monotonic - @start
-      dt > timeout
+      start = @start
+      timeout = @timeout
+
+      if start && timeout
+        dt = Time.monotonic - start
+        dt > timeout
+      else
+        false
+      end
     end
   end
 
@@ -61,7 +68,7 @@ module Duktape
       if timeout < 100.milliseconds
         raise ArgumentError.new "timeout must be > 100ms"
       else
-        timeout_data = TimeoutData.new(Time::Span.zero, timeout)
+        timeout_data = TimeoutData.new(nil, timeout)
         @ctx = Duktape.create_heap_udata(timeout_data.unsafe_as(Pointer(Void)))
         @timeout_data = timeout_data
       end
@@ -77,8 +84,18 @@ module Duktape
 
     def timeout : Int32 | Int64 | Nil
       # NOTE(z64): backwards compatibility
+      timeout = @timeout_data.try do |td|
+        td.timeout
+      end
+
+      if timeout
+        timeout.total_milliseconds.to_i64
+      end
+    end
+
+    def timeout=(timeout : Time::Span?)
       @timeout_data.try do |td|
-        td.timeout.total_milliseconds.to_i64
+        td.timeout = timeout
       end
     end
 

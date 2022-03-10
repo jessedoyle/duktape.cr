@@ -95,6 +95,13 @@ module Duktape
       reset_stack!
     end
 
+    def timeout=(timeout : Time::Span?)
+      ctx = @context
+      if ctx.is_a?(Duktape::Sandbox)
+        ctx.timeout = timeout
+      end
+    end
+
     # Call the named property with the supplied arguments,
     # returning the value of the called property.
     #
