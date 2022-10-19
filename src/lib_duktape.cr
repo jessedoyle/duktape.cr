@@ -7,7 +7,7 @@
 @[Link(ldflags: "-L#{__DIR__}/.build/lib -L#{__DIR__}/.build/include -lduktape -lm")]
 lib LibDUK
   alias Context = Void*
-  alias Size = Int32
+  alias Size = LibC::SizeT
   alias Bool = UInt32
   alias Index = Int32
   alias Number = Float64

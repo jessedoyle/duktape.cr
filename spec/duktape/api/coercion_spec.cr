@@ -37,7 +37,7 @@ describe Duktape::API::Coercion do
       JS
       tup = ctx.safe_to_lstring -1
 
-      tup.should be_a(Tuple(String, Int32))
+      tup.should be_a(Tuple(String, UInt64))
       tup[0].should eq("Error: toString error")
       tup[1].should eq(21)
     end
@@ -211,7 +211,7 @@ describe Duktape::API::Coercion do
       ctx << 123.456
       tup = ctx.to_lstring -1
 
-      tup.should be_a(Tuple(String, Int32))
+      tup.should be_a(Tuple(String, UInt64))
       tup[0].should eq("123.456")
       tup[1].should eq(7)
       last_stack_type(ctx).should be_js_type(:string)
