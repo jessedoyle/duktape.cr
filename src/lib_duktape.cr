@@ -197,6 +197,7 @@ lib LibDUK
     day : Number
     hours : Number
     minutes : Number
+    seconds : Number
     milliseconds : Number
     weekday : Number
   end
