@@ -73,11 +73,11 @@ module Duktape
       reset_stack!
     end
 
-    def initialize(timeout : Int32 | Int64)
+    def initialize(timeout : Time::Span | Int32 | Int64)
       @context = Duktape::Sandbox.new timeout
     end
 
-    def initialize(timeout : Int32 | Int64, &block)
+    def initialize(timeout : Time::Span | Int32 | Int64, &block)
       @context = Duktape::Sandbox.new timeout
       yield @context
       # Remove all values from the stack left
@@ -93,6 +93,13 @@ module Duktape
       @context = context
       yield @context
       reset_stack!
+    end
+
+    def timeout=(timeout : Time::Span?)
+      ctx = @context
+      if ctx.is_a?(Duktape::Sandbox)
+        ctx.timeout = timeout
+      end
     end
 
     # Call the named property with the supplied arguments,

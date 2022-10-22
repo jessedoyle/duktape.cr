@@ -164,11 +164,6 @@ lib LibDUK
     DontCare
   end
 
-  struct TimeoutData
-    start : LibC::Timeval
-    timeout : LibC::Timeval
-  end
-
   struct ThreadState
     data : UInt8[128]
   end

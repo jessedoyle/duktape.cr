@@ -106,6 +106,14 @@ describe Duktape::Sandbox do
     end
   end
 
+  describe "timeout=" do
+    it "should alter the timeout value" do
+      sbx = Duktape::Sandbox.new(200.milliseconds)
+      sbx.timeout = 500.milliseconds
+      sbx.timeout.should eq 500
+    end
+  end
+
   context "timeout during evaluation" do
     it "should raise a Duktape::RangeError on timeout" do
       sbx = Duktape::Sandbox.new(100)
@@ -114,6 +122,32 @@ describe Duktape::Sandbox do
           while (true) {}
         JS
       end
+    end
+
+    it "should respect an updated timeout when altered" do
+      sbx = Duktape::Sandbox.new(100)
+
+      t = Time.measure do
+        begin
+          sbx.eval! <<-JS
+              while (true) {}
+            JS
+        rescue ex
+        end
+      end
+      t.should be >= 100.milliseconds
+
+      sbx.timeout = 500.milliseconds
+
+      t = Time.measure do
+        begin
+          sbx.eval! <<-JS
+              while (true) {}
+            JS
+        rescue ex
+        end
+      end
+      t.should be >= 100.milliseconds
     end
   end
 end
