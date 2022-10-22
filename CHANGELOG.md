@@ -1,3 +1,7 @@
+# v1.0.1 - Oct 22, 2022
+
+* Fix a segfault that occurs on Crystal >= 1.6.0. Thanks @z64!, #74
+
 # v1.0.0 - April 2, 2021
 
 * Specify a `crystal` constraint of `>= 0.35.1` for compatibility with Crystal 1.0.0. Thanks @Kanezoh!
