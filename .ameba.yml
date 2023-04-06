@@ -1,0 +1,3 @@
+Style/PredicateName:
+  Excluded:
+    - src/duktape/api/error_handling.cr

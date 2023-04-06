@@ -1,7 +1,7 @@
 # Duktape.cr
 
 [![GitHub version](https://badge.fury.io/gh/jessedoyle%2Fduktape.cr.svg)](http://badge.fury.io/gh/jessedoyle%2Fduktape.cr)
-[![Build Status](https://travis-ci.org/jessedoyle/duktape.cr.svg?branch=master)](https://travis-ci.org/jessedoyle/duktape.cr)
+![Build Status](https://github.com/jessedoyle/duktape.cr/actions/workflows/ci.yml/badge.svg)
 
 Duktape.cr provides Crystal bindings to the [Duktape](https://github.com/svaarala/duktape) javascript engine.
 
@@ -27,7 +27,7 @@ then execute:
 shards install
 ```
 
-Shards will automatically make the native library. You can make the library manually by calling `make libduktape`.
+Shards will automatically build the native library. You can compile the engine manually by invoking `make libduktape`.
 
 ## Usage
 
@@ -204,6 +204,16 @@ These exceptions all inherit from `Duktape::InternalError`.
 I'll accept any pull requests that are well tested for bugs/features with Duktape.cr.
 
 You should fork the main repo, create a feature branch, write tests and submit a pull request.
+
+## Maintenance
+
+### Engine Updates
+
+The engine can be updated by invoking the following make target:
+
+```bash
+VERSION=X.X.X make update
+```
 
 ## License
 

@@ -1,3 +1,11 @@
+# v1.1.0 - April 5, 2023
+
+* Update from Duktape 2.5.0 to 2.7.0!
+* Define a default fatal handler for the Duktape heap. This change only impacts heaps created via `LibDUK.create_heap`. Heaps created via `Dukatpe::Context`, `Duktape::Sandbox` or `Duktape::Runtime` are not affected.
+* See the release notes for more information:
+  - [v2.6.0](https://github.com/svaarala/duktape/blob/5e169deafbbd12823665f5d30fb4c4c04e3dfa26/doc/release-notes-v2-6.rst)
+  - [v2.7.0](https://github.com/svaarala/duktape/blob/5e169deafbbd12823665f5d30fb4c4c04e3dfa26/doc/release-notes-v2-7.rst)
+
 # v1.0.1 - Oct 22, 2022
 
 * Fix a segfault that occurs on Crystal >= 1.6.0. Thanks @z64!, #74

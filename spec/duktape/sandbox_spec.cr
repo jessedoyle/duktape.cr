@@ -111,7 +111,7 @@ describe Duktape::Sandbox do
       sbx = Duktape::Sandbox.new(100)
       expect_raises Duktape::RangeError, /execution timeout/ do
         sbx.eval! <<-JS
-          while (true) {}
+          while(true) { "true" }
         JS
       end
     end

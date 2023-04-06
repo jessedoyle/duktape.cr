@@ -65,7 +65,7 @@ module Duktape
       @context = Duktape::Sandbox.new
     end
 
-    def initialize(&block)
+    def initialize(&)
       @context = Duktape::Sandbox.new
       yield @context
       # Remove all values from the stack left
@@ -77,7 +77,7 @@ module Duktape
       @context = Duktape::Sandbox.new timeout
     end
 
-    def initialize(timeout : Int32 | Int64, &block)
+    def initialize(timeout : Int32 | Int64, &)
       @context = Duktape::Sandbox.new timeout
       yield @context
       # Remove all values from the stack left
@@ -89,7 +89,7 @@ module Duktape
       @context = context
     end
 
-    def initialize(context : Duktape::Context, &block)
+    def initialize(context : Duktape::Context, &)
       @context = context
       yield @context
       reset_stack!

@@ -96,4 +96,21 @@ describe Duktape::Context do
       ctx.timeout.should eq(nil)
     end
   end
+
+  describe "duktape version" do
+    it "returns the native engine version" do
+      major, minor, patch = Duktape.api_version.split(".").map(&.to_i)
+      calculated_version = (major * 10000) + (minor * 100) + patch
+
+      ctx = Duktape::Context.new
+      ctx.push_global_object
+      ctx.push_string "Duktape"
+      ctx.get_prop -2
+      ctx.push_string "version"
+      ctx.get_prop -2
+
+      version = ctx.require_number -1
+      version.should eq calculated_version
+    end
+  end
 end
