@@ -1,0 +1,33 @@
+.PHONY: update-duktape clean
+
+VERSION ?= 2.7.0
+TAG := v$(VERSION)
+TMP_DIR ?= .tmp
+DUKTAPE := $(TMP_DIR)/duktape-$(VERSION)
+PYTHON ?= "python2"
+
+update-duktape: $(TMP_DIR)/build
+	cp $(TMP_DIR)/build/{duk_config.h,duktape.c,duktape.h} .
+
+$(TMP_DIR)/build: $(DUKTAPE)
+	$(PYTHON) $(DUKTAPE)/tools/configure.py \
+	--source-directory $(DUKTAPE)/src-input \
+	--config-metadata $(DUKTAPE)/config \
+	--output-directory $@ \
+	--option-file duktape_runtime_options.yml
+
+$(TMP_DIR)/duktape-%: $(TMP_DIR)/duktape-%.tar.xz
+	mkdir -p $@
+	tar -xf $^ --directory $(TMP_DIR)
+
+$(TMP_DIR)/duktape-%.tar.xz: $(TMP_DIR)
+	@curl -L https://github.com/svaarala/duktape/releases/download/$(TAG)/duktape-$(VERSION).tar.xz \
+	--user-agent crystal/duktape.cr \
+	--silent \
+	--output $@
+
+$(TMP_DIR):
+	mkdir -p $@
+
+clean:
+	rm -rf $(TMP_DIR)

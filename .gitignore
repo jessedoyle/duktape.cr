@@ -1,6 +1,7 @@
 .DS_Store
 .crystal/
 .build/
+ext/.tmp
 src/.build
 /doc/
 /lib

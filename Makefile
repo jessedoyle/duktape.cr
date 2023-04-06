@@ -1,4 +1,4 @@
-.PHONY: all spec duktape libduktape clean cleanlib
+.PHONY: all spec duktape libduktape update clean cleanlib
 
 CRYSTAL_BIN := $(shell which crystal)
 CRYSTAL_LOG_LEVEL ?= NONE
@@ -10,20 +10,34 @@ EXT := $(CURRENT)/ext
 OUTPUT := $(CURRENT)/.build
 
 all: duktape
+
 duktape: $(OUTPUT)/duktape
+
 libduktape:
 	$(MAKE) -C $(EXT) libduktape
+
+# use the following to update the native engine:
+# VERSION=X.X.X make clean cleanlib update libduktape
+update:
+	$(MAKE) -C $(EXT) -f Makefile.internal update-duktape
+
 spec: all_spec
 	@LOG_LEVEL=$(CRYSTAL_LOG_LEVEL) LOG_SOURCES=$(CRYSTAL_LOG_SOURCES) $(OUTPUT)/all_spec
+
 all_spec: $(OUTPUT)/all_spec
+
 $(OUTPUT)/all_spec: $(SOURCES) $(SPEC_SOURCES)
 	@mkdir -p $(OUTPUT)
 	$(CRYSTAL_BIN) build -o $@ spec/all_spec.cr --warnings all
+	
 $(OUTPUT)/duktape: $(SOURCES)
 	@mkdir -p $(OUTPUT)
 	$(CRYSTAL_BIN) build -o $@ src/duktape.cr --warnings all
+
 clean:
 	rm -rf $(OUTPUT)
 	rm -rf $(CURRENT)/.crystal
+
 cleanlib:
 	$(MAKE) -C $(EXT) clean
+	$(MAKE) -C $(EXT) -f Makefile.internal clean

@@ -1,13 +1,46 @@
 # Building:
-# python tools/configure.py --source-directory src-input \
-# --config-metadata config --output-directory ../build \
-# --option-file duktape_runtime_options.yml
+# VERSION=X.X.X make -f Makefile.internal update-duktape
 DUK_USE_COMPILER_STRING: |
   "crystal/llvm"
 DUK_USE_UNION_INITIALIZERS: true
-DUK_USE_EXEC_TIMEOUT_CHECK: duk_cr_timeout
+DUK_USE_EXEC_TIMEOUT_CHECK:
+  verbatim: >
+    #define DUK_USE_EXEC_TIMEOUT_CHECK duk_cr_timeout
+
+    struct timeout_data {
+      struct timeval start;
+      struct timeval timeout;
+    };
+
+    DUK_INTERNAL_DECL duk_bool_t duk_cr_timeout(void *udata) {
+      if (udata) {
+        duk_ret_t rc;
+        struct timeout_data data = *(struct timeout_data*) udata;
+        struct timeval now;
+        struct timeval delta;
+        rc = gettimeofday(&now, NULL);
+
+        if (rc != 0) {
+          return 1;
+        }
+
+        delta.tv_sec = now.tv_sec - data.start.tv_sec;
+        delta.tv_usec = now.tv_usec - data.start.tv_usec;
+
+        if (delta.tv_sec > data.timeout.tv_sec) {
+          return 1;
+        } else if ((delta.tv_sec == data.timeout.tv_sec) && (delta.tv_usec > data.timeout.tv_usec)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      } else {
+        return 0;
+      }
+    }
 DUK_USE_INTERRUPT_COUNTER: true
-DUK_USE_DEBUGGER_SUPPORT: true
+DUK_USE_FATAL_HANDLER:
+  verbatim: "#define DUK_USE_FATAL_HANDLER(udata, msg) do { const char *fatal_msg = (msg); fprintf(stderr, \"*** FATAL ERROR: %s\\n\", fatal_msg ? fatal_msg : \"no message\"); fflush(stderr); *((volatile unsigned int *) 0) = (unsigned int) 0xdeadbeefUL; abort(); } while(0)"
 DUK_USE_TARGET_INFO: |
   "duktape.cr"
 DUK_USE_FASTINT: true
