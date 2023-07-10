@@ -12,6 +12,8 @@
       tv_sec : TimeT
       tv_usec : SusecondsT
     end
+
+    fun gettimeofday(tp : Timeval*, timezone : Void*) : Int
   end
 {% end %}
 
