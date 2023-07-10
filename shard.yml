@@ -5,11 +5,11 @@ authors:
   - Jesse Doyle <jdoyle@ualberta.ca>
 
 scripts:
-  postinstall: "make -C ext clean libduktape"
+  postinstall: make -C clean libduktape
 
 development_dependencies:
   ameba:
-    github: veelenga/ameba
+    github: crystal-ameba/ameba
     version: '~> 1.4'
 
 crystal: '>= 0.35.1'

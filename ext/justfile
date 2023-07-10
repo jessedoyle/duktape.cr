@@ -1,0 +1,49 @@
+set shell := ["bash", "-uc"]
+set windows-shell := ["cmd.exe", "/c"]
+
+cc := if os() == "windows" {
+    if `where gcc 2>NUL || exit 0` == "" {
+        if `where clang 2>NUL || exit 0` == "" {
+            error("cannot find C compiler")
+        } else {
+            trim(replace(`where clang`, "\\", "\\\\"))
+        }
+    } else {
+        replace(`where gcc`, "\\", "\\\\")
+    }
+} else {
+    "cc"
+}
+
+cflags := "-pedantic -c -std=c99 -O2 -fstrict-aliasing -fomit-frame-pointer"
+current := justfile_directory()
+output := join(current, "..", "src", ".build")
+
+[unix]
+build:
+    mkdir -p {{output}}
+    {{cc}} -o {{output}}/libduktape.o {{current}}/duktape.c {{cflags}}
+
+    mkdir -p {{output}}/lib
+    ar rcs {{output}}/lib/libduktape.a {{output}}/libduktape.o
+
+    mkdir -p {{output}}/include
+    cp {{current}}/duktape.h {{current}}/duk_config.h {{output}}/include
+
+[windows]
+build compiler="{{cc}}":
+    mkdir {{output}}\lib
+    {{compiler}} -o {{output}}\lib\duktape.lib {{current}}\duktape.c {{cflags}} -fuse-ld=llvm-lib
+
+    mkdir {{output}}\include
+    copy {{current}}\duktape.h + {{current}}\duk_config.h {{output}}\include
+
+[unix]
+clean:
+    -rm -rf {{output}}
+    -rm -rf {{current}}/.crystal
+
+[windows]
+clean:
+    -rmdir /q /s {{output}}
+    -rmdir /q /s {{current}}\.crystal
