@@ -17,7 +17,7 @@ cc := if os() == "windows" {
 
 cflags := "-pedantic -c -std=c99 -O2 -fstrict-aliasing -fomit-frame-pointer"
 current := justfile_directory()
-output := join(current, "src", ".build")
+output := join(current, "..", "src", ".build")
 
 [unix]
 build:
