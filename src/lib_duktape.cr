@@ -4,7 +4,22 @@
 #
 # This is free software. Please see LICENSE for details.
 
-@[Link(ldflags: "-L#{__DIR__}/.build/lib -L#{__DIR__}/.build/include -lduktape -lm")]
+{% if flag?(:win32) %}
+  lib LibC
+    alias SusecondsT = LongLong
+
+    struct Timeval
+      tv_sec : TimeT
+      tv_usec : SusecondsT
+    end
+  end
+{% end %}
+
+{% if flag?(:win32) %}
+  @[Link(ldflags: "#{__DIR__}\\.build\\lib\\duktape.lib")]
+{% else %}
+  @[Link(ldflags: "-L#{__DIR__}/.build/lib -L#{__DIR__}/.build/include -lduktape -lm")]
+{% end %}
 lib LibDUK
   alias Context = Void*
   alias Size = LibC::SizeT
